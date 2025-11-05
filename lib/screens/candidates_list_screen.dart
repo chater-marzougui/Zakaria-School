@@ -87,7 +87,8 @@ class _CandidatesListScreenState extends State<CandidatesListScreen> {
                     .where((c) {
                       if (_searchQuery.isEmpty) return true;
                       return c.name.toLowerCase().contains(_searchQuery) ||
-                          c.phone.contains(_searchQuery);
+                          c.phone.contains(_searchQuery) ||
+                          c.cin.toLowerCase().contains(_searchQuery);
                     })
                     .toList() ?? [];
 
@@ -139,31 +140,43 @@ class _CandidatesListScreenState extends State<CandidatesListScreen> {
     final t = AppLocalizations.of(context)!;
     final nameController = TextEditingController();
     final phoneController = TextEditingController();
+    final cinController = TextEditingController();
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(t.addCandidate),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: nameController,
-              decoration: InputDecoration(
-                labelText: t.candidateName,
-                border: const OutlineInputBorder(),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  labelText: t.candidateName,
+                  border: const OutlineInputBorder(),
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: phoneController,
-              decoration: InputDecoration(
-                labelText: t.candidatePhone,
-                border: const OutlineInputBorder(),
+              const SizedBox(height: 16),
+              TextField(
+                controller: phoneController,
+                decoration: InputDecoration(
+                  labelText: t.candidatePhone,
+                  border: const OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.phone,
               ),
-              keyboardType: TextInputType.phone,
-            ),
-          ],
+              const SizedBox(height: 16),
+              TextField(
+                controller: cinController,
+                decoration: InputDecoration(
+                  labelText: t.candidateCin,
+                  border: const OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.number,
+              ),
+            ],
+          ),
         ),
         actions: [
           TextButton(
@@ -180,6 +193,7 @@ class _CandidatesListScreenState extends State<CandidatesListScreen> {
                 id: '',
                 name: nameController.text,
                 phone: phoneController.text,
+                cin: cinController.text,
                 startDate: DateTime.now(),
               );
 

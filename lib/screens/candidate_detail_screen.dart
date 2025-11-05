@@ -21,7 +21,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> with Sing
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
     _notesController.text = widget.candidate.notes;
   }
 
@@ -87,6 +87,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> with Sing
           indicatorColor: theme.colorScheme.secondary,
           tabs: [
             Tab(text: t.info),
+            Tab(text: t.availability),
             Tab(text: t.schedule),
             Tab(text: t.payments),
           ],
@@ -96,6 +97,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> with Sing
         controller: _tabController,
         children: [
           _buildInfoTab(),
+          _buildAvailabilityTab(),
           _buildScheduleTab(),
           _buildPaymentsTab(),
         ],
@@ -121,6 +123,11 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> with Sing
             icon: Icons.phone,
             title: t.candidatePhone,
             value: widget.candidate.phone,
+          ),
+          _InfoCard(
+            icon: Icons.credit_card,
+            title: t.cin,
+            value: widget.candidate.cin.isEmpty ? '-' : widget.candidate.cin,
           ),
           _InfoCard(
             icon: Icons.calendar_today,
@@ -187,6 +194,140 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> with Sing
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildAvailabilityTab() {
+    final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
+    
+    final daysOfWeek = [
+      {'key': 'monday', 'label': t.monday},
+      {'key': 'tuesday', 'label': t.tuesday},
+      {'key': 'wednesday', 'label': t.wednesday},
+      {'key': 'thursday', 'label': t.thursday},
+      {'key': 'friday', 'label': t.friday},
+      {'key': 'saturday', 'label': t.saturday},
+      {'key': 'sunday', 'label': t.sunday},
+    ];
+
+    return StreamBuilder<DocumentSnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('candidates')
+          .doc(widget.candidate.id)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
+
+        final candidate = structs.Candidate.fromFirestore(snapshot.data!);
+        final availability = candidate.availability;
+
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                t.weeklyAvailability,
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                t.availabilitySchedule,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.textTheme.bodyMedium?.color?.withAlpha(180),
+                ),
+              ),
+              const SizedBox(height: 24),
+              ...daysOfWeek.map((day) {
+                final dayKey = day['key'] as String;
+                final dayLabel = day['label'] as String;
+                final daySlots = availability[dayKey] ?? [];
+
+                return Card(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              dayLabel,
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.add_circle),
+                              color: theme.colorScheme.primary,
+                              onPressed: () => _addTimeSlot(context, dayKey),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        if (daySlots.isEmpty)
+                          Text(
+                            t.noAvailabilitySet,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.textTheme.bodySmall?.color?.withAlpha(150),
+                            ),
+                          )
+                        else
+                          ...daySlots.map((slot) => Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color: theme.colorScheme.primaryContainer.withAlpha(100),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.access_time,
+                                          size: 16,
+                                          color: theme.colorScheme.primary,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          '${slot.startTime} - ${slot.endTime}',
+                                          style: theme.textTheme.bodyMedium,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.delete),
+                                  color: theme.colorScheme.error,
+                                  onPressed: () => _deleteTimeSlot(context, dayKey, slot),
+                                ),
+                              ],
+                            ),
+                          )),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -359,6 +500,175 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> with Sing
 
   void _showEditDialog() {
     // TODO: Implement edit dialog
+  }
+
+  void _addTimeSlot(BuildContext context, String dayKey) async {
+    final t = AppLocalizations.of(context)!;
+    TimeOfDay? startTime;
+    TimeOfDay? endTime;
+
+    await showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: Text(t.addAvailability),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.access_time),
+                title: Text(t.from),
+                subtitle: Text(
+                  startTime != null
+                      ? '${startTime!.hour.toString().padLeft(2, '0')}:${startTime!.minute.toString().padLeft(2, '0')}'
+                      : t.selectDate,
+                ),
+                onTap: () async {
+                  final time = await showTimePicker(
+                    context: context,
+                    initialTime: TimeOfDay.now(),
+                  );
+                  if (time != null) {
+                    setState(() => startTime = time);
+                  }
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.access_time),
+                title: Text(t.to),
+                subtitle: Text(
+                  endTime != null
+                      ? '${endTime!.hour.toString().padLeft(2, '0')}:${endTime!.minute.toString().padLeft(2, '0')}'
+                      : t.selectDate,
+                ),
+                onTap: () async {
+                  final time = await showTimePicker(
+                    context: context,
+                    initialTime: TimeOfDay.now(),
+                  );
+                  if (time != null) {
+                    setState(() => endTime = time);
+                  }
+                },
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(t.cancel),
+            ),
+            ElevatedButton(
+              onPressed: startTime != null && endTime != null
+                  ? () async {
+                      final startTimeStr =
+                          '${startTime!.hour.toString().padLeft(2, '0')}:${startTime!.minute.toString().padLeft(2, '0')}';
+                      final endTimeStr =
+                          '${endTime!.hour.toString().padLeft(2, '0')}:${endTime!.minute.toString().padLeft(2, '0')}';
+
+                      // Get current availability
+                      final doc = await FirebaseFirestore.instance
+                          .collection('candidates')
+                          .doc(widget.candidate.id)
+                          .get();
+                      
+                      final candidate = structs.Candidate.fromFirestore(doc);
+                      final currentAvailability = Map<String, List<structs.TimeSlot>>.from(candidate.availability);
+                      
+                      // Add new time slot
+                      if (!currentAvailability.containsKey(dayKey)) {
+                        currentAvailability[dayKey] = [];
+                      }
+                      currentAvailability[dayKey]!.add(
+                        structs.TimeSlot(
+                          startTime: startTimeStr,
+                          endTime: endTimeStr,
+                        ),
+                      );
+
+                      // Convert to Map for Firestore
+                      Map<String, dynamic> availabilityMap = {};
+                      currentAvailability.forEach((day, slots) {
+                        availabilityMap[day] = slots.map((slot) => slot.toMap()).toList();
+                      });
+
+                      // Update Firestore
+                      await FirebaseFirestore.instance
+                          .collection('candidates')
+                          .doc(widget.candidate.id)
+                          .update({'availability': availabilityMap});
+
+                      if (context.mounted) {
+                        Navigator.pop(context);
+                      }
+                    }
+                  : null,
+              child: Text(t.save),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _deleteTimeSlot(BuildContext context, String dayKey, structs.TimeSlot slot) async {
+    final t = AppLocalizations.of(context)!;
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(t.deleteTimeSlot),
+        content: Text('${t.deleteTimeSlot}?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(t.cancel),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+            child: Text(t.confirmDelete),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      // Get current availability
+      final doc = await FirebaseFirestore.instance
+          .collection('candidates')
+          .doc(widget.candidate.id)
+          .get();
+      
+      final candidate = structs.Candidate.fromFirestore(doc);
+      final currentAvailability = Map<String, List<structs.TimeSlot>>.from(candidate.availability);
+      
+      // Remove the time slot
+      if (currentAvailability.containsKey(dayKey)) {
+        currentAvailability[dayKey]!.removeWhere(
+          (s) => s.startTime == slot.startTime && s.endTime == slot.endTime,
+        );
+        
+        // Remove day if no slots left
+        if (currentAvailability[dayKey]!.isEmpty) {
+          currentAvailability.remove(dayKey);
+        }
+      }
+
+      // Convert to Map for Firestore
+      Map<String, dynamic> availabilityMap = {};
+      currentAvailability.forEach((day, slots) {
+        availabilityMap[day] = slots.map((slot) => slot.toMap()).toList();
+      });
+
+      // Update Firestore
+      await FirebaseFirestore.instance
+          .collection('candidates')
+          .doc(widget.candidate.id)
+          .update({'availability': availabilityMap});
+    }
   }
 }
 
