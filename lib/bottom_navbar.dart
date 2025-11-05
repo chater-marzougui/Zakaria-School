@@ -1,6 +1,4 @@
-﻿import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'l10n/app_localizations.dart';
@@ -30,60 +28,15 @@ class _HomePageState extends State<BottomNavbar> {
   String? role;
   DateTime? lastPressed;
 
-  late List<Widget> _pages;
-  late List<Widget> _pageWidgets;
-  late List<BottomNavigationBarItem> _navItems;
-
   @override
   void initState() {
     super.initState();
     role = "instructor"; // Set a default role since we don't have RBAC
   }
 
-  void _setupPages() {
-
-    final loc = AppLocalizations.of(context)!;
-      _pages = [
-        const DashboardScreen(),
-        const CalendarScreen(),
-        const CandidatesListScreen(),
-        const SettingsPage(),
-      ];
-
-      _navItems = [
-        BottomNavigationBarItem(
-            icon: const Icon(Icons.dashboard), label: loc.dashboard),
-        BottomNavigationBarItem(
-            icon: const Icon(Icons.calendar_today), label: loc.calendar),
-        BottomNavigationBarItem(
-            icon: const Icon(Icons.people), label: loc.candidates),
-        BottomNavigationBarItem(
-            icon: const Icon(Icons.settings), label: loc.settings),
-      ];
-
-    _pageWidgets = _pages.asMap().entries.map((entry) {
-      return Offstage(
-        offstage: _selectedIndex != entry.key,
-        child: TickerMode(
-          enabled: _selectedIndex == entry.key,
-          child: entry.value,
-        ),
-      );
-    }).toList();
-  }
-
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      for (int i = 0; i < _pageWidgets.length; i++) {
-        _pageWidgets[i] = Offstage(
-          offstage: _selectedIndex != i,
-          child: TickerMode(
-            enabled: _selectedIndex == i,
-            child: _pages[i],
-          ),
-        );
-      }
     });
   }
 
@@ -98,6 +51,33 @@ class _HomePageState extends State<BottomNavbar> {
         body: Center(child: CircularProgressIndicator()),
       );
     }
+
+    // Define pages and navigation items in build method
+    final pages = [
+      const DashboardScreen(),
+      const CalendarScreen(),
+      const CandidatesListScreen(),
+      const SettingsPage(),
+    ];
+
+    final navItems = [
+      BottomNavigationBarItem(
+        icon: const Icon(Icons.dashboard),
+        label: loc.dashboard,
+      ),
+      BottomNavigationBarItem(
+        icon: const Icon(Icons.calendar_today),
+        label: loc.calendar,
+      ),
+      BottomNavigationBarItem(
+        icon: const Icon(Icons.people),
+        label: loc.candidates,
+      ),
+      BottomNavigationBarItem(
+        icon: const Icon(Icons.settings),
+        label: loc.settings,
+      ),
+    ];
 
     return PopScope(
       canPop: false,
@@ -114,25 +94,20 @@ class _HomePageState extends State<BottomNavbar> {
       child: Scaffold(
         backgroundColor: theme.scaffoldBackgroundColor,
         body: SafeArea(
-          child: Column(
-            children: [
-              Expanded(
-                child: Stack(
-                  children: _pageWidgets,
-                ),
-              ),
-              BottomNavigationBar(
-                currentIndex: _selectedIndex,
-                backgroundColor: theme.cardColor,
-                onTap: _onItemTapped,
-                selectedItemColor: theme.primaryColor,
-                unselectedItemColor: theme.colorScheme.tertiary,
-                showSelectedLabels: true,
-                showUnselectedLabels: true,
-                items: _navItems,
-              ),
-            ],
+          child: IndexedStack(
+            index: _selectedIndex,
+            children: pages,
           ),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _selectedIndex,
+          backgroundColor: theme.cardColor,
+          onTap: _onItemTapped,
+          selectedItemColor: theme.primaryColor,
+          unselectedItemColor: theme.colorScheme.tertiary,
+          showSelectedLabels: true,
+          showUnselectedLabels: true,
+          items: navItems,
         ),
       ),
     );

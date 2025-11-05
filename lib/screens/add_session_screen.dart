@@ -91,7 +91,7 @@ class _AddSessionScreenState extends State<AddSessionScreen> {
                             .toList();
 
                         return DropdownButtonFormField<String>(
-                          value: _selectedCandidateId,
+                          initialValue: _selectedCandidateId,
                           decoration: InputDecoration(
                             labelText: t.selectCandidate,
                             border: OutlineInputBorder(
@@ -137,7 +137,7 @@ class _AddSessionScreenState extends State<AddSessionScreen> {
                             .toList();
 
                         return DropdownButtonFormField<String>(
-                          value: _selectedInstructorId,
+                          initialValue: _selectedInstructorId,
                           decoration: InputDecoration(
                             labelText: t.selectInstructor,
                             border: OutlineInputBorder(
@@ -250,7 +250,7 @@ class _AddSessionScreenState extends State<AddSessionScreen> {
 
                     // Status Selection
                     DropdownButtonFormField<String>(
-                      value: _selectedStatus,
+                      initialValue: _selectedStatus,
                       decoration: InputDecoration(
                         labelText: t.sessionStatus,
                         border: OutlineInputBorder(
@@ -274,7 +274,7 @@ class _AddSessionScreenState extends State<AddSessionScreen> {
 
                     // Payment Status Selection
                     DropdownButtonFormField<String>(
-                      value: _selectedPaymentStatus,
+                      initialValue: _selectedPaymentStatus,
                       decoration: InputDecoration(
                         labelText: t.paymentStatus,
                         border: OutlineInputBorder(

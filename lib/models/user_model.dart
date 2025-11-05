@@ -7,11 +7,7 @@ class User {
   final String lastName;
   final String email;
   final String phoneNumber;
-  final DateTime birthdate;
-  final String gender;
   final DateTime createdAt;
-  final String profileImage;
-  final String? role;
 
   User({
     required this.uid,
@@ -20,12 +16,7 @@ class User {
     required this.lastName,
     required this.email,
     required this.phoneNumber,
-    required this.birthdate,
-    required this.gender,
-    required this.createdAt,
-    required this.profileImage,
-
-    required this.role,
+    required this.createdAt
   });
 
   // Factory method to create a User from Firestore document
@@ -38,14 +29,7 @@ class User {
       lastName: data['lastName'] ?? '',
       email: data['email'] ?? '',
       phoneNumber: data['phoneNumber'] ?? '',
-      birthdate: (data['birthdate'] ?? DateTime.now() as Timestamp).toDate(),
-      gender: data['gender'] ?? '',
       createdAt: (data['createdAt'] ?? DateTime.now() as Timestamp).toDate(),
-      profileImage: data['profileImage'] ?? '',
-
-      // get role from data if exists, else default to 'sponsor'
-      role: data['role']
-
     );
   }
 
@@ -58,11 +42,7 @@ class User {
       'lastName': lastName,
       'email': email,
       'phoneNumber': phoneNumber,
-      'birthdate': Timestamp.fromDate(birthdate),
-      'gender': gender,
       'createdAt': FieldValue.serverTimestamp(),
-      'profileImage': profileImage,
-      'role': role,
     };
   }
 }

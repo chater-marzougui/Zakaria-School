@@ -185,7 +185,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Text(
                       loc.signInToContinueYourJourney,
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 180),
+                        color: theme.textTheme.bodyMedium?.color?.withAlpha(180),
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -204,11 +204,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   decoration: InputDecoration(
                     labelText: loc.emailAddress,
                     labelStyle: TextStyle(
-                      color: theme.colorScheme.primary.withValues(alpha: 205),
+                      color: theme.colorScheme.primary.withAlpha(205),
                     ),
                     hintText: loc.enterYourEmail,
                     hintStyle: TextStyle(
-                      color: theme.textTheme.bodyLarge?.color?.withValues(alpha: 128),
+                      color: theme.textTheme.bodyLarge?.color?.withAlpha(128),
                     ),
                     prefixIcon: Icon(
                       Icons.email_outlined,
@@ -217,13 +217,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(
-                        color: theme.colorScheme.primary.withValues(alpha: 75),
+                        color: theme.colorScheme.primary.withAlpha(75),
                       ),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(
-                        color: theme.colorScheme.primary.withValues(alpha: 75),
+                        color: theme.colorScheme.primary.withAlpha(75),
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
@@ -254,11 +254,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   decoration: InputDecoration(
                     labelText: 'Password',
                     labelStyle: TextStyle(
-                      color: theme.colorScheme.primary.withValues(alpha: 205),
+                      color: theme.colorScheme.primary.withAlpha(205),
                     ),
                     hintText: loc.enterYourPassword,
                     hintStyle: TextStyle(
-                      color: theme.textTheme.bodyLarge?.color?.withValues(alpha: 128),
+                      color: theme.textTheme.bodyLarge?.color?.withAlpha(128),
                     ),
                     prefixIcon: Icon(
                       Icons.lock_outline,
@@ -267,7 +267,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     suffixIcon: IconButton(
                       icon: Icon(
                         _isObscure ? Icons.visibility_off : Icons.visibility,
-                        color: theme.colorScheme.primary.withValues(alpha: 180),
+                        color: theme.colorScheme.primary.withAlpha(180),
                       ),
                       onPressed: () {
                         setState(() {
@@ -278,13 +278,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(
-                        color: theme.colorScheme.primary.withValues(alpha: 75),
+                        color: theme.colorScheme.primary.withAlpha(75),
                       ),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(
-                        color: theme.colorScheme.primary.withValues(alpha: 75),
+                        color: theme.colorScheme.primary.withAlpha(75),
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
@@ -314,11 +314,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     backgroundColor: theme.colorScheme.primary,
                     foregroundColor: Colors.white,
                     elevation: 2,
-                    shadowColor: theme.colorScheme.primary.withValues(alpha: 75),
+                    shadowColor: theme.colorScheme.primary.withAlpha(75),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    disabledBackgroundColor: theme.colorScheme.primary.withValues(alpha: 150),
+                    disabledBackgroundColor: theme.colorScheme.primary.withAlpha(150),
                   ),
                   child: _isLoading
                       ? SizedBox(
@@ -339,36 +339,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       letterSpacing: 0.5,
                     ),
                   ),
-                ),
-              ),
-
-              // Divider
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 20),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        height: 1,
-                        color: theme.dividerColor,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Text(
-                        loc.orContinueWith,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.textTheme.bodySmall?.color?.withValues(alpha: 144),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        height: 1,
-                        color: theme.dividerColor,
-                      ),
-                    ),
-                  ],
                 ),
               ),
             ],

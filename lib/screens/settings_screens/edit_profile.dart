@@ -409,9 +409,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   ImageProvider _getProfileImage() {
     if (_imageFile != null) {
       return FileImage(_imageFile!);
-    } else if (goraUser?.profileImage != null &&
-        goraUser!.profileImage.isNotEmpty) {
-      return NetworkImage(goraUser!.profileImage);
     } else {
       return const AssetImage('assets/icons/default_profile_pic_man.png');
     }

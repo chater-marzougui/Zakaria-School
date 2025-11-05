@@ -112,11 +112,7 @@ Then, add user document in Firestore:
      "firstName": "Test",
      "lastName": "Instructor",
      "phoneNumber": "+21612345678",
-     "birthdate": <Timestamp>,
-     "gender": "male",
-     "createdAt": <Timestamp>,
-     "profileImage": "",
-     "role": "instructor"
+     "createdAt": <Timestamp>
    }
    ```
 

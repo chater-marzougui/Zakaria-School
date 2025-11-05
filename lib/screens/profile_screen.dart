@@ -74,9 +74,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildProfileImage() {
     return CircleAvatar(
       radius: _profileImageRadius,
-      backgroundImage: goraUser?.profileImage.isNotEmpty == true
-          ? NetworkImage(goraUser!.profileImage)
-          : const AssetImage('assets/icons/default_profile_pic_man.png')
+      backgroundImage: const AssetImage('assets/icons/default_profile_pic_man.png')
       as ImageProvider,
     );
   }

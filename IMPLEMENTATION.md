@@ -304,7 +304,7 @@ class User {
 - Dialog titles and content
 
 **Usage Pattern**:
-```dart
+```
 final t = AppLocalizations.of(context)!;
 Text(t.dashboard); // Translated text
 ```
@@ -328,7 +328,7 @@ Text(t.dashboard); // Translated text
 - Card: Dark (#1E1E1E)
 
 **Theme Access Pattern**:
-```dart
+```
 final theme = Theme.of(context);
 color: theme.colorScheme.primary.withAlpha(128)
 ```
