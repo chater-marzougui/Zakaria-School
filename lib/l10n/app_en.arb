@@ -244,5 +244,8 @@
   "failedToCheckSessionOverlap": "Failed to check session overlap: {error}",
   "failedToGetStatistics": "Failed to get statistics: {error}",
   "exportedTo": "Exported to:\n{candidatesPath}\n{sessionsPath}",
-  "failedToSaveFile": "Failed to save file: {error}"
+  "failedToSaveFile": "Failed to save file: {error}",
+  "developerToolsWarning": "⚠️ Warning: These tools are for testing only. Use with caution!",
+  "databaseStatistics": "📊 Database Statistics",
+  "quickActions": "⚡ Quick Actions"
 }

@@ -244,5 +244,8 @@
   "failedToCheckSessionOverlap": "Échec de la vérification du chevauchement des sessions : {error}",
   "failedToGetStatistics": "Échec de la récupération des statistiques : {error}",
   "exportedTo": "Exporté vers :\n{candidatesPath}\n{sessionsPath}",
-  "failedToSaveFile": "Échec de l'enregistrement du fichier : {error}"
+  "failedToSaveFile": "Échec de l'enregistrement du fichier : {error}",
+  "developerToolsWarning": "⚠️ Attention : Ces outils sont à des fins de test uniquement. Utilisez avec précaution !",
+  "databaseStatistics": "📊 Statistiques de la base de données",
+  "quickActions": "⚡ Actions rapides"
 }

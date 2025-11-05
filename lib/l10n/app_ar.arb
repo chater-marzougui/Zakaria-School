@@ -244,5 +244,8 @@
   "failedToCheckSessionOverlap": "فشل التحقق من تداخل الجلسات: {error}",
   "failedToGetStatistics": "فشل الحصول على الإحصائيات: {error}",
   "exportedTo": "تم التصدير إلى:\n{candidatesPath}\n{sessionsPath}",
-  "failedToSaveFile": "فشل حفظ الملف: {error}"
+  "failedToSaveFile": "فشل حفظ الملف: {error}",
+  "developerToolsWarning": "⚠️ تحذير: هذه الأدوات للاختبار فقط. استخدمها بحذر!",
+  "databaseStatistics": "📊 إحصائيات قاعدة البيانات",
+  "quickActions": "⚡ إجراءات سريعة"
 }

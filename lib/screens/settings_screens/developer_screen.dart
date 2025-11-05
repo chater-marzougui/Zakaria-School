@@ -227,7 +227,7 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
                           const SizedBox(width: 12),
                           Expanded(
                             child: Text(
-                              '⚠️ Warning: These tools are for testing only. Use with caution!',
+                              t.developerToolsWarning,
                               style: TextStyle(
                                 color: Colors.orange[900],
                                 fontWeight: FontWeight.bold,
@@ -243,7 +243,7 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
 
                   // Statistics Section
                   Text(
-                    '📊 Database Statistics',
+                    t.databaseStatistics,
                     style: theme.textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -291,7 +291,7 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
 
                   // Actions Section
                   Text(
-                    '⚡ Quick Actions',
+                    t.quickActions,
                     style: theme.textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
