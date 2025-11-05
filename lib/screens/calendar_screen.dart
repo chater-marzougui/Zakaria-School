@@ -104,16 +104,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   .where('date',
                       isLessThan: Timestamp.fromDate(weekEnd.add(const Duration(days: 1))))
                   .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
+              builder: (context, sessionsSnapshot) {
+                if (sessionsSnapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
+                if (sessionsSnapshot.hasError) {
+                  return Center(child: Text('Error: ${sessionsSnapshot.error}'));
                 }
 
-                final sessions = snapshot.data?.docs
+                final sessions = sessionsSnapshot.data?.docs
                     .map((doc) => structs.Session.fromFirestore(doc))
                     .toList() ?? [];
 
@@ -139,7 +139,24 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   );
                 }
 
-                return _buildImprovedCalendarGrid(sessions);
+                // Fetch all candidates to avoid N+1 query issue
+                return StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance.collection('candidates').snapshots(),
+                  builder: (context, candidatesSnapshot) {
+                    if (!candidatesSnapshot.hasData) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    // Create a map for quick lookups
+                    final candidatesMap = <String, structs.Candidate>{};
+                    for (var doc in candidatesSnapshot.data!.docs) {
+                      final candidate = structs.Candidate.fromFirestore(doc);
+                      candidatesMap[candidate.id] = candidate;
+                    }
+
+                    return _buildImprovedCalendarGrid(sessions, candidatesMap);
+                  },
+                );
               },
             ),
           ),
@@ -154,7 +171,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  Widget _buildImprovedCalendarGrid(List<structs.Session> sessions) {
+  Widget _buildImprovedCalendarGrid(List<structs.Session> sessions, Map<String, structs.Candidate> candidatesMap) {
     final theme = Theme.of(context);
     
     // Generate time slots with 15-minute intervals (8:00 AM to 8:00 PM)
@@ -279,7 +296,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       ),
                       child: sessionsAtTime.isEmpty
                           ? null
-                          : _buildSessionCells(sessionsAtTime, timeInMinutes),
+                          : _buildSessionCells(sessionsAtTime, timeInMinutes, candidatesMap),
                     );
                   }),
                 ],
@@ -326,25 +343,25 @@ class _CalendarScreenState extends State<CalendarScreen> {
     }
   }
 
-  Widget _buildSessionCells(List<structs.Session> sessions, int timeInMinutes) {
+  Widget _buildSessionCells(List<structs.Session> sessions, int timeInMinutes, Map<String, structs.Candidate> candidatesMap) {
     if (sessions.isEmpty) return const SizedBox();
     
     // If multiple sessions overlap, show them side by side
     if (sessions.length == 1) {
-      return _buildSessionCell(sessions[0], timeInMinutes, isFirst: true, width: 150);
+      return _buildSessionCell(sessions[0], timeInMinutes, candidatesMap, isFirst: true, width: 150);
     } else {
       // Multiple sessions - show side by side
       final cellWidth = 150.0 / sessions.length;
       return Row(
         children: sessions.map((session) {
           final isFirst = sessions.indexOf(session) == 0;
-          return _buildSessionCell(session, timeInMinutes, isFirst: isFirst, width: cellWidth);
+          return _buildSessionCell(session, timeInMinutes, candidatesMap, isFirst: isFirst, width: cellWidth);
         }).toList(),
       );
     }
   }
 
-  Widget _buildSessionCell(structs.Session session, int timeInMinutes, {required bool isFirst, required double width}) {
+  Widget _buildSessionCell(structs.Session session, int timeInMinutes, Map<String, structs.Candidate> candidatesMap, {required bool isFirst, required double width}) {
     final theme = Theme.of(context);
     final sessionStart = _timeToMinutes(session.startTime);
     
@@ -366,43 +383,40 @@ class _CalendarScreenState extends State<CalendarScreen> {
         ),
         padding: const EdgeInsets.all(2),
         child: showContent
-            ? FutureBuilder<DocumentSnapshot>(
-                future: FirebaseFirestore.instance
-                    .collection('candidates')
-                    .doc(session.candidateId)
-                    .get(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData && snapshot.data!.exists) {
-                    final candidate = structs.Candidate.fromFirestore(snapshot.data!);
-                    return Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          candidate.name,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 9,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
-                          '${session.startTime}-${session.endTime}',
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: Colors.white,
-                            fontSize: 8,
-                          ),
-                        ),
-                      ],
-                    );
-                  }
-                  return const SizedBox();
-                },
-              )
+            ? _buildSessionContent(session, candidatesMap)
             : null,
       ),
+    );
+  }
+
+  Widget? _buildSessionContent(structs.Session session, Map<String, structs.Candidate> candidatesMap) {
+    final theme = Theme.of(context);
+    final candidate = candidatesMap[session.candidateId];
+    
+    if (candidate == null) return null;
+    
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          candidate.name,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 9,
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        Text(
+          '${session.startTime}-${session.endTime}',
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: Colors.white,
+            fontSize: 8,
+          ),
+        ),
+      ],
     );
   }
 

@@ -81,7 +81,7 @@ class _AddSessionScreenState extends State<AddSessionScreen> {
                     Row(
                       children: [
                         Expanded(
-                          child: Text(t.hour ?? 'Hour'),
+                          child: Text(t.hour),
                         ),
                         DropdownButton<int>(
                           value: selectedTime.hour,
@@ -105,8 +105,8 @@ class _AddSessionScreenState extends State<AddSessionScreen> {
                     // Minute selection (15-minute intervals)
                     Row(
                       children: [
-                        Expanded(
-                          child: Text(t.minute ?? 'Minute'),
+                        const Expanded(
+                          child: Text('Minute'),
                         ),
                         DropdownButton<int>(
                           value: selectedTime.minute,
