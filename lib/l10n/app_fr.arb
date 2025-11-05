@@ -134,5 +134,7 @@
   "wouldYouLikeToTakeAPictureOrChooseFromGallery": "Voulez-vous prendre une photo ou choisir dans la galerie ?",
   "wrongPassword": "Mauvais mot de passe",
   "yes": "Oui",
-  "youCanInteractWithMeInMultipleWays": "Vous pouvez interagir avec moi de plusieurs manières :"
+  "youCanInteractWithMeInMultipleWays": "Vous pouvez interagir avec moi de plusieurs manières :",
+  "edit": "Modifier",
+  "duration": "Durée"
 }

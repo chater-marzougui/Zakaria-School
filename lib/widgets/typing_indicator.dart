@@ -4,9 +4,9 @@ class TypingIndicator extends StatefulWidget {
   final Color color;
 
   const TypingIndicator({
-    Key? key,
+    super.key,
     required this.color,
-  }) : super(key: key);
+  });
 
   @override
   State<TypingIndicator> createState() => _TypingIndicatorState();

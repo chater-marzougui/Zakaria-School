@@ -134,5 +134,7 @@
   "wouldYouLikeToTakeAPictureOrChooseFromGallery": "Would you like to take a picture or choose from gallery?",
   "wrongPassword": "Wrong password",
   "yes": "Yes",
-  "youCanInteractWithMeInMultipleWays": "You can interact with me in multiple ways:"
+  "youCanInteractWithMeInMultipleWays": "You can interact with me in multiple ways:",
+  "edit": "Edit",
+  "duration": "Duration"
 }

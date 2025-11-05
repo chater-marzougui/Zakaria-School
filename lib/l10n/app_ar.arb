@@ -134,5 +134,7 @@
   "wouldYouLikeToTakeAPictureOrChooseFromGallery": "هل ترغب في التقاط صورة أو الاختيار من المعرض؟",
   "wrongPassword": "كلمة مرور خاطئة",
   "yes": "نعم",
-  "youCanInteractWithMeInMultipleWays": "يمكنك التفاعل معي بعدة طرق:"
+  "youCanInteractWithMeInMultipleWays": "يمكنك التفاعل معي بعدة طرق:",
+  "edit": "تعديل",
+  "duration": "المدة"
 }

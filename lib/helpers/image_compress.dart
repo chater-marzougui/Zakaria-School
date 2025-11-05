@@ -43,7 +43,6 @@ class ImageCompressor {
 
       return uint8List;
     } catch (e) {
-      print('Image compression error: $e');
       return null;
     }
   }
