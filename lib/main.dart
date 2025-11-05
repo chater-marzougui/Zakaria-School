@@ -6,6 +6,7 @@ import 'firebase_options.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'l10n/app_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'screens/add_session_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -66,7 +67,7 @@ class MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'HRAYER',
+      title: 'École de Conduite Zakaria',
       themeMode: _themeMode,
       locale: _locale,
       theme: _lightTheme(),
@@ -91,6 +92,7 @@ class MyAppState extends State<MyApp> {
       ],
       routes: {
         'auth': (context) => const AuthWrapper(),
+        '/add-session': (context) => const AddSessionScreen(),
       },
     );
   }

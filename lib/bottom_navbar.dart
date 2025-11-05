@@ -5,8 +5,11 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'l10n/app_localizations.dart';
 
-// Shared pages
-import 'screens/profile_screen.dart';
+// Screens
+import 'screens/dashboard_screen.dart';
+import 'screens/calendar_screen.dart';
+import 'screens/candidates_list_screen.dart';
+import 'screens/settings_screens/settings_page.dart';
 
 class BottomNavbar extends StatefulWidget {
   const BottomNavbar({super.key});
@@ -34,28 +37,28 @@ class _HomePageState extends State<BottomNavbar> {
   @override
   void initState() {
     super.initState();
+    role = "instructor"; // Set a default role since we don't have RBAC
   }
 
   void _setupPages() {
 
     final loc = AppLocalizations.of(context)!;
       _pages = [
-        const ProfileScreen(),
+        const DashboardScreen(),
+        const CalendarScreen(),
+        const CandidatesListScreen(),
+        const SettingsPage(),
       ];
 
       _navItems = [
         BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard), label: loc.dashboard),
+            icon: const Icon(Icons.dashboard), label: loc.dashboard),
         BottomNavigationBarItem(
-            icon: const Icon(Icons.add_photo_alternate), label: loc.addLand),
+            icon: const Icon(Icons.calendar_today), label: loc.calendar),
         BottomNavigationBarItem(
-            icon: Icon(Icons.upload_file), label: loc.proofs),
+            icon: const Icon(Icons.people), label: loc.candidates),
         BottomNavigationBarItem(
-            icon: const Icon(Icons.psychology), label: loc.aiChat),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.group), label: loc.conversations),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.person), label: loc.profile),
+            icon: const Icon(Icons.settings), label: loc.settings),
       ];
 
     _pageWidgets = _pages.asMap().entries.map((entry) {

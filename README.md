@@ -1,3 +1,34 @@
+# École de Conduite Zakaria - Driving School Management App
+
+## 🚀 Quick Links
+
+- **[SETUP.md](SETUP.md)** - Step-by-step setup guide to get started
+- **[IMPLEMENTATION.md](IMPLEMENTATION.md)** - Complete technical documentation
+- **[firebase_options.dart.template](firebase_options.dart.template)** - Firebase configuration template
+
+## ✅ Implementation Status
+
+All core features from the requirements have been successfully implemented:
+- ✅ User authentication (email/password login)
+- ✅ Dashboard with session overview and statistics
+- ✅ Weekly calendar view with color-coded sessions
+- ✅ Complete candidate management (CRUD operations)
+- ✅ Session scheduling and tracking
+- ✅ Payment tracking per candidate
+- ✅ CSV data export functionality
+- ✅ Multi-language support (EN, FR, AR)
+- ✅ Dark/Light theme support
+- ✅ SMS/WhatsApp/Call integration
+- ✅ Settings and configuration management
+
+## 📱 Screenshots
+
+*(Add screenshots here after running the app)*
+
+---
+
+## Project Specification
+
 Framework: Flutter
 Backend: Firebase (Firestore + Auth + optional Storage)
 Purpose: Driving school (auto-école) management app with scheduling, candidate tracking, and payments.
