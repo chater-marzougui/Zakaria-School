@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../l10n/app_localizations.dart';
 import '../models/structs.dart' as structs;
 import '../services/db_service.dart';
+import '../helpers/validators.dart';
 
 class CandidateDetailScreen extends StatefulWidget {
   final structs.Candidate candidate;
@@ -526,7 +527,8 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> with Sing
     
     final formKey = GlobalKey<FormState>();
 
-    await showDialog(
+    try {
+      await showDialog(
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
@@ -564,16 +566,12 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> with Sing
                       ),
                     ),
                     keyboardType: TextInputType.phone,
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return t.pleaseEnterLabel.replaceAll('{label}', t.phoneNumber);
-                      }
-                      // Basic phone validation (at least 8 digits)
-                      if (value.replaceAll(RegExp(r'\D'), '').length < 8) {
-                        return t.phoneNumberInvalid;
-                      }
-                      return null;
-                    },
+                    validator: (value) => Validators.validatePhone(
+                      value,
+                      errorMessage: value == null || value.trim().isEmpty
+                          ? t.pleaseEnterLabel.replaceAll('{label}', t.phoneNumber)
+                          : t.phoneNumberInvalid,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
@@ -588,14 +586,10 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> with Sing
                     ),
                     keyboardType: TextInputType.number,
                     maxLength: 8,
-                    validator: (value) {
-                      if (value != null && value.isNotEmpty) {
-                        if (value.length != 8 || !RegExp(r'^\d+$').hasMatch(value)) {
-                          return t.cinInvalid;
-                        }
-                      }
-                      return null;
-                    },
+                    validator: (value) => Validators.validateCIN(
+                      value,
+                      errorMessage: t.cinInvalid,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
@@ -693,12 +687,13 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> with Sing
         ),
       ),
     );
-
-    // Clean up controllers
-    nameController.dispose();
-    phoneController.dispose();
-    cinController.dispose();
-    instructorController.dispose();
+    } finally {
+      // Clean up controllers
+      nameController.dispose();
+      phoneController.dispose();
+      cinController.dispose();
+      instructorController.dispose();
+    }
   }
 
   void _showDeleteConfirmation() async {

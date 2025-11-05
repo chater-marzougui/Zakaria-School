@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../l10n/app_localizations.dart';
 import '../models/structs.dart' as structs;
 import '../services/db_service.dart';
+import '../helpers/validators.dart';
 import 'candidate_detail_screen.dart';
 
 class CandidatesListScreen extends StatefulWidget {
@@ -170,7 +171,7 @@ class _CandidatesListScreenState extends State<CandidatesListScreen> {
                       // Apply search filter
                       if (_searchQuery.isNotEmpty) {
                         bool matchesSearch = c.name.toLowerCase().contains(_searchQuery) ||
-                            c.phone.contains(_searchQuery) ||
+                            c.phone.toLowerCase().contains(_searchQuery) ||
                             c.cin.toLowerCase().contains(_searchQuery);
                         if (!matchesSearch) return false;
                       }
@@ -318,16 +319,12 @@ class _CandidatesListScreenState extends State<CandidatesListScreen> {
                     ),
                   ),
                   keyboardType: TextInputType.phone,
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return t.pleaseEnterLabel.replaceAll('{label}', t.phoneNumber);
-                    }
-                    // Basic phone validation (at least 8 digits)
-                    if (value.replaceAll(RegExp(r'\D'), '').length < 8) {
-                      return t.phoneNumberInvalid;
-                    }
-                    return null;
-                  },
+                  validator: (value) => Validators.validatePhone(
+                    value,
+                    errorMessage: value == null || value.trim().isEmpty
+                        ? t.pleaseEnterLabel.replaceAll('{label}', t.phoneNumber)
+                        : t.phoneNumberInvalid,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -338,18 +335,14 @@ class _CandidatesListScreenState extends State<CandidatesListScreen> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    hintText: '12345678 (${t.cancel.toLowerCase()})',
+                    hintText: '12345678 (optional)',
                   ),
                   keyboardType: TextInputType.number,
                   maxLength: 8,
-                  validator: (value) {
-                    if (value != null && value.isNotEmpty) {
-                      if (value.length != 8 || !RegExp(r'^\d+$').hasMatch(value)) {
-                        return t.cinInvalid;
-                      }
-                    }
-                    return null;
-                  },
+                  validator: (value) => Validators.validateCIN(
+                    value,
+                    errorMessage: t.cinInvalid,
+                  ),
                 ),
               ],
             ),
