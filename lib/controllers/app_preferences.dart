@@ -16,6 +16,7 @@ class AppPreferences {
     try {
       return await _prefs.setString(_keyPreferredLanguage, language);
     } catch (e) {
+      debugPrint('Error setting preferred language: $e'); // ✅ Added logging
       return false;
     }
   }
@@ -24,6 +25,7 @@ class AppPreferences {
     try {
       return _prefs.getString(_keyPreferredLanguage) ?? 'en';
     } catch (e) {
+      debugPrint('Error getting preferred language: $e');
       return 'en';
     }
   }
@@ -33,6 +35,7 @@ class AppPreferences {
     try {
       return await _prefs.setString(_keyThemeMode, themeMode);
     } catch (e) {
+      debugPrint('Error setting theme mode: $e');
       return false;
     }
   }
@@ -41,6 +44,7 @@ class AppPreferences {
     try {
       return _prefs.getString(_keyThemeMode) ?? 'light';
     } catch (e) {
+      debugPrint('Error getting theme mode: $e');
       return 'light';
     }
   }
@@ -50,6 +54,7 @@ class AppPreferences {
     try {
       return await _prefs.setBool(_keyNotificationsEnabled, isEnabled);
     } catch (e) {
+      debugPrint('Error setting notifications: $e');
       return false;
     }
   }
@@ -58,13 +63,14 @@ class AppPreferences {
     try {
       return _prefs.getBool(_keyNotificationsEnabled) ?? true;
     } catch (e) {
+      debugPrint('Error getting notifications setting: $e');
       return true;
     }
   }
 
   Future<void> initDefaults() async {
     if (!_prefs.containsKey(_keyPreferredLanguage)) {
-      final String systemLanguage = await getSystemLanguage();
+      final String systemLanguage = getSystemLanguage(); // ✅ Removed await (not async)
       await setPreferredLanguage(systemLanguage);
     }
     if (!_prefs.containsKey(_keyThemeMode)) {
@@ -76,12 +82,13 @@ class AppPreferences {
     }
   }
 
-  Future<String> getSystemLanguage() async {
+  String getSystemLanguage() { // ✅ Removed async/Future
     try {
       final String systemLocale = Platform.localeName.split('_')[0];
       if (["ar", "fr", "en", "tn"].contains(systemLocale)) return systemLocale;
-      return systemLocale;
+      return 'en'; // ✅ Changed default to 'en'
     } catch (e) {
+      debugPrint('Error getting system language: $e');
       return 'en';
     }
   }
@@ -91,6 +98,7 @@ class AppPreferences {
       final brightness = WidgetsBinding.instance.platformDispatcher.platformBrightness;
       return brightness == Brightness.dark ? 'dark' : 'light';
     } catch (e) {
+      debugPrint('Error getting system theme: $e');
       return 'light';
     }
   }
@@ -100,6 +108,7 @@ class AppPreferences {
     try {
       return await _prefs.clear();
     } catch (e) {
+      debugPrint('Error clearing preferences: $e');
       return false;
     }
   }

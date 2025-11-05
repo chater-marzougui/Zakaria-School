@@ -38,7 +38,7 @@ class AuthWrapper extends StatelessWidget {
             }
           );
         } else {
-          return LoginScreen();
+          return const LoginScreen();
         }
       },
     );

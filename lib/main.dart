@@ -4,16 +4,21 @@ import 'controllers/app_preferences.dart';
 import 'controllers/auth_wrapper.dart';
 import 'firebase_options.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'helpers/seed_db.dart';
 import 'l10n/app_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'screens/add_session_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (Firebase.apps.isEmpty) {
     await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    FirebaseFirestore.instance.settings = Settings(cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED);
+    FirebaseFirestore.instance.settings = Settings(persistenceEnabled: true);
   }
   final prefs = await SharedPreferences.getInstance();
+  await TestDataGenerator.ensureTestData();
   final appPreferences = AppPreferences(prefs);
   await appPreferences.initDefaults();
   runApp(MyApp(appPreferences: appPreferences));

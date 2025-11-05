@@ -166,8 +166,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
         child: DataTable(
           columnSpacing: 8,
           horizontalMargin: 8,
-          headingRowHeight: 40,
-          dataRowHeight: 60,
+          headingRowHeight: 50,
+          dataRowMinHeight: 60,
+          dataRowMaxHeight: 65,
           columns: [
             DataColumn(
               label: SizedBox(

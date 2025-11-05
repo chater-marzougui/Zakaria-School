@@ -1,6 +1,4 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'l10n/app_localizations.dart';
 
 // Screens
@@ -13,17 +11,17 @@ class BottomNavbar extends StatefulWidget {
   const BottomNavbar({super.key});
 
   static void switchToPage(BuildContext context, int index) {
-    final state = context.findAncestorStateOfType<_HomePageState>();
+    final state = context.findAncestorStateOfType<_BottomNavbarState>();
     if (state != null) {
       state._onItemTapped(index);
     }
   }
 
   @override
-  State<BottomNavbar> createState() => _HomePageState();
+  State<BottomNavbar> createState() => _BottomNavbarState();
 }
 
-class _HomePageState extends State<BottomNavbar> {
+class _BottomNavbarState extends State<BottomNavbar> {
   int _selectedIndex = 0;
   String? role;
   DateTime? lastPressed;
@@ -79,36 +77,24 @@ class _HomePageState extends State<BottomNavbar> {
       ),
     ];
 
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (bool didPop, Object? result) async {
-        final now = DateTime.now();
-        if (lastPressed == null ||
-            now.difference(lastPressed!) > const Duration(seconds: 2)) {
-          lastPressed = now;
-          Fluttertoast.showToast(msg: loc.tapAgainToExit);
-        } else {
-          SystemNavigator.pop();
-        }
-      },
-      child: Scaffold(
-        backgroundColor: theme.scaffoldBackgroundColor,
-        body: SafeArea(
-          child: IndexedStack(
-            index: _selectedIndex,
-            children: pages,
-          ),
+    return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
+      body: SafeArea(
+        child: IndexedStack(
+          index: _selectedIndex,
+          children: pages,
         ),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _selectedIndex,
-          backgroundColor: theme.cardColor,
-          onTap: _onItemTapped,
-          selectedItemColor: theme.primaryColor,
-          unselectedItemColor: theme.colorScheme.tertiary,
-          showSelectedLabels: true,
-          showUnselectedLabels: true,
-          items: navItems,
-        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        backgroundColor: theme.cardColor,
+        type: BottomNavigationBarType.fixed,
+        onTap: _onItemTapped,
+        selectedItemColor: theme.primaryColor,
+        unselectedItemColor: theme.colorScheme.tertiary,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
+        items: navItems,
       ),
     );
   }

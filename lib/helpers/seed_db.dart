@@ -24,7 +24,6 @@ class TestDataGenerator {
 
   static final List<String> _statuses = ['active', 'graduated', 'inactive'];
   static final List<String> _sessionStatuses = ['scheduled', 'done', 'missed', 'rescheduled'];
-  static final List<String> _paymentStatuses = ['paid', 'unpaid'];
 
   static final List<String> _notes = [
     'Good progress, needs more practice on parallel parking',
@@ -62,9 +61,9 @@ class TestDataGenerator {
       // Create candidates if needed
       List<String> candidateIds = candidatesSnapshot.docs.map((doc) => doc.id).toList();
 
-      if (candidatesCount < 10) {
-        print('\n📝 Creating ${10 - candidatesCount} candidates...');
-        final newIds = await _createCandidates(10 - candidatesCount);
+      if (candidatesCount < 21) {
+        print('\n📝 Creating ${21 - candidatesCount} candidates...');
+        final newIds = await _createCandidates(21 - candidatesCount);
         candidateIds.addAll(newIds);
         print('   ✅ Candidates created successfully');
       } else {
@@ -72,9 +71,9 @@ class TestDataGenerator {
       }
 
       // Create sessions if needed
-      if (sessionsCount < 30) {
-        print('\n📅 Creating ${30 - sessionsCount} sessions...');
-        await _createSessions(30 - sessionsCount, candidateIds);
+      if (sessionsCount < 180) {
+        print('\n📅 Creating ${180 - sessionsCount} sessions...');
+        await _createSessions(180 - sessionsCount, candidateIds);
         print('   ✅ Sessions created successfully');
       } else {
         print('   ✅ Sufficient sessions exist');
@@ -82,7 +81,7 @@ class TestDataGenerator {
 
       print('\n🎉 Test data setup complete!');
       print('   Total candidates: ${candidateIds.length}');
-      print('   Total sessions: ${sessionsCount < 30 ? 30 : sessionsCount}');
+      print('   Total sessions: ${sessionsCount < 180 ? 180 : sessionsCount}');
 
     } catch (e) {
       print('❌ Error ensuring test data: $e');
