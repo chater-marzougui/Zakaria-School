@@ -171,7 +171,7 @@ class _CandidatesListScreenState extends State<CandidatesListScreen> {
                       // Apply search filter
                       if (_searchQuery.isNotEmpty) {
                         bool matchesSearch = c.name.toLowerCase().contains(_searchQuery) ||
-                            c.phone.toLowerCase().contains(_searchQuery) ||
+                            c.phone.contains(_searchQuery) ||
                             c.cin.toLowerCase().contains(_searchQuery);
                         if (!matchesSearch) return false;
                       }
