@@ -63,7 +63,7 @@ class TestDataGenerator {
 
       if (candidatesCount < 21) {
         print('\n📝 Creating ${21 - candidatesCount} candidates...');
-        final newIds = await _createCandidates(21 - candidatesCount);
+        final newIds = await createCandidates(21 - candidatesCount);
         candidateIds.addAll(newIds);
         print('   ✅ Candidates created successfully');
       } else {
@@ -73,7 +73,7 @@ class TestDataGenerator {
       // Create sessions if needed
       if (sessionsCount < 180) {
         print('\n📅 Creating ${180 - sessionsCount} sessions...');
-        await _createSessions(180 - sessionsCount, candidateIds);
+        await createSessions(180 - sessionsCount, candidateIds);
         print('   ✅ Sessions created successfully');
       } else {
         print('   ✅ Sufficient sessions exist');
@@ -90,7 +90,7 @@ class TestDataGenerator {
   }
 
   /// Create fake candidates
-  static Future<List<String>> _createCandidates(int count) async {
+  static Future<List<String>> createCandidates(int count) async {
     final List<String> createdIds = [];
     final batch = FirebaseFirestore.instance.batch();
 
@@ -109,7 +109,7 @@ class TestDataGenerator {
   }
 
   /// Create fake sessions
-  static Future<void> _createSessions(int count, List<String> candidateIds) async {
+  static Future<void> createSessions(int count, List<String> candidateIds) async {
     if (candidateIds.isEmpty) {
       print('   ⚠️  No candidates available to create sessions');
       return;
