@@ -233,9 +233,10 @@ class _SettingsPageState extends State<SettingsPage> {
     });
 
     try {
-      final path = await ExportService.exportAllDataToCSV();
+      final paths = await ExportService.exportAllDataToCSV();
       if (mounted) {
-        showCustomSnackBar(context, '${loc.dataExported}\n$path');
+        final message = loc.exportedTo(paths['candidatesPath']!, paths['sessionsPath']!);
+        showCustomSnackBar(context, message);
       }
     } catch (e) {
       if (mounted) {

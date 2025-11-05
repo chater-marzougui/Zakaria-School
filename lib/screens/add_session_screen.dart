@@ -511,9 +511,18 @@ class _AddSessionScreenState extends State<AddSessionScreen> {
     } catch (e) {
       if (mounted) {
         final t = AppLocalizations.of(context)!;
+        String errorMessage;
+        
+        // Check if it's an overlap error and use localized message
+        if (e.toString().contains('already has a session at this time')) {
+          errorMessage = t.sessionOverlapError;
+        } else {
+          errorMessage = t.error(e.toString());
+        }
+        
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(t.error(e.toString())),
+            content: Text(errorMessage),
             backgroundColor: Colors.red,
             duration: const Duration(seconds: 4),
           ),
