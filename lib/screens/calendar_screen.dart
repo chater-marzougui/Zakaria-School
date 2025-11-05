@@ -314,10 +314,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   int _timeToMinutes(String timeString) {
-    final parts = timeString.split(':');
-    final hours = int.parse(parts[0]);
-    final minutes = int.parse(parts[1]);
-    return hours * 60 + minutes;
+    try {
+      final parts = timeString.split(':');
+      if (parts.length != 2) return 0;
+      final hours = int.parse(parts[0]);
+      final minutes = int.parse(parts[1]);
+      return hours * 60 + minutes;
+    } catch (e) {
+      // Return 0 for invalid time strings
+      return 0;
+    }
   }
 
   Widget _buildSessionCells(List<structs.Session> sessions, int timeInMinutes) {

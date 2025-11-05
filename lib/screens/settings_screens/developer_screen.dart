@@ -553,6 +553,27 @@ class _CustomDataDialogState extends State<_CustomDataDialog> {
             final candidates = int.tryParse(_candidatesController.text) ?? 0;
             final sessions = int.tryParse(_sessionsController.text) ?? 0;
             
+            // Validate reasonable limits
+            if (candidates > 1000) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Maximum 1000 candidates allowed'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+              return;
+            }
+            
+            if (sessions > 5000) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Maximum 5000 sessions allowed'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+              return;
+            }
+            
             if (candidates > 0 || sessions > 0) {
               Navigator.pop(context, {
                 'candidates': candidates,

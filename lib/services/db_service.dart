@@ -275,6 +275,13 @@ class DatabaseService {
   // ==================== VALIDATION HELPERS ====================
 
   /// Check if a session overlaps with existing sessions for a candidate
+  /// 
+  /// Algorithm: Two time ranges overlap if start1 < end2 AND start2 < end1
+  /// Example:
+  ///   Existing: 9:00-10:00
+  ///   New: 9:30-10:30 → OVERLAPS (9:30 < 10:00 AND 9:00 < 10:30)
+  ///   New: 10:00-11:00 → NO OVERLAP (10:00 >= 10:00)
+  /// 
   /// Returns true if there is an overlap
   static Future<bool> _checkSessionOverlap({
     required String candidateId,
