@@ -105,7 +105,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 }
 
                 if (sessionsSnapshot.hasError) {
-                  return Center(child: Text('Error: ${sessionsSnapshot.error}'));
+                  final t = AppLocalizations.of(context)!;
+                  return Center(child: Text(t.error(sessionsSnapshot.error.toString())));
                 }
 
                 final sessions = sessionsSnapshot.data?.docs

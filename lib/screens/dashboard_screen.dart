@@ -26,7 +26,7 @@ class DashboardScreen extends StatelessWidget {
           }
 
           if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return Center(child: Text(t.error(snapshot.error.toString())));
           }
 
           final sessions = snapshot.data?.docs
