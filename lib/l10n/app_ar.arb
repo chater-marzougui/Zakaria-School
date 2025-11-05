@@ -182,5 +182,7 @@
   "sortByProgress": "ترتيب حسب التقدم",
   "sortByRemainingHours": "ترتيب حسب الساعات المتبقية",
   "ascending": "تصاعدي",
-  "descending": "تنازلي"
+  "descending": "تنازلي",
+  "showingResults": "عرض {count} من {total} المرشحين",
+  "totalCandidates": "إجمالي المرشحين"
 }

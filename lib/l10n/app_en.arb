@@ -182,5 +182,7 @@
   "sortByProgress": "Sort by Progress",
   "sortByRemainingHours": "Sort by Remaining Hours",
   "ascending": "Ascending",
-  "descending": "Descending"
+  "descending": "Descending",
+  "showingResults": "Showing {count} of {total} candidates",
+  "totalCandidates": "Total Candidates"
 }

@@ -161,8 +161,11 @@ class _CandidatesListScreenState extends State<CandidatesListScreen> {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 }
 
-                final candidates = snapshot.data?.docs
+                final allCandidates = snapshot.data?.docs
                     .map((doc) => structs.Candidate.fromFirestore(doc))
+                    .toList() ?? [];
+
+                final candidates = allCandidates
                     .where((c) {
                       // Apply search filter
                       if (_searchQuery.isNotEmpty) {
@@ -179,7 +182,7 @@ class _CandidatesListScreenState extends State<CandidatesListScreen> {
                       
                       return true;
                     })
-                    .toList() ?? [];
+                    .toList();
 
                 // Apply sorting
                 candidates.sort((a, b) {
@@ -203,34 +206,57 @@ class _CandidatesListScreenState extends State<CandidatesListScreen> {
                   return _sortAscending ? comparison : -comparison;
                 });
 
-                if (candidates.isEmpty) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.person_add_outlined,
-                          size: 64,
-                          color: theme.textTheme.bodyMedium?.color?.withAlpha(100),
+                return Column(
+                  children: [
+                    // Results count
+                    if (allCandidates.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        child: Row(
+                          children: [
+                            Icon(Icons.info_outline, size: 16, color: theme.textTheme.bodySmall?.color),
+                            const SizedBox(width: 8),
+                            Text(
+                              t.showingResults
+                                  .replaceAll('{count}', candidates.length.toString())
+                                  .replaceAll('{total}', allCandidates.length.toString()),
+                              style: theme.textTheme.bodySmall,
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 16),
-                        Text(
-                          t.noCandidatesYet,
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            color: theme.textTheme.bodyMedium?.color?.withAlpha(150),
-                          ),
-                        ),
-                      ],
+                      ),
+                    
+                    // Candidates list or empty state
+                    Expanded(
+                      child: candidates.isEmpty
+                          ? Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.person_add_outlined,
+                                    size: 64,
+                                    color: theme.textTheme.bodyMedium?.color?.withAlpha(100),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    t.noCandidatesYet,
+                                    style: theme.textTheme.titleMedium?.copyWith(
+                                      color: theme.textTheme.bodyMedium?.color?.withAlpha(150),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : ListView.builder(
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              itemCount: candidates.length,
+                              itemBuilder: (context, index) {
+                                return _CandidateCard(candidate: candidates[index]);
+                              },
+                            ),
                     ),
-                  );
-                }
-
-                return ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: candidates.length,
-                  itemBuilder: (context, index) {
-                    return _CandidateCard(candidate: candidates[index]);
-                  },
+                  ],
                 );
               },
             ),
