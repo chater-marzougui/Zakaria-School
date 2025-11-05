@@ -1,7 +1,7 @@
 /// Validation utilities for form fields
 class Validators {
-  // Regular expression for validating CIN (8 digits)
-  static final RegExp _cinRegex = RegExp(r'^\d+$');
+  // Regular expression for validating CIN (exactly 8 digits)
+  static final RegExp _cinRegex = RegExp(r'^\d{8}$');
   // Regular expression for removing non-digit characters
   static final RegExp _nonDigitRegex = RegExp(r'\D');
   
@@ -23,7 +23,7 @@ class Validators {
   /// CIN is optional, so empty values are valid
   static String? validateCIN(String? value, {required String errorMessage}) {
     if (value != null && value.isNotEmpty) {
-      if (value.length != 8 || !_cinRegex.hasMatch(value)) {
+      if (!_cinRegex.hasMatch(value)) {
         return errorMessage;
       }
     }
