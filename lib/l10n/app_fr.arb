@@ -184,5 +184,7 @@
   "ascending": "Croissant",
   "descending": "Décroissant",
   "showingResults": "Affichage de {count} sur {total} candidats",
-  "totalCandidates": "Total de candidats"
+  "totalCandidates": "Total de candidats",
+  "optional": "facultatif",
+  "cinExample": "12345678"
 }

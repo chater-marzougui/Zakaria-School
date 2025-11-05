@@ -582,7 +582,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> with Sing
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      hintText: '12345678',
+                      hintText: t.cinExample,
                     ),
                     keyboardType: TextInputType.number,
                     maxLength: 8,

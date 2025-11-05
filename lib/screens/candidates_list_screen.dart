@@ -335,7 +335,7 @@ class _CandidatesListScreenState extends State<CandidatesListScreen> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    hintText: '12345678 (optional)',
+                    hintText: '${t.cinExample} (${t.optional})',
                   ),
                   keyboardType: TextInputType.number,
                   maxLength: 8,

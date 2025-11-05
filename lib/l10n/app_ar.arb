@@ -184,5 +184,7 @@
   "ascending": "تصاعدي",
   "descending": "تنازلي",
   "showingResults": "عرض {count} من {total} المرشحين",
-  "totalCandidates": "إجمالي المرشحين"
+  "totalCandidates": "إجمالي المرشحين",
+  "optional": "اختياري",
+  "cinExample": "12345678"
 }

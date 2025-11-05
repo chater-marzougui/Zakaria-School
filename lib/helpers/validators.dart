@@ -2,6 +2,8 @@
 class Validators {
   // Regular expression for validating CIN (8 digits)
   static final RegExp _cinRegex = RegExp(r'^\d+$');
+  // Regular expression for removing non-digit characters
+  static final RegExp _nonDigitRegex = RegExp(r'\D');
   
   /// Validates phone number format
   /// Returns error message if invalid, null if valid
@@ -10,7 +12,7 @@ class Validators {
       return errorMessage;
     }
     // Basic phone validation (at least 8 digits)
-    if (value.replaceAll(RegExp(r'\D'), '').length < 8) {
+    if (value.replaceAll(_nonDigitRegex, '').length < 8) {
       return errorMessage;
     }
     return null;
