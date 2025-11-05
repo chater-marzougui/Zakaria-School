@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import '../l10n/app_localizations.dart';
 import '../models/structs.dart' as structs;
+import '../helpers/time_utils.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
@@ -322,25 +323,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
     return allSessions.where((session) {
       if (!_isSameDay(session.date, date)) return false;
       
-      final sessionStart = _timeToMinutes(session.startTime);
-      final sessionEnd = _timeToMinutes(session.endTime);
+      final sessionStart = TimeUtils.timeToMinutes(session.startTime);
+      final sessionEnd = TimeUtils.timeToMinutes(session.endTime);
       
       // Check if this time slot falls within the session
       return timeInMinutes >= sessionStart && timeInMinutes < sessionEnd;
     }).toList();
-  }
-
-  int _timeToMinutes(String timeString) {
-    try {
-      final parts = timeString.split(':');
-      if (parts.length != 2) return 0;
-      final hours = int.parse(parts[0]);
-      final minutes = int.parse(parts[1]);
-      return hours * 60 + minutes;
-    } catch (e) {
-      // Return 0 for invalid time strings
-      return 0;
-    }
   }
 
   Widget _buildSessionCells(List<structs.Session> sessions, int timeInMinutes, Map<String, structs.Candidate> candidatesMap) {
@@ -363,7 +351,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   Widget _buildSessionCell(structs.Session session, int timeInMinutes, Map<String, structs.Candidate> candidatesMap, {required bool isFirst, required double width}) {
     final theme = Theme.of(context);
-    final sessionStart = _timeToMinutes(session.startTime);
+    final sessionStart = TimeUtils.timeToMinutes(session.startTime);
     
     // Only show content on the first time slot of the session
     final showContent = timeInMinutes == sessionStart;

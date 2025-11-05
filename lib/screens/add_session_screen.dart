@@ -135,9 +135,9 @@ class _AddSessionScreenState extends State<AddSessionScreen> {
                           ),
                     ),
                     const SizedBox(height: 8),
-                    Text(
-                      'Using 15-minute intervals',
-                      style: Theme.of(context).textTheme.bodySmall,
+                    const Text(
+                      '15-minute intervals',
+                      style: TextStyle(fontSize: 12),
                     ),
                   ],
                 ),

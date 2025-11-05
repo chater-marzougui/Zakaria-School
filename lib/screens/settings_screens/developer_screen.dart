@@ -16,6 +16,10 @@ class DeveloperScreen extends StatefulWidget {
 }
 
 class _DeveloperScreenState extends State<DeveloperScreen> {
+  // Maximum limits for data generation
+  static const int maxCandidates = 1000;
+  static const int maxSessions = 5000;
+  
   Map<String, dynamic>? _stats;
   bool _isLoading = false;
 
@@ -554,20 +558,20 @@ class _CustomDataDialogState extends State<_CustomDataDialog> {
             final sessions = int.tryParse(_sessionsController.text) ?? 0;
             
             // Validate reasonable limits
-            if (candidates > 1000) {
+            if (candidates > maxCandidates) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Maximum 1000 candidates allowed'),
+                SnackBar(
+                  content: Text('Maximum $maxCandidates candidates allowed'),
                   backgroundColor: Colors.red,
                 ),
               );
               return;
             }
             
-            if (sessions > 5000) {
+            if (sessions > maxSessions) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Maximum 5000 sessions allowed'),
+                SnackBar(
+                  content: Text('Maximum $maxSessions sessions allowed'),
                   backgroundColor: Colors.red,
                 ),
               );

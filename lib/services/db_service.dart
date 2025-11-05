@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/structs.dart';
+import '../helpers/time_utils.dart';
 
 /// Database service for managing candidates and sessions
 /// Provides CRUD operations and validation logic
@@ -308,13 +309,13 @@ class DatabaseService {
           .toList();
 
       // Convert time strings to minutes for easier comparison
-      final newStart = _timeToMinutes(startTime);
-      final newEnd = _timeToMinutes(endTime);
+      final newStart = TimeUtils.timeToMinutes(startTime);
+      final newEnd = TimeUtils.timeToMinutes(endTime);
 
       // Check each existing session for overlap
       for (var session in existingSessions) {
-        final existingStart = _timeToMinutes(session.startTime);
-        final existingEnd = _timeToMinutes(session.endTime);
+        final existingStart = TimeUtils.timeToMinutes(session.startTime);
+        final existingEnd = TimeUtils.timeToMinutes(session.endTime);
 
         // Check if times overlap
         // Two time ranges overlap if: start1 < end2 AND start2 < end1
@@ -327,21 +328,6 @@ class DatabaseService {
     } catch (e) {
       throw Exception('Failed to check session overlap: $e');
     }
-  }
-
-  /// Convert time string (HH:mm) to minutes since midnight
-  static int _timeToMinutes(String timeString) {
-    final parts = timeString.split(':');
-    final hours = int.parse(parts[0]);
-    final minutes = int.parse(parts[1]);
-    return hours * 60 + minutes;
-  }
-
-  /// Convert minutes since midnight to time string (HH:mm)
-  static String _minutesToTime(int minutes) {
-    final hours = minutes ~/ 60;
-    final mins = minutes % 60;
-    return '${hours.toString().padLeft(2, '0')}:${mins.toString().padLeft(2, '0')}';
   }
 
   // ==================== STATISTICS ====================
