@@ -94,7 +94,14 @@ class _SettingsPageState extends State<SettingsPage> {
             children: [
               ListTile(
                 title: Text(loc.language),
-                subtitle: Text(loc.currentLanguage(_selectedLanguage == 'en' ? loc.english : _selectedLanguage== 'fr' ? loc.french : loc.arabic)),
+                subtitle: Text(() {
+                  final languages = {
+                    'en': loc.english,
+                    'fr': loc.french,
+                    'ar': loc.arabic,
+                  };
+                  return loc.currentLanguage(languages[_selectedLanguage] ?? loc.english);
+                }()),
                   trailing: DropdownButton<String>(
                   value: _selectedLanguage,
                   onChanged: (String? newLocale) {
