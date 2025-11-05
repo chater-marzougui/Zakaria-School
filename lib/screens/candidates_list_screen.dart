@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../l10n/app_localizations.dart';
 import '../models/structs.dart' as structs;
+import '../services/db_service.dart';
 import 'candidate_detail_screen.dart';
 
 class CandidatesListScreen extends StatefulWidget {
@@ -138,44 +139,84 @@ class _CandidatesListScreenState extends State<CandidatesListScreen> {
 
   void _showAddCandidateDialog(BuildContext context) {
     final t = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
     final nameController = TextEditingController();
     final phoneController = TextEditingController();
     final cinController = TextEditingController();
+    final formKey = GlobalKey<FormState>();
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(t.addCandidate),
         content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: nameController,
-                decoration: InputDecoration(
-                  labelText: t.candidateName,
-                  border: const OutlineInputBorder(),
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: nameController,
+                  decoration: InputDecoration(
+                    labelText: t.candidateName,
+                    prefixIcon: const Icon(Icons.person),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return t.nameRequired;
+                    }
+                    return null;
+                  },
                 ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: phoneController,
-                decoration: InputDecoration(
-                  labelText: t.candidatePhone,
-                  border: const OutlineInputBorder(),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: phoneController,
+                  decoration: InputDecoration(
+                    labelText: t.candidatePhone,
+                    prefixIcon: const Icon(Icons.phone),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  keyboardType: TextInputType.phone,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return t.pleaseEnterLabel.replaceAll('{label}', t.phoneNumber);
+                    }
+                    // Basic phone validation (at least 8 digits)
+                    if (value.replaceAll(RegExp(r'\D'), '').length < 8) {
+                      return t.phoneNumberInvalid;
+                    }
+                    return null;
+                  },
                 ),
-                keyboardType: TextInputType.phone,
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: cinController,
-                decoration: InputDecoration(
-                  labelText: t.candidateCin,
-                  border: const OutlineInputBorder(),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: cinController,
+                  decoration: InputDecoration(
+                    labelText: t.candidateCin,
+                    prefixIcon: const Icon(Icons.credit_card),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    hintText: '12345678 (${t.cancel.toLowerCase()})',
+                  ),
+                  keyboardType: TextInputType.number,
+                  maxLength: 8,
+                  validator: (value) {
+                    if (value != null && value.isNotEmpty) {
+                      if (value.length != 8 || !RegExp(r'^\d+$').hasMatch(value)) {
+                        return t.cinInvalid;
+                      }
+                    }
+                    return null;
+                  },
                 ),
-                keyboardType: TextInputType.number,
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         actions: [
@@ -185,24 +226,36 @@ class _CandidatesListScreenState extends State<CandidatesListScreen> {
           ),
           ElevatedButton(
             onPressed: () async {
-              if (nameController.text.isEmpty || phoneController.text.isEmpty) {
-                return;
-              }
+              if (formKey.currentState!.validate()) {
+                try {
+                  final candidate = structs.Candidate(
+                    id: '',
+                    name: nameController.text.trim(),
+                    phone: phoneController.text.trim(),
+                    cin: cinController.text.trim(),
+                    startDate: DateTime.now(),
+                  );
 
-              final candidate = structs.Candidate(
-                id: '',
-                name: nameController.text,
-                phone: phoneController.text,
-                cin: cinController.text,
-                startDate: DateTime.now(),
-              );
+                  await DatabaseService.createCandidate(candidate);
 
-              await FirebaseFirestore.instance
-                  .collection('candidates')
-                  .add(candidate.toFirestore());
-
-              if (context.mounted) {
-                Navigator.pop(context);
+                  if (!context.mounted) return;
+                  Navigator.pop(context);
+                  
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(t.candidateCreatedSuccessfully),
+                      backgroundColor: theme.colorScheme.primary,
+                    ),
+                  );
+                } catch (e) {
+                  if (!context.mounted) return;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('${t.failedToCreateCandidate}: $e'),
+                      backgroundColor: theme.colorScheme.error,
+                    ),
+                  );
+                }
               }
             },
             child: Text(t.save),
