@@ -6,6 +6,7 @@ import '../../l10n/app_localizations.dart';
 import '../../main.dart';
 import '../../services/export_service.dart';
 import '../../widgets/widgets.dart';
+import 'developer_screen.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -142,6 +143,23 @@ class _SettingsPageState extends State<SettingsPage> {
                 subtitle: const Text('Export candidates and sessions to CSV'),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: _exportData,
+              ),
+              const Divider(),
+
+              // Developer Tools Section
+              ListTile(
+                leading: Icon(Icons.developer_mode, color: theme.colorScheme.tertiary),
+                title: const Text('🛠️ Developer Tools'),
+                subtitle: const Text('Testing and database management'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const DeveloperScreen(),
+                    ),
+                  );
+                },
               ),
               const Divider(),
 

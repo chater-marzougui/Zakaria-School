@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import '../l10n/app_localizations.dart';
 import '../models/structs.dart' as structs;
+import '../helpers/time_utils.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
@@ -104,16 +105,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   .where('date',
                       isLessThan: Timestamp.fromDate(weekEnd.add(const Duration(days: 1))))
                   .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
+              builder: (context, sessionsSnapshot) {
+                if (sessionsSnapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
+                if (sessionsSnapshot.hasError) {
+                  return Center(child: Text('Error: ${sessionsSnapshot.error}'));
                 }
 
-                final sessions = snapshot.data?.docs
+                final sessions = sessionsSnapshot.data?.docs
                     .map((doc) => structs.Session.fromFirestore(doc))
                     .toList() ?? [];
 
@@ -139,7 +140,24 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   );
                 }
 
-                return _buildCalendarGrid(sessions);
+                // Fetch all candidates to avoid N+1 query issue
+                return StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance.collection('candidates').snapshots(),
+                  builder: (context, candidatesSnapshot) {
+                    if (!candidatesSnapshot.hasData) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    // Create a map for quick lookups
+                    final candidatesMap = <String, structs.Candidate>{};
+                    for (var doc in candidatesSnapshot.data!.docs) {
+                      final candidate = structs.Candidate.fromFirestore(doc);
+                      candidatesMap[candidate.id] = candidate;
+                    }
+
+                    return _buildImprovedCalendarGrid(sessions, candidatesMap);
+                  },
+                );
               },
             ),
           ),
@@ -154,138 +172,239 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  Widget _buildCalendarGrid(List<structs.Session> sessions) {
+  Widget _buildImprovedCalendarGrid(List<structs.Session> sessions, Map<String, structs.Candidate> candidatesMap) {
     final theme = Theme.of(context);
     
-    // Generate time slots (8 AM to 8 PM)
-    final timeSlots = List.generate(13, (index) => index + 8);
+    // Generate time slots with 15-minute intervals (8:00 AM to 8:00 PM)
+    final List<int> timeSlots = [];
+    for (int hour = 8; hour <= 20; hour++) {
+      for (int minute = 0; minute < 60; minute += 15) {
+        timeSlots.add(hour * 60 + minute); // Store as minutes since midnight
+      }
+    }
     
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: SingleChildScrollView(
-        child: DataTable(
-          columnSpacing: 8,
-          horizontalMargin: 8,
-          headingRowHeight: 50,
-          dataRowMinHeight: 60,
-          dataRowMaxHeight: 65,
-          columns: [
-            DataColumn(
-              label: SizedBox(
-                width: 60,
-                child: Text(
-                  'Time',
-                  style: theme.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header Row
+            Row(
+              children: [
+                // Time column header
+                SizedBox(
+                  width: 70,
+                  height: 50,
+                  child: Center(
+                    child: Text(
+                      'Time',
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-            ...List.generate(7, (index) {
-              final date = _selectedWeekStart.add(Duration(days: index));
-              return DataColumn(
-                label: SizedBox(
-                  width: 100,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        DateFormat('EEE').format(date),
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                // Day headers
+                ...List.generate(7, (index) {
+                  final date = _selectedWeekStart.add(Duration(days: index));
+                  final isToday = _isSameDay(date, DateTime.now());
+                  return Container(
+                    width: 150,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: isToday 
+                          ? theme.colorScheme.primary.withAlpha(30)
+                          : null,
+                      border: Border.all(
+                        color: theme.dividerColor,
+                        width: 0.5,
                       ),
-                      Text(
-                        DateFormat('dd').format(date),
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          DateFormat('EEE').format(date),
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: isToday ? theme.colorScheme.primary : null,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }),
-          ],
-          rows: timeSlots.map((hour) {
-            return DataRow(
-              cells: [
-                DataCell(
-                  Text(
-                    '${hour.toString().padLeft(2, '0')}:00',
-                    style: theme.textTheme.bodySmall,
-                  ),
-                ),
-                ...List.generate(7, (dayIndex) {
-                  final date = _selectedWeekStart.add(Duration(days: dayIndex));
-                  final sessionsAtTime = sessions.where((s) {
-                    final startHour = int.parse(s.startTime.split(':')[0]);
-                    return s.date.year == date.year &&
-                        s.date.month == date.month &&
-                        s.date.day == date.day &&
-                        startHour == hour;
-                  }).toList();
-
-                  if (sessionsAtTime.isEmpty) {
-                    return const DataCell(SizedBox(width: 100, height: 60));
-                  }
-
-                  return DataCell(
-                    GestureDetector(
-                      onTap: () {
-                        _showSessionDetails(context, sessionsAtTime.first);
-                      },
-                      child: Container(
-                        width: 100,
-                        height: 55,
-                        decoration: BoxDecoration(
-                          color: _getStatusColor(sessionsAtTime.first.status),
-                          borderRadius: BorderRadius.circular(8),
+                        Text(
+                          DateFormat('dd').format(date),
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: isToday ? theme.colorScheme.primary : null,
+                          ),
                         ),
-                        padding: const EdgeInsets.all(4),
-                        child: FutureBuilder<DocumentSnapshot>(
-                          future: FirebaseFirestore.instance
-                              .collection('candidates')
-                              .doc(sessionsAtTime.first.candidateId)
-                              .get(),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData && snapshot.data!.exists) {
-                              final candidate = structs.Candidate.fromFirestore(snapshot.data!);
-                              return Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    candidate.name,
-                                    style: theme.textTheme.bodySmall?.copyWith(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  Text(
-                                    '${sessionsAtTime.first.startTime}-${sessionsAtTime.first.endTime}',
-                                    style: theme.textTheme.bodySmall?.copyWith(
-                                      color: Colors.white,
-                                      fontSize: 10,
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }
-                            return const SizedBox();
-                          },
-                        ),
-                      ),
+                      ],
                     ),
                   );
                 }),
               ],
-            );
-          }).toList(),
+            ),
+            // Time rows
+            ...timeSlots.map((timeInMinutes) {
+              final hour = timeInMinutes ~/ 60;
+              final minute = timeInMinutes % 60;
+              final timeString = '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
+              
+              return Row(
+                children: [
+                  // Time label
+                  Container(
+                    width: 70,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: theme.dividerColor,
+                        width: 0.5,
+                      ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        timeString,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          fontWeight: minute == 0 ? FontWeight.bold : FontWeight.normal,
+                        ),
+                      ),
+                    ),
+                  ),
+                  // Day cells
+                  ...List.generate(7, (dayIndex) {
+                    final date = _selectedWeekStart.add(Duration(days: dayIndex));
+                    final isToday = _isSameDay(date, DateTime.now());
+                    
+                    // Find all sessions that occupy this time slot
+                    final sessionsAtTime = _getSessionsAtTimeSlot(
+                      sessions,
+                      date,
+                      timeInMinutes,
+                    );
+                    
+                    return Container(
+                      width: 150,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: isToday 
+                            ? theme.colorScheme.primary.withAlpha(10)
+                            : null,
+                        border: Border.all(
+                          color: theme.dividerColor,
+                          width: 0.5,
+                        ),
+                      ),
+                      child: sessionsAtTime.isEmpty
+                          ? null
+                          : _buildSessionCells(sessionsAtTime, timeInMinutes, candidatesMap),
+                    );
+                  }),
+                ],
+              );
+            }).toList(),
+          ],
         ),
       ),
+    );
+  }
+
+  bool _isSameDay(DateTime date1, DateTime date2) {
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
+  }
+
+  List<structs.Session> _getSessionsAtTimeSlot(
+    List<structs.Session> allSessions,
+    DateTime date,
+    int timeInMinutes,
+  ) {
+    return allSessions.where((session) {
+      if (!_isSameDay(session.date, date)) return false;
+      
+      final sessionStart = TimeUtils.timeToMinutes(session.startTime);
+      final sessionEnd = TimeUtils.timeToMinutes(session.endTime);
+      
+      // Check if this time slot falls within the session
+      return timeInMinutes >= sessionStart && timeInMinutes < sessionEnd;
+    }).toList();
+  }
+
+  Widget _buildSessionCells(List<structs.Session> sessions, int timeInMinutes, Map<String, structs.Candidate> candidatesMap) {
+    if (sessions.isEmpty) return const SizedBox();
+    
+    // If multiple sessions overlap, show them side by side
+    if (sessions.length == 1) {
+      return _buildSessionCell(sessions[0], timeInMinutes, candidatesMap, isFirst: true, width: 150);
+    } else {
+      // Multiple sessions - show side by side
+      final cellWidth = 150.0 / sessions.length;
+      return Row(
+        children: sessions.map((session) {
+          final isFirst = sessions.indexOf(session) == 0;
+          return _buildSessionCell(session, timeInMinutes, candidatesMap, isFirst: isFirst, width: cellWidth);
+        }).toList(),
+      );
+    }
+  }
+
+  Widget _buildSessionCell(structs.Session session, int timeInMinutes, Map<String, structs.Candidate> candidatesMap, {required bool isFirst, required double width}) {
+    final theme = Theme.of(context);
+    final sessionStart = TimeUtils.timeToMinutes(session.startTime);
+    
+    // Only show content on the first time slot of the session
+    final showContent = timeInMinutes == sessionStart;
+    
+    return GestureDetector(
+      onTap: () => _showSessionDetails(context, session),
+      child: Container(
+        width: width,
+        decoration: BoxDecoration(
+          color: _getStatusColor(session.status),
+          border: Border(
+            left: BorderSide(
+              color: Colors.white,
+              width: isFirst ? 0 : 1,
+            ),
+          ),
+        ),
+        padding: const EdgeInsets.all(2),
+        child: showContent
+            ? _buildSessionContent(session, candidatesMap)
+            : null,
+      ),
+    );
+  }
+
+  Widget? _buildSessionContent(structs.Session session, Map<String, structs.Candidate> candidatesMap) {
+    final theme = Theme.of(context);
+    final candidate = candidatesMap[session.candidateId];
+    
+    if (candidate == null) return null;
+    
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          candidate.name,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 9,
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        Text(
+          '${session.startTime}-${session.endTime}',
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: Colors.white,
+            fontSize: 8,
+          ),
+        ),
+      ],
     );
   }
 
@@ -329,6 +448,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 const SizedBox(height: 8),
                 Text('${t.date}: ${DateFormat('dd/MM/yyyy').format(session.date)}'),
                 Text('${t.time}: ${session.startTime} - ${session.endTime}'),
+                Text('${t.duration}: ${session.durationInHours.toStringAsFixed(2)} hours'),
                 Text('${t.status}: ${session.status}'),
                 Text('${t.paymentStatus}: ${session.paymentStatus}'),
                 if (session.note.isNotEmpty) ...[
@@ -343,6 +463,17 @@ class _CalendarScreenState extends State<CalendarScreen> {
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(t.close),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(
+                context,
+                '/add-session',
+                arguments: session,
+              );
+            },
+            child: Text(t.edit),
           ),
         ],
       ),

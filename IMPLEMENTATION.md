@@ -120,22 +120,34 @@ class User {
 - 🟠 Orange: Rescheduled
 - 🔴 Red: Missed
 
-#### Calendar Screen (`lib/screens/calendar_screen.dart`)
-**Purpose**: Weekly calendar view for session visualization
+#### Calendar Screen (`lib/screens/calendar_screen.dart`) **ENHANCED**
+**Purpose**: Weekly calendar view for session visualization with advanced features
 
 **Features**:
 - Week navigation (previous/next/today)
 - 7-day grid (Monday-Sunday)
-- Time slots from 8:00 to 20:00
-- Color-coded session blocks
-- Tap to view session details
+- **15-minute time intervals** from 8:00 to 20:00 (8:00, 8:15, 8:30, 8:45, etc.)
+- **Side-by-side session display** when multiple candidates have overlapping times
+- Sessions span multiple rows based on their duration
+- **Today column highlighted** with background color
+- Color-coded session blocks by status
+- Tap to view session details with edit option
 - Legend for status colors
-- Responsive horizontal scrolling for narrow screens
+- Responsive horizontal/vertical scrolling
 
-**Implementation Notes**:
-- Uses DataTable for grid layout
+**Implementation Details**:
+- Time slots stored as minutes since midnight for precise calculations
+- Sessions displayed as connected blocks across their full duration
+- Only first time slot of each session shows candidate name and time
+- Automatic cell width adjustment when sessions overlap
 - Sessions filtered by week start/end dates
 - Firestore query optimized with date range filters
+
+**Grid Layout**:
+- Time column: 70px width
+- Day columns: 150px width each (auto-splits for overlapping sessions)
+- Row height: 40px per 15-minute interval
+- Borders for clear visual separation
 
 #### Candidates List Screen (`lib/screens/candidates_list_screen.dart`)
 **Purpose**: Browse and search all candidates
@@ -182,27 +194,68 @@ class User {
 - SMS: Uses `sms:` URI scheme
 - WhatsApp: Uses `https://wa.me/` with external app launch
 
-#### Add/Edit Session Screen (`lib/screens/add_session_screen.dart`)
-**Purpose**: Create or modify sessions
+#### Add/Edit Session Screen (`lib/screens/add_session_screen.dart`) **ENHANCED**
+**Purpose**: Create or modify sessions with validation
 
 **Features**:
 - Form with validation
 - Candidate dropdown (populated from Firestore)
 - Instructor dropdown (populated from users)
 - Date picker
-- Start/End time pickers with duration calculation
+- **Custom time pickers with 15-minute intervals** (00, 15, 30, 45)
+- **Overlap validation**: Prevents double-booking for the same candidate
+- Duration calculation and preview
 - Status dropdown (scheduled/done/missed/rescheduled)
 - Payment status dropdown (paid/unpaid)
 - Notes field
-- Save button
+- Save button with validation
 - Delete button (edit mode only)
 - Confirmation dialog for deletion
+
+**Time Picker Enhancement**:
+- Custom dialog with hour and minute dropdowns
+- Minutes restricted to 15-minute intervals (00, 15, 30, 45)
+- Live preview of selected time
+- User-friendly interface for quick selection
+
+**Validation Features**:
+- Uses DatabaseService for overlap checking
+- Clear error messages displayed when conflicts detected
+- Shows duration of 4+ seconds for user to read the error
+- Validation on both create and update operations
 
 **Auto-Update Logic**:
 - When session marked as "done", automatically updates candidate's `total_taken_hours`
 - Duration calculated from start/end times
 
-#### Settings Screen (`lib/screens/settings_screens/settings_page.dart`)
+#### Developer Screen (`lib/screens/settings_screens/developer_screen.dart`) **NEW**
+**Purpose**: Testing and database management tools
+
+**Features**:
+- Real-time database statistics dashboard
+- Three statistics cards:
+  - **Candidates**: Total, Active, Graduated, Inactive
+  - **Sessions**: Total, Scheduled, Done, Missed, Rescheduled
+  - **Payments**: Paid vs Unpaid sessions
+- **Generate Test Data**: Create 21 candidates and 180 sessions
+- **Custom Data Generation**: Specify exact counts for candidates/sessions
+- **Delete All Data**: Clear all candidates and sessions (users unaffected)
+- Refresh button to update statistics
+- Warning banner for caution
+
+**Safety Features**:
+- Confirmation dialogs for destructive operations
+- Color-coded buttons (red for dangerous actions)
+- User data (collection: `users`) is never touched
+- Success/error feedback with snackbars
+
+**Usage**:
+- Accessible from Settings → Developer Tools
+- Ideal for testing scheduling conflicts
+- Generate realistic test data with Tunisian names
+- Quick cleanup between test scenarios
+
+#### Settings Screen (`lib/screens/settings_screens/settings_page.dart`) **UPDATED**
 **Purpose**: App configuration and data management
 
 **Features**:
@@ -210,6 +263,7 @@ class User {
 - Theme mode selector (light/dark) - updates immediately
 - Notifications toggle
 - Export Data button - exports to CSV
+- **Developer Tools** - link to developer screen
 - About dialog with app version and developer info
 - Logout button with confirmation
 
@@ -222,6 +276,39 @@ class User {
 ---
 
 ### 3. Services
+
+#### Database Service (`lib/services/db_service.dart`) **NEW**
+**Purpose**: Centralized database operations with validation and error handling
+
+**Candidate Operations**:
+- `createCandidate(Candidate)`: Create a new candidate
+- `getCandidate(id)`: Get single candidate by ID
+- `getAllCandidates()`: Get all candidates
+- `updateCandidate(id, updates)`: Update candidate fields
+- `deleteCandidate(id)`: Delete candidate and all their sessions
+- `deleteAllCandidates()`: Clear all candidates and sessions
+
+**Session Operations**:
+- `createSession(Session, checkOverlap)`: Create session with optional overlap validation
+- `getSession(id)`: Get single session by ID
+- `getCandidateSessions(candidateId)`: Get all sessions for a candidate
+- `getAllSessions()`: Get all sessions
+- `getSessionsInDateRange(start, end)`: Query sessions by date range
+- `updateSession(id, updates, checkOverlap)`: Update session with validation
+- `deleteSession(id)`: Delete a session
+- `deleteAllSessions()`: Clear all sessions
+
+**Validation Features**:
+- **Overlap Detection**: Automatically checks if a candidate already has a session at the same time
+- Validates on both create and update operations
+- Returns clear error messages when conflicts are detected
+- Can be disabled by setting `checkOverlap: false`
+
+**Statistics**:
+- `getStatistics()`: Returns comprehensive database statistics
+- Candidate counts by status (active, graduated, inactive)
+- Session counts by status (scheduled, done, missed, rescheduled)
+- Payment tracking (paid vs unpaid sessions)
 
 #### Export Service (`lib/services/export_service.dart`)
 **Purpose**: Generate CSV files for data backup/analysis
@@ -509,7 +596,34 @@ Before pushing:
 5. **No Payment Processing**: Just tracking, not actual payment integration
 6. **CSV Export Location**: Saved to app documents, not user-accessible folder on some devices
 7. **No Image Upload**: Candidate/user photos not yet implemented
-8. **Session Overlap**: No validation to prevent double-booking
+8. ~~**Session Overlap**: No validation to prevent double-booking~~ **FIXED** ✅
+
+---
+
+## Recent Improvements (November 2024)
+
+### ✅ Session Overlap Validation - IMPLEMENTED
+- DatabaseService now checks for overlapping sessions before creation/update
+- Prevents double-booking for the same candidate
+- Clear error messages when conflicts detected
+- Can be disabled if needed with `checkOverlap: false` parameter
+
+### ✅ 15-Minute Time Intervals - IMPLEMENTED
+- Calendar now displays 15-minute time slots (8:00, 8:15, 8:30, etc.)
+- Custom time picker supports 15-minute intervals
+- Sessions can start at any quarter hour
+- Better accommodation for varied schedules
+
+### ✅ Overlapping Session Display - IMPLEMENTED
+- Multiple candidates' sessions at the same time display side-by-side
+- Automatic cell width adjustment for overlaps
+- Clear visual separation between concurrent sessions
+
+### ✅ Developer Tools - IMPLEMENTED
+- Comprehensive testing and database management screen
+- Generate realistic test data for development
+- Safe cleanup operations (users protected)
+- Real-time statistics dashboard
 
 ---
 

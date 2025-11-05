@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import '../l10n/app_localizations.dart';
 import '../models/structs.dart' as structs;
+import '../services/db_service.dart';
 
 class AddSessionScreen extends StatefulWidget {
   final structs.Session? session;
@@ -49,6 +50,113 @@ class _AddSessionScreenState extends State<AddSessionScreen> {
 
   String _formatTimeOfDay(TimeOfDay time) {
     return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+  }
+
+  Future<TimeOfDay?> _showCustomTimePicker({
+    required BuildContext context,
+    required TimeOfDay initialTime,
+    required String title,
+  }) async {
+    final t = AppLocalizations.of(context)!;
+    
+    // Round to nearest 15-minute interval
+    int roundedMinute = ((initialTime.minute / 15).round() * 15) % 60;
+    int roundedHour = initialTime.hour + (((initialTime.minute / 15).round() * 15) ~/ 60);
+    
+    TimeOfDay selectedTime = TimeOfDay(hour: roundedHour % 24, minute: roundedMinute);
+    
+    return showDialog<TimeOfDay>(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Text(title),
+              content: SizedBox(
+                width: 300,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Hour selection
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(t.hour),
+                        ),
+                        DropdownButton<int>(
+                          value: selectedTime.hour,
+                          items: List.generate(24, (index) => index)
+                              .map((hour) => DropdownMenuItem(
+                                    value: hour,
+                                    child: Text(hour.toString().padLeft(2, '0')),
+                                  ))
+                              .toList(),
+                          onChanged: (hour) {
+                            if (hour != null) {
+                              setState(() {
+                                selectedTime = TimeOfDay(hour: hour, minute: selectedTime.minute);
+                              });
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    // Minute selection (15-minute intervals)
+                    Row(
+                      children: [
+                        const Expanded(
+                          child: Text('Minute'),
+                        ),
+                        DropdownButton<int>(
+                          value: selectedTime.minute,
+                          items: [0, 15, 30, 45]
+                              .map((minute) => DropdownMenuItem(
+                                    value: minute,
+                                    child: Text(minute.toString().padLeft(2, '0')),
+                                  ))
+                              .toList(),
+                          onChanged: (minute) {
+                            if (minute != null) {
+                              setState(() {
+                                selectedTime = TimeOfDay(hour: selectedTime.hour, minute: minute);
+                              });
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    // Preview
+                    Text(
+                      _formatTimeOfDay(selectedTime),
+                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      '15-minute intervals',
+                      style: TextStyle(fontSize: 12),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text(t.cancel),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context, selectedTime),
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -208,9 +316,10 @@ class _AddSessionScreenState extends State<AddSessionScreen> {
                               side: BorderSide(color: theme.colorScheme.primary.withAlpha(75)),
                             ),
                             onTap: () async {
-                              final time = await showTimePicker(
+                              final time = await _showCustomTimePicker(
                                 context: context,
                                 initialTime: _startTime,
+                                title: t.startTime,
                               );
                               if (time != null) {
                                 setState(() {
@@ -232,9 +341,10 @@ class _AddSessionScreenState extends State<AddSessionScreen> {
                               side: BorderSide(color: theme.colorScheme.primary.withAlpha(75)),
                             ),
                             onTap: () async {
-                              final time = await showTimePicker(
+                              final time = await _showCustomTimePicker(
                                 context: context,
                                 initialTime: _endTime,
+                                title: t.endTime,
                               );
                               if (time != null) {
                                 setState(() {
@@ -378,16 +488,15 @@ class _AddSessionScreenState extends State<AddSessionScreen> {
       );
 
       if (widget.session == null) {
-        // Create new session
-        await FirebaseFirestore.instance
-            .collection('sessions')
-            .add(session.toFirestore());
+        // Create new session with overlap validation
+        await DatabaseService.createSession(session, checkOverlap: true);
       } else {
-        // Update existing session
-        await FirebaseFirestore.instance
-            .collection('sessions')
-            .doc(widget.session!.id)
-            .update(session.toFirestore());
+        // Update existing session with overlap validation
+        await DatabaseService.updateSession(
+          widget.session!.id,
+          session.toFirestore(),
+          checkOverlap: true,
+        );
       }
 
       // Update candidate hours if session is done
@@ -402,7 +511,11 @@ class _AddSessionScreenState extends State<AddSessionScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
+          SnackBar(
+            content: Text('Error: $e'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 4),
+          ),
         );
       }
     } finally {

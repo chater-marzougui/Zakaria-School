@@ -11,15 +11,46 @@
 All core features from the requirements have been successfully implemented:
 - ✅ User authentication (email/password login)
 - ✅ Dashboard with session overview and statistics
-- ✅ Weekly calendar view with color-coded sessions
+- ✅ Enhanced weekly calendar view with 15-minute time slots
 - ✅ Complete candidate management (CRUD operations)
-- ✅ Session scheduling and tracking
+- ✅ Session scheduling with overlap validation
 - ✅ Payment tracking per candidate
 - ✅ CSV data export functionality
 - ✅ Multi-language support (EN, FR, AR)
 - ✅ Dark/Light theme support
 - ✅ SMS/WhatsApp/Call integration
 - ✅ Settings and configuration management
+- ✅ Developer tools for testing and database management
+
+## 🆕 New Features (Latest Update)
+
+### 1. Database Service (db_service.dart)
+- Centralized CRUD operations for candidates and sessions
+- **Session overlap validation**: Prevents double-booking for the same candidate
+- Robust error handling and edge case management
+- Statistics and analytics support
+
+### 2. Developer Screen
+- Accessible from Settings → Developer Tools
+- **Delete all candidates and sessions** for testing
+- **Generate fake test data** (21 candidates, 180 sessions)
+- **Custom data generation** (specify counts)
+- View real-time database statistics
+- Safe operations (users are never affected)
+
+### 3. Enhanced Calendar View
+- **15-minute time intervals** (8:00-20:00) for flexible scheduling
+- Sessions can start at any 15-minute mark (9:15, 9:30, 9:45, etc.)
+- **Side-by-side display** when multiple candidates have overlapping sessions
+- Visual indicators for today's column
+- Sessions displayed as connected blocks spanning their full duration
+- Improved UI with better color coding
+
+### 4. Smart Session Scheduling
+- Custom time picker with 15-minute intervals
+- Automatic overlap detection when creating/editing sessions
+- Clear error messages when conflicts are detected
+- Support for various session lengths (1h, 1.5h, 2h, etc.)
 
 ## 📱 Screenshots
 
