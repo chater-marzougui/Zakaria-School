@@ -34,8 +34,8 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> with Sing
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final t = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -83,6 +83,8 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> with Sing
         ],
         bottom: TabBar(
           controller: _tabController,
+          labelColor: theme.colorScheme.secondary,
+          indicatorColor: theme.colorScheme.secondary,
           tabs: [
             Tab(text: t.info),
             Tab(text: t.schedule),
@@ -404,7 +406,6 @@ class _SessionItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final t = AppLocalizations.of(context)!;
 
     Color statusColor;
     switch (session.status) {

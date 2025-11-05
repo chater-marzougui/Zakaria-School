@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../l10n/app_localizations.dart';
 import '../../services/db_service.dart';
 import '../../helpers/seed_db.dart';
 
@@ -16,9 +15,6 @@ class DeveloperScreen extends StatefulWidget {
 }
 
 class _DeveloperScreenState extends State<DeveloperScreen> {
-  // Maximum limits for data generation
-  static const int maxCandidates = 1000;
-  static const int maxSessions = 5000;
   
   Map<String, dynamic>? _stats;
   bool _isLoading = false;
@@ -193,7 +189,6 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final t = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
@@ -513,6 +508,9 @@ class _CustomDataDialog extends StatefulWidget {
 class _CustomDataDialogState extends State<_CustomDataDialog> {
   final _candidatesController = TextEditingController(text: '10');
   final _sessionsController = TextEditingController(text: '50');
+  // Maximum limits for data generation
+  static const int maxCandidates = 1000;
+  static const int maxSessions = 5000;
 
   @override
   void dispose() {

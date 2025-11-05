@@ -53,7 +53,7 @@ class DashboardScreen extends StatelessWidget {
           // Calculate unpaid summary
           final unpaidTotal = sessions
               .where((s) => s.paymentStatus == 'unpaid')
-              .fold<double>(0, (sum, s) => sum + s.durationInHours);
+              .fold<double>(0, (sumT, s) => sumT + s.durationInHours);
 
           return RefreshIndicator(
             onRefresh: () async {

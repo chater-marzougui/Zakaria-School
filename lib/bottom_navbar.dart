@@ -91,7 +91,7 @@ class _BottomNavbarState extends State<BottomNavbar> {
         type: BottomNavigationBarType.fixed,
         onTap: _onItemTapped,
         selectedItemColor: theme.primaryColor,
-        unselectedItemColor: theme.colorScheme.tertiary,
+        unselectedItemColor: theme.colorScheme.secondary,
         showSelectedLabels: true,
         showUnselectedLabels: true,
         items: navItems,

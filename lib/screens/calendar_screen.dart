@@ -302,7 +302,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   }),
                 ],
               );
-            }).toList(),
+            }),
           ],
         ),
       ),
@@ -339,7 +339,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       return _buildSessionCell(sessions[0], timeInMinutes, candidatesMap, isFirst: true, width: 150);
     } else {
       // Multiple sessions - show side by side
-      final cellWidth = 150.0 / sessions.length;
+      final cellWidth = 148.0 / sessions.length;
       return Row(
         children: sessions.map((session) {
           final isFirst = sessions.indexOf(session) == 0;
@@ -350,7 +350,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   Widget _buildSessionCell(structs.Session session, int timeInMinutes, Map<String, structs.Candidate> candidatesMap, {required bool isFirst, required double width}) {
-    final theme = Theme.of(context);
     final sessionStart = TimeUtils.timeToMinutes(session.startTime);
     
     // Only show content on the first time slot of the session

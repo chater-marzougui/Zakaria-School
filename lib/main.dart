@@ -104,113 +104,113 @@ class MyAppState extends State<MyApp> {
 
   ThemeData _lightTheme() {
     return ThemeData(
-      primarySwatch: Colors.green,
-      primaryColor: const Color(0xFF4CAF50), // Medium green
+      primarySwatch: Colors.blue,
+      primaryColor: const Color(0xFF1D3557), // Navy blue from logo
       appBarTheme: const AppBarTheme(
         centerTitle: true,
-        backgroundColor: Color(0xFF4CAF50),
-        foregroundColor: Colors.white,
-        titleTextStyle: TextStyle(color: Colors.white, fontSize: 18),
+        backgroundColor: Color(0xFF1D3557), // Navy blue
+        foregroundColor: Color(0xFFF5E6D3), // Cream/gold
+        titleTextStyle: TextStyle(color: Color(0xFFF5E6D3), fontSize: 18),
       ),
       textTheme: const TextTheme(
-        displayLarge: TextStyle(color: Colors.black87, fontSize: 57),
-        displayMedium: TextStyle(color: Colors.black87, fontSize: 45),
-        displaySmall: TextStyle(color: Colors.black87, fontSize: 36),
-        headlineLarge: TextStyle(color: Colors.black87, fontSize: 32),
-        headlineMedium: TextStyle(color: Colors.black87, fontSize: 28),
-        headlineSmall: TextStyle(color: Colors.black87, fontSize: 24),
-        titleLarge: TextStyle(color: Colors.black87, fontSize: 22),
-        titleMedium: TextStyle(color: Colors.black87, fontSize: 16),
-        titleSmall: TextStyle(color: Colors.black87, fontSize: 14),
-        bodyLarge: TextStyle(color: Colors.black87, fontSize: 20),
-        bodyMedium: TextStyle(color: Colors.black87, fontSize: 18),
-        bodySmall: TextStyle(color: Colors.black87, fontSize: 15),
-        labelLarge: TextStyle(color: Colors.black87, fontSize: 14),
-        labelMedium: TextStyle(color: Colors.black87, fontSize: 12),
-        labelSmall: TextStyle(color: Colors.black87, fontSize: 10),
+        displayLarge: TextStyle(color: Color(0xFF1D3557), fontSize: 57),
+        displayMedium: TextStyle(color: Color(0xFF1D3557), fontSize: 45),
+        displaySmall: TextStyle(color: Color(0xFF1D3557), fontSize: 36),
+        headlineLarge: TextStyle(color: Color(0xFF1D3557), fontSize: 32),
+        headlineMedium: TextStyle(color: Color(0xFF1D3557), fontSize: 28),
+        headlineSmall: TextStyle(color: Color(0xFF1D3557), fontSize: 24),
+        titleLarge: TextStyle(color: Color(0xFF1D3557), fontSize: 22),
+        titleMedium: TextStyle(color: Color(0xFF1D3557), fontSize: 16),
+        titleSmall: TextStyle(color: Color(0xFF1D3557), fontSize: 14),
+        bodyLarge: TextStyle(color: Color(0xFF1D3557), fontSize: 20),
+        bodyMedium: TextStyle(color: Color(0xFF1D3557), fontSize: 18),
+        bodySmall: TextStyle(color: Color(0xFF1D3557), fontSize: 15),
+        labelLarge: TextStyle(color: Color(0xFF1D3557), fontSize: 14),
+        labelMedium: TextStyle(color: Color(0xFF1D3557), fontSize: 12),
+        labelSmall: TextStyle(color: Color(0xFF1D3557), fontSize: 10),
       ),
-      scaffoldBackgroundColor: Colors.white,
-      cardColor: Colors.white70,
-      dividerColor: Colors.grey[300],
-      splashColor: const Color(0xFF81C784), // Light green
-      iconTheme: const IconThemeData(color: Colors.black87),
+      scaffoldBackgroundColor: const Color(0xFFFAF8F5), // Off-white background
+      cardColor: Colors.white,
+      dividerColor: const Color(0xFFD4C5B0), // Light gold divider
+      splashColor: const Color(0xFFD4A574), // Gold accent
+      iconTheme: const IconThemeData(color: Color(0xFF1D3557)),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
-          backgroundColor: WidgetStateProperty.all(const Color(0xFF4CAF50)),
-          foregroundColor: WidgetStateProperty.all(Colors.white),
+          backgroundColor: WidgetStateProperty.all(const Color(0xFF1D3557)), // Navy
+          foregroundColor: WidgetStateProperty.all(const Color(0xFFF5E6D3)), // Cream
           textStyle: WidgetStateProperty.all(
-            const TextStyle(color: Colors.white, fontSize: 16),
+            const TextStyle(color: Color(0xFFF5E6D3), fontSize: 16),
           ),
         ),
       ),
       buttonTheme: const ButtonThemeData(
-        buttonColor: Color(0xFF4CAF50),
+        buttonColor: Color(0xFF1D3557),
         textTheme: ButtonTextTheme.primary,
       ),
       colorScheme: ColorScheme.light(
-        primary: const Color(0xFF4CAF50), // Medium green
-        secondary: const Color(0xFF388E3C), // Darker green
+        primary: const Color(0xFF1D3557), // Navy blue
+        secondary: const Color(0xFFD4A574), // Gold
         surface: Colors.white,
-        tertiary: const Color(0xFF81C784), // Light green
+        tertiary: const Color(0xFFF5E6D3), // Cream
         error: Colors.red[700]!,
       ),
-      dialogTheme: DialogThemeData(backgroundColor: Colors.white),
+      dialogTheme: const DialogThemeData(backgroundColor: Colors.white),
     );
   }
 
   ThemeData _darkTheme() {
     return ThemeData(
-      primarySwatch: Colors.green,
-      primaryColor: const Color(0xFF81C784), // Light green
+      primarySwatch: Colors.blue,
+      primaryColor: const Color(0xFF2A4A6F), // Lighter navy for dark mode
       appBarTheme: const AppBarTheme(
         centerTitle: true,
-        backgroundColor: Color(0xFF81C784),
-        foregroundColor: Colors.white,
-        titleTextStyle: TextStyle(color: Colors.white, fontSize: 18),
+        backgroundColor: Color(0xFF1D3557), // Navy blue
+        foregroundColor: Color(0xFFF5E6D3), // Cream/gold
+        titleTextStyle: TextStyle(color: Color(0xFFF5E6D3), fontSize: 18),
       ),
       textTheme: const TextTheme(
-        displayLarge: TextStyle(color: Colors.white70, fontSize: 57),
-        displayMedium: TextStyle(color: Colors.white70, fontSize: 45),
-        displaySmall: TextStyle(color: Colors.white70, fontSize: 36),
-        headlineLarge: TextStyle(color: Colors.white70, fontSize: 32),
-        headlineMedium: TextStyle(color: Colors.white70, fontSize: 28),
-        headlineSmall: TextStyle(color: Colors.white70, fontSize: 24),
-        titleLarge: TextStyle(color: Colors.white70, fontSize: 22),
-        titleMedium: TextStyle(color: Colors.white70, fontSize: 16),
-        titleSmall: TextStyle(color: Colors.white70, fontSize: 14),
-        bodyLarge: TextStyle(color: Colors.white70, fontSize: 20),
-        bodyMedium: TextStyle(color: Colors.white70, fontSize: 18),
-        bodySmall: TextStyle(color: Colors.white70, fontSize: 15),
-        labelLarge: TextStyle(color: Colors.white70, fontSize: 14),
-        labelMedium: TextStyle(color: Colors.white70, fontSize: 12),
-        labelSmall: TextStyle(color: Colors.white70, fontSize: 10),
+        displayLarge: TextStyle(color: Color(0xFFF5E6D3), fontSize: 57),
+        displayMedium: TextStyle(color: Color(0xFFF5E6D3), fontSize: 45),
+        displaySmall: TextStyle(color: Color(0xFFF5E6D3), fontSize: 36),
+        headlineLarge: TextStyle(color: Color(0xFFF5E6D3), fontSize: 32),
+        headlineMedium: TextStyle(color: Color(0xFFF5E6D3), fontSize: 28),
+        headlineSmall: TextStyle(color: Color(0xFFF5E6D3), fontSize: 24),
+        titleLarge: TextStyle(color: Color(0xFFF5E6D3), fontSize: 22),
+        titleMedium: TextStyle(color: Color(0xFFF5E6D3), fontSize: 16),
+        titleSmall: TextStyle(color: Color(0xFFF5E6D3), fontSize: 14),
+        bodyLarge: TextStyle(color: Color(0xFFF5E6D3), fontSize: 20),
+        bodyMedium: TextStyle(color: Color(0xFFF5E6D3), fontSize: 18),
+        bodySmall: TextStyle(color: Color(0xFFF5E6D3), fontSize: 15),
+        labelLarge: TextStyle(color: Color(0xFFF5E6D3), fontSize: 14),
+        labelMedium: TextStyle(color: Color(0xFFF5E6D3), fontSize: 12),
+        labelSmall: TextStyle(color: Color(0xFFF5E6D3), fontSize: 10),
       ),
-      scaffoldBackgroundColor: const Color(0xA5272424),
-      cardColor: const Color(0xFF1E1E1E),
-      dividerColor: Colors.grey[800],
-      splashColor: const Color(0xFF81C784),
-      iconTheme: const IconThemeData(color: Colors.white70),
+      scaffoldBackgroundColor: const Color(0xFF0F1A2B), // Dark navy background
+      cardColor: const Color(0xFF1D3557), // Navy cards
+      dividerColor: const Color(0xFF2A4A6F), // Subtle navy divider
+      splashColor: const Color(0xFFD4A574), // Gold splash
+      iconTheme: const IconThemeData(color: Color(0xFFF5E6D3)),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
-          backgroundColor: WidgetStateProperty.all(const Color(0xFF81C784)),
-          foregroundColor: WidgetStateProperty.all(Colors.white),
+          backgroundColor: WidgetStateProperty.all(const Color(0xFFD4A574)), // Gold
+          foregroundColor: WidgetStateProperty.all(const Color(0xFF1D3557)), // Navy text
           textStyle: WidgetStateProperty.all(
-            const TextStyle(color: Colors.white, fontSize: 16),
+            const TextStyle(color: Color(0xFF1D3557), fontSize: 16),
           ),
         ),
       ),
       buttonTheme: const ButtonThemeData(
-        buttonColor: Color(0xFF81C784),
+        buttonColor: Color(0xFFD4A574),
         textTheme: ButtonTextTheme.primary,
       ),
       colorScheme: ColorScheme.dark(
-        primary: const Color(0xFF81C784), // Light green
-        secondary: const Color(0xFF4CAF50), // Medium green
-        surface: const Color(0xFF1E1E1E),
-        tertiary: const Color(0xFF388E3C), // Darker green
+        primary: const Color(0xFF2A4A6F), // Lighter navy
+        secondary: const Color(0xFFD4A574), // Gold
+        surface: const Color(0xFF1D3557), // Navy
+        tertiary: const Color(0xFFF5E6D3), // Cream
         error: Colors.red[400]!,
       ),
-      dialogTheme: DialogThemeData(backgroundColor: const Color(0xFF1E1E1E)),
+      dialogTheme: const DialogThemeData(backgroundColor: Color(0xFF1D3557)),
     );
   }
 }

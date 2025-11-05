@@ -906,6 +906,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You can interact with me in multiple ways:'**
   String get youCanInteractWithMeInMultipleWays;
+
+  /// No description provided for @edit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get edit;
+
+  /// No description provided for @duration.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get duration;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

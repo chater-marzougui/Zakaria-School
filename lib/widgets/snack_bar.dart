@@ -163,7 +163,7 @@ class _SlideTransitionSnackBarState extends State<SlideTransitionSnackBar>
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
+                      color: Colors.black.withAlpha(48),
                       blurRadius: 8,
                       offset: const Offset(0, 4),
                     ),
@@ -174,7 +174,7 @@ class _SlideTransitionSnackBarState extends State<SlideTransitionSnackBar>
                     Container(
                       padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withAlpha(48),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -199,7 +199,7 @@ class _SlideTransitionSnackBarState extends State<SlideTransitionSnackBar>
                       child: Container(
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withAlpha(48),
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(

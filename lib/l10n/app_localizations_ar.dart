@@ -428,4 +428,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get youCanInteractWithMeInMultipleWays => 'يمكنك التفاعل معي بعدة طرق:';
+
+  @override
+  String get edit => 'تعديل';
+
+  @override
+  String get duration => 'المدة';
 }
