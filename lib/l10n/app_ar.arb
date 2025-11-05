@@ -173,5 +173,14 @@
   "selectStatus": "اختر الحالة",
   "phoneNumberInvalid": "رقم الهاتف غير صالح",
   "cinInvalid": "يجب أن يتكون رقم البطاقة من 8 أرقام",
-  "nameRequired": "الاسم مطلوب"
+  "nameRequired": "الاسم مطلوب",
+  "filterByStatus": "تصفية حسب الحالة",
+  "allStatuses": "جميع الحالات",
+  "sortBy": "ترتيب حسب",
+  "sortByName": "ترتيب حسب الاسم",
+  "sortByStartDate": "ترتيب حسب تاريخ البدء",
+  "sortByProgress": "ترتيب حسب التقدم",
+  "sortByRemainingHours": "ترتيب حسب الساعات المتبقية",
+  "ascending": "تصاعدي",
+  "descending": "تنازلي"
 }

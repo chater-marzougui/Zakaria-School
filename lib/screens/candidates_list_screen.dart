@@ -14,6 +14,9 @@ class CandidatesListScreen extends StatefulWidget {
 
 class _CandidatesListScreenState extends State<CandidatesListScreen> {
   String _searchQuery = '';
+  String _statusFilter = 'all';
+  String _sortBy = 'name'; // name, startDate, progress, remainingHours
+  bool _sortAscending = true;
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +70,81 @@ class _CandidatesListScreenState extends State<CandidatesListScreen> {
             ),
           ),
 
+          // Filter and Sort Controls
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              children: [
+                // Status Filter
+                Expanded(
+                  child: DropdownButtonFormField<String>(
+                    value: _statusFilter,
+                    decoration: InputDecoration(
+                      labelText: t.filterByStatus,
+                      prefixIcon: const Icon(Icons.filter_list),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    ),
+                    items: [
+                      DropdownMenuItem(value: 'all', child: Text(t.allStatuses)),
+                      DropdownMenuItem(value: 'active', child: Text(t.active)),
+                      DropdownMenuItem(value: 'inactive', child: Text(t.inactive)),
+                      DropdownMenuItem(value: 'graduated', child: Text(t.graduated)),
+                    ],
+                    onChanged: (value) {
+                      if (value != null) {
+                        setState(() {
+                          _statusFilter = value;
+                        });
+                      }
+                    },
+                  ),
+                ),
+                const SizedBox(width: 8),
+                // Sort By
+                Expanded(
+                  child: DropdownButtonFormField<String>(
+                    value: _sortBy,
+                    decoration: InputDecoration(
+                      labelText: t.sortBy,
+                      prefixIcon: const Icon(Icons.sort),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    ),
+                    items: [
+                      DropdownMenuItem(value: 'name', child: Text(t.sortByName)),
+                      DropdownMenuItem(value: 'startDate', child: Text(t.sortByStartDate)),
+                      DropdownMenuItem(value: 'progress', child: Text(t.sortByProgress)),
+                      DropdownMenuItem(value: 'remainingHours', child: Text(t.sortByRemainingHours)),
+                    ],
+                    onChanged: (value) {
+                      if (value != null) {
+                        setState(() {
+                          _sortBy = value;
+                        });
+                      }
+                    },
+                  ),
+                ),
+                const SizedBox(width: 8),
+                // Sort Order Toggle
+                IconButton(
+                  icon: Icon(_sortAscending ? Icons.arrow_upward : Icons.arrow_downward),
+                  tooltip: _sortAscending ? t.ascending : t.descending,
+                  onPressed: () {
+                    setState(() {
+                      _sortAscending = !_sortAscending;
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+
           // Candidates List
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
@@ -86,12 +164,44 @@ class _CandidatesListScreenState extends State<CandidatesListScreen> {
                 final candidates = snapshot.data?.docs
                     .map((doc) => structs.Candidate.fromFirestore(doc))
                     .where((c) {
-                      if (_searchQuery.isEmpty) return true;
-                      return c.name.toLowerCase().contains(_searchQuery) ||
-                          c.phone.contains(_searchQuery) ||
-                          c.cin.toLowerCase().contains(_searchQuery);
+                      // Apply search filter
+                      if (_searchQuery.isNotEmpty) {
+                        bool matchesSearch = c.name.toLowerCase().contains(_searchQuery) ||
+                            c.phone.contains(_searchQuery) ||
+                            c.cin.toLowerCase().contains(_searchQuery);
+                        if (!matchesSearch) return false;
+                      }
+                      
+                      // Apply status filter
+                      if (_statusFilter != 'all' && c.status != _statusFilter) {
+                        return false;
+                      }
+                      
+                      return true;
                     })
                     .toList() ?? [];
+
+                // Apply sorting
+                candidates.sort((a, b) {
+                  int comparison;
+                  switch (_sortBy) {
+                    case 'name':
+                      comparison = a.name.compareTo(b.name);
+                      break;
+                    case 'startDate':
+                      comparison = a.startDate.compareTo(b.startDate);
+                      break;
+                    case 'progress':
+                      comparison = a.progressPercentage.compareTo(b.progressPercentage);
+                      break;
+                    case 'remainingHours':
+                      comparison = a.remainingHours.compareTo(b.remainingHours);
+                      break;
+                    default:
+                      comparison = 0;
+                  }
+                  return _sortAscending ? comparison : -comparison;
+                });
 
                 if (candidates.isEmpty) {
                   return Center(

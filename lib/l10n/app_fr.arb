@@ -173,5 +173,14 @@
   "selectStatus": "Sélectionner le statut",
   "phoneNumberInvalid": "Le numéro de téléphone est invalide",
   "cinInvalid": "Le CIN doit comporter 8 chiffres",
-  "nameRequired": "Le nom est obligatoire"
+  "nameRequired": "Le nom est obligatoire",
+  "filterByStatus": "Filtrer par statut",
+  "allStatuses": "Tous les statuts",
+  "sortBy": "Trier par",
+  "sortByName": "Trier par nom",
+  "sortByStartDate": "Trier par date de début",
+  "sortByProgress": "Trier par progression",
+  "sortByRemainingHours": "Trier par heures restantes",
+  "ascending": "Croissant",
+  "descending": "Décroissant"
 }
