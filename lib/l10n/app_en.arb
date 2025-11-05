@@ -139,5 +139,22 @@
   "yes": "Yes",
   "youCanInteractWithMeInMultipleWays": "You can interact with me in multiple ways:",
   "edit": "Edit",
-  "duration": "Duration"
+  "duration": "Duration",
+  "cin": "CIN",
+  "candidateCin": "Candidate CIN",
+  "availability": "Availability",
+  "weeklyAvailability": "Weekly Availability",
+  "noAvailabilitySet": "No availability set yet",
+  "addAvailability": "Add Availability",
+  "monday": "Monday",
+  "tuesday": "Tuesday",
+  "wednesday": "Wednesday",
+  "thursday": "Thursday",
+  "friday": "Friday",
+  "saturday": "Saturday",
+  "sunday": "Sunday",
+  "from": "From",
+  "to": "To",
+  "deleteTimeSlot": "Delete Time Slot",
+  "availabilitySchedule": "Availability Schedule"
 }

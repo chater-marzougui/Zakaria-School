@@ -139,5 +139,22 @@
   "yes": "نعم",
   "youCanInteractWithMeInMultipleWays": "يمكنك التفاعل معي بعدة طرق:",
   "edit": "تعديل",
-  "duration": "المدة"
+  "duration": "المدة",
+  "cin": "رقم بطاقة التعريف",
+  "candidateCin": "رقم بطاقة تعريف المرشح",
+  "availability": "التوفر",
+  "weeklyAvailability": "التوفر الأسبوعي",
+  "noAvailabilitySet": "لم يتم تحديد التوفر بعد",
+  "addAvailability": "إضافة التوفر",
+  "monday": "الإثنين",
+  "tuesday": "الثلاثاء",
+  "wednesday": "الأربعاء",
+  "thursday": "الخميس",
+  "friday": "الجمعة",
+  "saturday": "السبت",
+  "sunday": "الأحد",
+  "from": "من",
+  "to": "إلى",
+  "deleteTimeSlot": "حذف الفترة الزمنية",
+  "availabilitySchedule": "جدول التوفر"
 }

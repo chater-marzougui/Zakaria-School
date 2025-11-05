@@ -144,6 +144,7 @@ class TestDataGenerator {
   static Candidate _generateCandidate(String id) {
     final name = '${_firstNames[_random.nextInt(_firstNames.length)]} ${_lastNames[_random.nextInt(_lastNames.length)]}';
     final phone = '+216 ${20 + _random.nextInt(79)} ${_random.nextInt(900) + 100} ${_random.nextInt(900) + 100}';
+    final cin = '${_random.nextInt(90000000) + 10000000}'; // 8-digit CIN
 
     // Random start date within last 6 months
     final startDate = DateTime.now().subtract(Duration(days: _random.nextInt(180)));
@@ -160,6 +161,7 @@ class TestDataGenerator {
       id: id,
       name: name,
       phone: phone,
+      cin: cin,
       startDate: startDate,
       theoryPassed: theoryPassed,
       totalPaidHours: totalPaidHours,

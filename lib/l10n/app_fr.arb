@@ -139,5 +139,22 @@
   "yes": "Oui",
   "youCanInteractWithMeInMultipleWays": "Vous pouvez interagir avec moi de plusieurs manières :",
   "edit": "Modifier",
-  "duration": "Durée"
+  "duration": "Durée",
+  "cin": "CIN",
+  "candidateCin": "CIN du candidat",
+  "availability": "Disponibilité",
+  "weeklyAvailability": "Disponibilité hebdomadaire",
+  "noAvailabilitySet": "Aucune disponibilité définie",
+  "addAvailability": "Ajouter disponibilité",
+  "monday": "Lundi",
+  "tuesday": "Mardi",
+  "wednesday": "Mercredi",
+  "thursday": "Jeudi",
+  "friday": "Vendredi",
+  "saturday": "Samedi",
+  "sunday": "Dimanche",
+  "from": "De",
+  "to": "À",
+  "deleteTimeSlot": "Supprimer le créneau",
+  "availabilitySchedule": "Calendrier de disponibilité"
 }
