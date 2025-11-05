@@ -1,8 +1,11 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../../controllers/app_preferences.dart';
 import '../../l10n/app_localizations.dart';
 import '../../main.dart';
+import '../../services/export_service.dart';
+import '../../widgets/widgets.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -129,6 +132,56 @@ class _SettingsPageState extends State<SettingsPage> {
                   _toggleNotifications(newValue);
                 },
               ),
+              const Divider(),
+
+              // Export Data Section
+              ListTile(
+                leading: Icon(Icons.download, color: theme.colorScheme.primary),
+                title: Text(loc.exportData),
+                subtitle: const Text('Export candidates and sessions to CSV'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: _exportData,
+              ),
+              const Divider(),
+
+              // About Section
+              ListTile(
+                leading: Icon(Icons.info_outline, color: theme.colorScheme.primary),
+                title: Text(loc.about),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: _showAboutDialog,
+              ),
+
+              // Logout Button
+              const SizedBox(height: 24),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: ElevatedButton(
+                  onPressed: _logout,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: theme.colorScheme.error,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.logout),
+                      const SizedBox(width: 8),
+                      Text(
+                        loc.logout,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
 
             ],
           ),
@@ -152,5 +205,103 @@ class _SettingsPageState extends State<SettingsPage> {
       _notificationsEnabled = isEnabled;
       _isUpdating = false;
     });
+  }
+
+  Future<void> _exportData() async {
+    final loc = AppLocalizations.of(context)!;
+    setState(() {
+      _isUpdating = true;
+    });
+
+    try {
+      final path = await ExportService.exportAllDataToCSV();
+      if (mounted) {
+        showCustomSnackBar(context, '${loc.dataExported}\n$path');
+      }
+    } catch (e) {
+      if (mounted) {
+        showCustomSnackBar(context, '${loc.exportFailed}: $e');
+      }
+    } finally {
+      setState(() {
+        _isUpdating = false;
+      });
+    }
+  }
+
+  void _showAboutDialog() {
+    final loc = AppLocalizations.of(context)!;
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(loc.about),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'École de Conduite Zakaria',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text('${loc.appVersion}: 1.0.0'),
+            const SizedBox(height: 16),
+            Text(
+              loc.developerInfo,
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            const Text('Developed for driving school management'),
+            const SizedBox(height: 4),
+            const Text('© 2024 All rights reserved'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(loc.close),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _logout() async {
+    final loc = AppLocalizations.of(context)!;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(loc.logout),
+        content: Text(loc.areYouSureYouWantToLogout),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(loc.cancel),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+            child: Text(loc.logout),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      try {
+        await FirebaseAuth.instance.signOut();
+        // Navigation will be handled by AuthWrapper
+      } catch (e) {
+        if (mounted) {
+          showCustomSnackBar(context, '${loc.errorSigningOut}: $e');
+        }
+      }
+    }
   }
 }
