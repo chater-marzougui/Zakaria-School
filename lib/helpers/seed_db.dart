@@ -182,8 +182,10 @@ class TestDataGenerator {
 
     final startTime = '${startHour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
 
-    final endHour = startHour + duration.toInt();
-    final endMinute = startMinute + ((duration % 1) * 60).toInt();
+    // Calculate end time with proper minute/hour overflow handling
+    final totalMinutes = startHour * 60 + startMinute + (duration * 60).toInt();
+    final endHour = (totalMinutes ~/ 60).clamp(0, 23); // Ensure valid hour (0-23)
+    final endMinute = totalMinutes % 60;
     final endTime = '${endHour.toString().padLeft(2, '0')}:${endMinute.toString().padLeft(2, '0')}';
 
     // Status based on date

@@ -936,6 +936,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Duration'**
   String get duration;
+
+  /// No description provided for @cin.
+  ///
+  /// In en, this message translates to:
+  /// **'CIN'**
+  String get cin;
+
+  /// No description provided for @candidateCin.
+  ///
+  /// In en, this message translates to:
+  /// **'Candidate CIN'**
+  String get candidateCin;
+
+  /// No description provided for @availability.
+  ///
+  /// In en, this message translates to:
+  /// **'Availability'**
+  String get availability;
+
+  /// No description provided for @weeklyAvailability.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Availability'**
+  String get weeklyAvailability;
+
+  /// No description provided for @noAvailabilitySet.
+  ///
+  /// In en, this message translates to:
+  /// **'No availability set yet'**
+  String get noAvailabilitySet;
+
+  /// No description provided for @addAvailability.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Availability'**
+  String get addAvailability;
+
+  /// No description provided for @monday.
+  ///
+  /// In en, this message translates to:
+  /// **'Monday'**
+  String get monday;
+
+  /// No description provided for @tuesday.
+  ///
+  /// In en, this message translates to:
+  /// **'Tuesday'**
+  String get tuesday;
+
+  /// No description provided for @wednesday.
+  ///
+  /// In en, this message translates to:
+  /// **'Wednesday'**
+  String get wednesday;
+
+  /// No description provided for @thursday.
+  ///
+  /// In en, this message translates to:
+  /// **'Thursday'**
+  String get thursday;
+
+  /// No description provided for @friday.
+  ///
+  /// In en, this message translates to:
+  /// **'Friday'**
+  String get friday;
+
+  /// No description provided for @saturday.
+  ///
+  /// In en, this message translates to:
+  /// **'Saturday'**
+  String get saturday;
+
+  /// No description provided for @sunday.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunday'**
+  String get sunday;
+
+  /// No description provided for @from.
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get from;
+
+  /// No description provided for @to.
+  ///
+  /// In en, this message translates to:
+  /// **'To'**
+  String get to;
+
+  /// No description provided for @deleteTimeSlot.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Time Slot'**
+  String get deleteTimeSlot;
+
+  /// No description provided for @availabilitySchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Availability Schedule'**
+  String get availabilitySchedule;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

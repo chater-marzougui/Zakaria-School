@@ -443,4 +443,55 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get duration => 'المدة';
+
+  @override
+  String get cin => 'رقم بطاقة التعريف';
+
+  @override
+  String get candidateCin => 'رقم بطاقة تعريف المرشح';
+
+  @override
+  String get availability => 'التوفر';
+
+  @override
+  String get weeklyAvailability => 'التوفر الأسبوعي';
+
+  @override
+  String get noAvailabilitySet => 'لم يتم تحديد التوفر بعد';
+
+  @override
+  String get addAvailability => 'إضافة التوفر';
+
+  @override
+  String get monday => 'الإثنين';
+
+  @override
+  String get tuesday => 'الثلاثاء';
+
+  @override
+  String get wednesday => 'الأربعاء';
+
+  @override
+  String get thursday => 'الخميس';
+
+  @override
+  String get friday => 'الجمعة';
+
+  @override
+  String get saturday => 'السبت';
+
+  @override
+  String get sunday => 'الأحد';
+
+  @override
+  String get from => 'من';
+
+  @override
+  String get to => 'إلى';
+
+  @override
+  String get deleteTimeSlot => 'حذف الفترة الزمنية';
+
+  @override
+  String get availabilitySchedule => 'جدول التوفر';
 }

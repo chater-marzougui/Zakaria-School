@@ -443,4 +443,55 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get duration => 'Durée';
+
+  @override
+  String get cin => 'CIN';
+
+  @override
+  String get candidateCin => 'CIN du candidat';
+
+  @override
+  String get availability => 'Disponibilité';
+
+  @override
+  String get weeklyAvailability => 'Disponibilité hebdomadaire';
+
+  @override
+  String get noAvailabilitySet => 'Aucune disponibilité définie';
+
+  @override
+  String get addAvailability => 'Ajouter disponibilité';
+
+  @override
+  String get monday => 'Lundi';
+
+  @override
+  String get tuesday => 'Mardi';
+
+  @override
+  String get wednesday => 'Mercredi';
+
+  @override
+  String get thursday => 'Jeudi';
+
+  @override
+  String get friday => 'Vendredi';
+
+  @override
+  String get saturday => 'Samedi';
+
+  @override
+  String get sunday => 'Dimanche';
+
+  @override
+  String get from => 'De';
+
+  @override
+  String get to => 'À';
+
+  @override
+  String get deleteTimeSlot => 'Supprimer le créneau';
+
+  @override
+  String get availabilitySchedule => 'Calendrier de disponibilité';
 }
