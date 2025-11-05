@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../l10n/app_localizations.dart';
 import '../models/structs.dart' as structs;
+import '../services/db_service.dart';
+import '../helpers/validators.dart';
 import 'candidate_detail_screen.dart';
 
 class CandidatesListScreen extends StatefulWidget {
@@ -13,6 +15,9 @@ class CandidatesListScreen extends StatefulWidget {
 
 class _CandidatesListScreenState extends State<CandidatesListScreen> {
   String _searchQuery = '';
+  String _statusFilter = 'all';
+  String _sortBy = 'name'; // name, startDate, progress, remainingHours
+  bool _sortAscending = true;
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +71,81 @@ class _CandidatesListScreenState extends State<CandidatesListScreen> {
             ),
           ),
 
+          // Filter and Sort Controls
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              children: [
+                // Status Filter
+                Expanded(
+                  child: DropdownButtonFormField<String>(
+                    value: _statusFilter,
+                    decoration: InputDecoration(
+                      labelText: t.filterByStatus,
+                      prefixIcon: const Icon(Icons.filter_list),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    ),
+                    items: [
+                      DropdownMenuItem(value: 'all', child: Text(t.allStatuses)),
+                      DropdownMenuItem(value: 'active', child: Text(t.active)),
+                      DropdownMenuItem(value: 'inactive', child: Text(t.inactive)),
+                      DropdownMenuItem(value: 'graduated', child: Text(t.graduated)),
+                    ],
+                    onChanged: (value) {
+                      if (value != null) {
+                        setState(() {
+                          _statusFilter = value;
+                        });
+                      }
+                    },
+                  ),
+                ),
+                const SizedBox(width: 8),
+                // Sort By
+                Expanded(
+                  child: DropdownButtonFormField<String>(
+                    value: _sortBy,
+                    decoration: InputDecoration(
+                      labelText: t.sortBy,
+                      prefixIcon: const Icon(Icons.sort),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    ),
+                    items: [
+                      DropdownMenuItem(value: 'name', child: Text(t.sortByName)),
+                      DropdownMenuItem(value: 'startDate', child: Text(t.sortByStartDate)),
+                      DropdownMenuItem(value: 'progress', child: Text(t.sortByProgress)),
+                      DropdownMenuItem(value: 'remainingHours', child: Text(t.sortByRemainingHours)),
+                    ],
+                    onChanged: (value) {
+                      if (value != null) {
+                        setState(() {
+                          _sortBy = value;
+                        });
+                      }
+                    },
+                  ),
+                ),
+                const SizedBox(width: 8),
+                // Sort Order Toggle
+                IconButton(
+                  icon: Icon(_sortAscending ? Icons.arrow_upward : Icons.arrow_downward),
+                  tooltip: _sortAscending ? t.ascending : t.descending,
+                  onPressed: () {
+                    setState(() {
+                      _sortAscending = !_sortAscending;
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+
           // Candidates List
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
@@ -82,44 +162,102 @@ class _CandidatesListScreenState extends State<CandidatesListScreen> {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 }
 
-                final candidates = snapshot.data?.docs
+                final allCandidates = snapshot.data?.docs
                     .map((doc) => structs.Candidate.fromFirestore(doc))
-                    .where((c) {
-                      if (_searchQuery.isEmpty) return true;
-                      return c.name.toLowerCase().contains(_searchQuery) ||
-                          c.phone.contains(_searchQuery) ||
-                          c.cin.toLowerCase().contains(_searchQuery);
-                    })
                     .toList() ?? [];
 
-                if (candidates.isEmpty) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.person_add_outlined,
-                          size: 64,
-                          color: theme.textTheme.bodyMedium?.color?.withAlpha(100),
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          t.noCandidatesYet,
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            color: theme.textTheme.bodyMedium?.color?.withAlpha(150),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }
+                final candidates = allCandidates
+                    .where((c) {
+                      // Apply search filter
+                      if (_searchQuery.isNotEmpty) {
+                        bool matchesSearch = c.name.toLowerCase().contains(_searchQuery) ||
+                            c.phone.contains(_searchQuery) ||
+                            c.cin.toLowerCase().contains(_searchQuery);
+                        if (!matchesSearch) return false;
+                      }
+                      
+                      // Apply status filter
+                      if (_statusFilter != 'all' && c.status != _statusFilter) {
+                        return false;
+                      }
+                      
+                      return true;
+                    })
+                    .toList();
 
-                return ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: candidates.length,
-                  itemBuilder: (context, index) {
-                    return _CandidateCard(candidate: candidates[index]);
-                  },
+                // Apply sorting
+                candidates.sort((a, b) {
+                  int comparison;
+                  switch (_sortBy) {
+                    case 'name':
+                      comparison = a.name.compareTo(b.name);
+                      break;
+                    case 'startDate':
+                      comparison = a.startDate.compareTo(b.startDate);
+                      break;
+                    case 'progress':
+                      comparison = a.progressPercentage.compareTo(b.progressPercentage);
+                      break;
+                    case 'remainingHours':
+                      comparison = a.remainingHours.compareTo(b.remainingHours);
+                      break;
+                    default:
+                      comparison = 0;
+                  }
+                  return _sortAscending ? comparison : -comparison;
+                });
+
+                return Column(
+                  children: [
+                    // Results count
+                    if (allCandidates.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        child: Row(
+                          children: [
+                            Icon(Icons.info_outline, size: 16, color: theme.textTheme.bodySmall?.color),
+                            const SizedBox(width: 8),
+                            Text(
+                              t.showingResults
+                                  .replaceAll('{count}', candidates.length.toString())
+                                  .replaceAll('{total}', allCandidates.length.toString()),
+                              style: theme.textTheme.bodySmall,
+                            ),
+                          ],
+                        ),
+                      ),
+                    
+                    // Candidates list or empty state
+                    Expanded(
+                      child: candidates.isEmpty
+                          ? Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.person_add_outlined,
+                                    size: 64,
+                                    color: theme.textTheme.bodyMedium?.color?.withAlpha(100),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    t.noCandidatesYet,
+                                    style: theme.textTheme.titleMedium?.copyWith(
+                                      color: theme.textTheme.bodyMedium?.color?.withAlpha(150),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : ListView.builder(
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              itemCount: candidates.length,
+                              itemBuilder: (context, index) {
+                                return _CandidateCard(candidate: candidates[index]);
+                              },
+                            ),
+                    ),
+                  ],
                 );
               },
             ),
@@ -138,44 +276,76 @@ class _CandidatesListScreenState extends State<CandidatesListScreen> {
 
   void _showAddCandidateDialog(BuildContext context) {
     final t = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
     final nameController = TextEditingController();
     final phoneController = TextEditingController();
     final cinController = TextEditingController();
+    final formKey = GlobalKey<FormState>();
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(t.addCandidate),
         content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: nameController,
-                decoration: InputDecoration(
-                  labelText: t.candidateName,
-                  border: const OutlineInputBorder(),
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: nameController,
+                  decoration: InputDecoration(
+                    labelText: t.candidateName,
+                    prefixIcon: const Icon(Icons.person),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return t.nameRequired;
+                    }
+                    return null;
+                  },
                 ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: phoneController,
-                decoration: InputDecoration(
-                  labelText: t.candidatePhone,
-                  border: const OutlineInputBorder(),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: phoneController,
+                  decoration: InputDecoration(
+                    labelText: t.candidatePhone,
+                    prefixIcon: const Icon(Icons.phone),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  keyboardType: TextInputType.phone,
+                  validator: (value) => Validators.validatePhone(
+                    value,
+                    errorMessage: value == null || value.trim().isEmpty
+                        ? t.pleaseEnterLabel.replaceAll('{label}', t.phoneNumber)
+                        : t.phoneNumberInvalid,
+                  ),
                 ),
-                keyboardType: TextInputType.phone,
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: cinController,
-                decoration: InputDecoration(
-                  labelText: t.candidateCin,
-                  border: const OutlineInputBorder(),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: cinController,
+                  decoration: InputDecoration(
+                    labelText: t.candidateCin,
+                    prefixIcon: const Icon(Icons.credit_card),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    hintText: '${t.cinExample} (${t.optional})',
+                  ),
+                  keyboardType: TextInputType.number,
+                  maxLength: 8,
+                  validator: (value) => Validators.validateCIN(
+                    value,
+                    errorMessage: t.cinInvalid,
+                  ),
                 ),
-                keyboardType: TextInputType.number,
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         actions: [
@@ -185,24 +355,36 @@ class _CandidatesListScreenState extends State<CandidatesListScreen> {
           ),
           ElevatedButton(
             onPressed: () async {
-              if (nameController.text.isEmpty || phoneController.text.isEmpty) {
-                return;
-              }
+              if (formKey.currentState!.validate()) {
+                try {
+                  final candidate = structs.Candidate(
+                    id: '',
+                    name: nameController.text.trim(),
+                    phone: phoneController.text.trim(),
+                    cin: cinController.text.trim(),
+                    startDate: DateTime.now(),
+                  );
 
-              final candidate = structs.Candidate(
-                id: '',
-                name: nameController.text,
-                phone: phoneController.text,
-                cin: cinController.text,
-                startDate: DateTime.now(),
-              );
+                  await DatabaseService.createCandidate(candidate);
 
-              await FirebaseFirestore.instance
-                  .collection('candidates')
-                  .add(candidate.toFirestore());
-
-              if (context.mounted) {
-                Navigator.pop(context);
+                  if (!context.mounted) return;
+                  Navigator.pop(context);
+                  
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(t.candidateCreatedSuccessfully),
+                      backgroundColor: theme.colorScheme.primary,
+                    ),
+                  );
+                } catch (e) {
+                  if (!context.mounted) return;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('${t.failedToCreateCandidate}: $e'),
+                      backgroundColor: theme.colorScheme.error,
+                    ),
+                  );
+                }
               }
             },
             child: Text(t.save),
