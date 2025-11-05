@@ -156,5 +156,20 @@
   "from": "From",
   "to": "To",
   "deleteTimeSlot": "Delete Time Slot",
-  "availabilitySchedule": "Availability Schedule"
+  "availabilitySchedule": "Availability Schedule",
+  "editCandidate": "Edit Candidate",
+  "updateCandidate": "Update Candidate",
+  "deleteCandidate": "Delete Candidate",
+  "deleteCandidateMessage": "Are you sure you want to delete this candidate? This will also delete all their sessions.",
+  "candidateUpdatedSuccessfully": "Candidate updated successfully",
+  "candidateDeletedSuccessfully": "Candidate deleted successfully",
+  "failedToUpdateCandidate": "Failed to update candidate",
+  "failedToDeleteCandidate": "Failed to delete candidate",
+  "active": "Active",
+  "inactive": "Inactive",
+  "graduated": "Graduated",
+  "selectStatus": "Select Status",
+  "phoneNumberInvalid": "Phone number is invalid",
+  "cinInvalid": "CIN must be 8 digits",
+  "nameRequired": "Name is required"
 }

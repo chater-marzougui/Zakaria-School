@@ -156,5 +156,20 @@
   "from": "De",
   "to": "À",
   "deleteTimeSlot": "Supprimer le créneau",
-  "availabilitySchedule": "Calendrier de disponibilité"
+  "availabilitySchedule": "Calendrier de disponibilité",
+  "editCandidate": "Modifier le candidat",
+  "updateCandidate": "Mettre à jour le candidat",
+  "deleteCandidate": "Supprimer le candidat",
+  "deleteCandidateMessage": "Êtes-vous sûr de vouloir supprimer ce candidat ? Cela supprimera également toutes ses séances.",
+  "candidateUpdatedSuccessfully": "Candidat mis à jour avec succès",
+  "candidateDeletedSuccessfully": "Candidat supprimé avec succès",
+  "failedToUpdateCandidate": "Échec de la mise à jour du candidat",
+  "failedToDeleteCandidate": "Échec de la suppression du candidat",
+  "active": "Actif",
+  "inactive": "Inactif",
+  "graduated": "Diplômé",
+  "selectStatus": "Sélectionner le statut",
+  "phoneNumberInvalid": "Le numéro de téléphone est invalide",
+  "cinInvalid": "Le CIN doit comporter 8 chiffres",
+  "nameRequired": "Le nom est obligatoire"
 }

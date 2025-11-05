@@ -156,5 +156,20 @@
   "from": "من",
   "to": "إلى",
   "deleteTimeSlot": "حذف الفترة الزمنية",
-  "availabilitySchedule": "جدول التوفر"
+  "availabilitySchedule": "جدول التوفر",
+  "editCandidate": "تعديل المرشح",
+  "updateCandidate": "تحديث المرشح",
+  "deleteCandidate": "حذف المرشح",
+  "deleteCandidateMessage": "هل أنت متأكد من حذف هذا المرشح؟ سيؤدي هذا أيضًا إلى حذف جميع جلساته.",
+  "candidateUpdatedSuccessfully": "تم تحديث المرشح بنجاح",
+  "candidateDeletedSuccessfully": "تم حذف المرشح بنجاح",
+  "failedToUpdateCandidate": "فشل تحديث المرشح",
+  "failedToDeleteCandidate": "فشل حذف المرشح",
+  "active": "نشط",
+  "inactive": "غير نشط",
+  "graduated": "متخرج",
+  "selectStatus": "اختر الحالة",
+  "phoneNumberInvalid": "رقم الهاتف غير صالح",
+  "cinInvalid": "يجب أن يتكون رقم البطاقة من 8 أرقام",
+  "nameRequired": "الاسم مطلوب"
 }
