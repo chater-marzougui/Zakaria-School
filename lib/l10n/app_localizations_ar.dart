@@ -15,6 +15,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get addCandidate => 'إضافة مرشح';
 
   @override
+  String get addSession => 'إضافة جلسة';
+
+  @override
   String get addSessionTitle => 'إضافة جلسة';
 
   @override
@@ -391,7 +394,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get tooManyFailedAttempts => 'عدد كبير جدًا من المحاولات الفاشلة. يرجى المحاولة لاحقًا';
 
   @override
+  String get totalHours => 'الساعات الإجمالية';
+
+  @override
   String get totalPaidHours => 'الساعات المدفوعة';
+
+  @override
+  String get totalSessions => 'إجمالي الجلسات';
 
   @override
   String get totalTakenHours => 'الساعات المنجزة';

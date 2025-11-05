@@ -15,6 +15,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get addCandidate => 'Ajouter un candidat';
 
   @override
+  String get addSession => 'Ajouter une séance';
+
+  @override
   String get addSessionTitle => 'Ajouter une séance';
 
   @override
@@ -391,7 +394,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get tooManyFailedAttempts => 'Trop de tentatives échouées. Veuillez réessayer plus tard';
 
   @override
+  String get totalHours => 'Heures totales';
+
+  @override
   String get totalPaidHours => 'Heures payées';
+
+  @override
+  String get totalSessions => 'Séances totales';
 
   @override
   String get totalTakenHours => 'Heures effectuées';

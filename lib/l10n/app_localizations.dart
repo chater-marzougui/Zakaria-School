@@ -109,6 +109,12 @@ abstract class AppLocalizations {
   /// **'Add Candidate'**
   String get addCandidate;
 
+  /// No description provided for @addSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Session'**
+  String get addSession;
+
   /// No description provided for @addSessionTitle.
   ///
   /// In en, this message translates to:
@@ -829,11 +835,23 @@ abstract class AppLocalizations {
   /// **'Too many failed attempts. Please try again later'**
   String get tooManyFailedAttempts;
 
+  /// No description provided for @totalHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Hours'**
+  String get totalHours;
+
   /// No description provided for @totalPaidHours.
   ///
   /// In en, this message translates to:
   /// **'Total Paid Hours'**
   String get totalPaidHours;
+
+  /// No description provided for @totalSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Sessions'**
+  String get totalSessions;
 
   /// No description provided for @totalTakenHours.
   ///
