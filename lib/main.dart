@@ -154,6 +154,7 @@ class MyAppState extends State<MyApp> {
     return ThemeData(
       primarySwatch: Colors.blue,
       primaryColor: const Color(0xFF2A4A6F), // Lighter navy for dark mode
+      brightness: Brightness.dark,
       appBarTheme: const AppBarTheme(
         centerTitle: true,
         backgroundColor: Color(0xFF1D3557), // Navy blue
@@ -161,48 +162,84 @@ class MyAppState extends State<MyApp> {
         titleTextStyle: TextStyle(color: Color(0xFFF5E6D3), fontSize: 18),
       ),
       textTheme: const TextTheme(
-        displayLarge: TextStyle(color: Color(0xFFF5E6D3), fontSize: 57),
-        displayMedium: TextStyle(color: Color(0xFFF5E6D3), fontSize: 45),
-        displaySmall: TextStyle(color: Color(0xFFF5E6D3), fontSize: 36),
-        headlineLarge: TextStyle(color: Color(0xFFF5E6D3), fontSize: 32),
-        headlineMedium: TextStyle(color: Color(0xFFF5E6D3), fontSize: 28),
-        headlineSmall: TextStyle(color: Color(0xFFF5E6D3), fontSize: 24),
-        titleLarge: TextStyle(color: Color(0xFFF5E6D3), fontSize: 22),
-        titleMedium: TextStyle(color: Color(0xFFF5E6D3), fontSize: 16),
-        titleSmall: TextStyle(color: Color(0xFFF5E6D3), fontSize: 14),
-        bodyLarge: TextStyle(color: Color(0xFFF5E6D3), fontSize: 20),
-        bodyMedium: TextStyle(color: Color(0xFFF5E6D3), fontSize: 18),
-        bodySmall: TextStyle(color: Color(0xFFF5E6D3), fontSize: 15),
-        labelLarge: TextStyle(color: Color(0xFFF5E6D3), fontSize: 14),
-        labelMedium: TextStyle(color: Color(0xFFF5E6D3), fontSize: 12),
-        labelSmall: TextStyle(color: Color(0xFFF5E6D3), fontSize: 10),
+        displayLarge: TextStyle(color: Color(0xFFFFFFFF), fontSize: 57, fontWeight: FontWeight.w400),
+        displayMedium: TextStyle(color: Color(0xFFFFFFFF), fontSize: 45, fontWeight: FontWeight.w400),
+        displaySmall: TextStyle(color: Color(0xFFFFFFFF), fontSize: 36, fontWeight: FontWeight.w400),
+        headlineLarge: TextStyle(color: Color(0xFFFFFFFF), fontSize: 32, fontWeight: FontWeight.w400),
+        headlineMedium: TextStyle(color: Color(0xFFFFFFFF), fontSize: 28, fontWeight: FontWeight.w400),
+        headlineSmall: TextStyle(color: Color(0xFFFFFFFF), fontSize: 24, fontWeight: FontWeight.w400),
+        titleLarge: TextStyle(color: Color(0xFFFFFFFF), fontSize: 22, fontWeight: FontWeight.w500),
+        titleMedium: TextStyle(color: Color(0xFFFFFFFF), fontSize: 16, fontWeight: FontWeight.w500),
+        titleSmall: TextStyle(color: Color(0xFFFFFFFF), fontSize: 14, fontWeight: FontWeight.w500),
+        bodyLarge: TextStyle(color: Color(0xFFE0E0E0), fontSize: 20, fontWeight: FontWeight.w400),
+        bodyMedium: TextStyle(color: Color(0xFFE0E0E0), fontSize: 18, fontWeight: FontWeight.w400),
+        bodySmall: TextStyle(color: Color(0xFFE0E0E0), fontSize: 15, fontWeight: FontWeight.w400),
+        labelLarge: TextStyle(color: Color(0xFFE0E0E0), fontSize: 14, fontWeight: FontWeight.w500),
+        labelMedium: TextStyle(color: Color(0xFFB0B0B0), fontSize: 12, fontWeight: FontWeight.w500),
+        labelSmall: TextStyle(color: Color(0xFFB0B0B0), fontSize: 10, fontWeight: FontWeight.w500),
       ),
       scaffoldBackgroundColor: const Color(0xFF0F1A2B), // Dark navy background
       cardColor: const Color(0xFF1D3557), // Navy cards
       dividerColor: const Color(0xFF2A4A6F), // Subtle navy divider
       splashColor: const Color(0xFFD4A574), // Gold splash
-      iconTheme: const IconThemeData(color: Color(0xFFF5E6D3)),
+      iconTheme: const IconThemeData(color: Color(0xFFE0E0E0)),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
           backgroundColor: WidgetStateProperty.all(const Color(0xFFD4A574)), // Gold
-          foregroundColor: WidgetStateProperty.all(const Color(0xFF1D3557)), // Navy text
+          foregroundColor: WidgetStateProperty.all(const Color(0xFF0F1A2B)), // Dark background for contrast
           textStyle: WidgetStateProperty.all(
-            const TextStyle(color: Color(0xFF1D3557), fontSize: 16),
+            const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
           ),
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: ButtonStyle(
+          foregroundColor: WidgetStateProperty.all(const Color(0xFFD4A574)), // Gold for text buttons
         ),
       ),
       buttonTheme: const ButtonThemeData(
         buttonColor: Color(0xFFD4A574),
         textTheme: ButtonTextTheme.primary,
       ),
+      inputDecorationTheme: InputDecorationTheme(
+        labelStyle: const TextStyle(color: Color(0xFFE0E0E0)),
+        hintStyle: const TextStyle(color: Color(0xFFB0B0B0)),
+        border: OutlineInputBorder(
+          borderSide: const BorderSide(color: Color(0xFF2A4A6F)),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Color(0xFF2A4A6F)),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Color(0xFFD4A574)),
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
       colorScheme: ColorScheme.dark(
-        primary: const Color(0xFF2A4A6F), // Lighter navy
+        primary: const Color(0xFFD4A574), // Gold as primary for better visibility
         secondary: const Color(0xFFD4A574), // Gold
         surface: const Color(0xFF1D3557), // Navy
         tertiary: const Color(0xFFF5E6D3), // Cream
         error: Colors.red[400]!,
+        onPrimary: const Color(0xFF0F1A2B), // Dark text on gold
+        onSecondary: const Color(0xFF0F1A2B), // Dark text on gold
+        onSurface: const Color(0xFFFFFFFF), // White text on surface
+        onError: Colors.white,
       ),
-      dialogTheme: const DialogThemeData(backgroundColor: Color(0xFF1D3557)),
+      dialogTheme: DialogThemeData(
+        backgroundColor: const Color(0xFF1D3557),
+        titleTextStyle: const TextStyle(
+          color: Color(0xFFFFFFFF),
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+        ),
+        contentTextStyle: const TextStyle(
+          color: Color(0xFFE0E0E0),
+          fontSize: 16,
+        ),
+      ),
     );
   }
 }

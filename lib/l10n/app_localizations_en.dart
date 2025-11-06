@@ -494,4 +494,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get availabilitySchedule => 'Availability Schedule';
+
+  @override
+  String get loading => 'Loading...';
 }

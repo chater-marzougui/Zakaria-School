@@ -6,6 +6,7 @@ import '../widgets/widgets.dart';
 import '../models/structs.dart' as structs;
 import 'user_controller.dart';
 import '../screens/user_management/login.dart';
+import '../l10n/app_localizations.dart';
 
 class AuthWrapper extends StatelessWidget {
   const AuthWrapper({super.key});
@@ -16,7 +17,7 @@ class AuthWrapper extends StatelessWidget {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.active) {
-          return _loadingScreen();
+          return _loadingScreen(context);
         }
 
         if (snapshot.hasData && snapshot.data != null) {
@@ -25,7 +26,7 @@ class AuthWrapper extends StatelessWidget {
             future: FirebaseFirestore.instance.collection('users').doc(user.uid).get(),
             builder: (context, userSnapshot) {
               if (userSnapshot.connectionState != ConnectionState.done) {
-                return _loadingScreen();
+                return _loadingScreen(context);
               }
 
               if (userSnapshot.hasData && userSnapshot.data!.exists) {
@@ -44,11 +45,12 @@ class AuthWrapper extends StatelessWidget {
     );
   }
 
-  Widget _loadingScreen() {
-    return const Scaffold(
+  Widget _loadingScreen(BuildContext context) {
+    final t = AppLocalizations.of(context);
+    return Scaffold(
       body: Center(
         child: CustomLoadingScreen(
-          message: "Checking authentication...",
+          message: t?.loading ?? "Loading...",
         ),
       ),
     );
