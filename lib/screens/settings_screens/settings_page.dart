@@ -93,8 +93,15 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: const EdgeInsets.all(16.0),
             children: [
               ListTile(
-                title: const Text("Language"),
-                subtitle: Text('Current: ${_selectedLanguage == 'en' ? 'English' : _selectedLanguage== 'fr' ? 'French' : 'العربية'}'),
+                title: Text(loc.language),
+                subtitle: Text(() {
+                  final languages = {
+                    'en': loc.english,
+                    'fr': loc.french,
+                    'ar': loc.arabic,
+                  };
+                  return loc.currentLanguage(languages[_selectedLanguage] ?? loc.english);
+                }()),
                   trailing: DropdownButton<String>(
                   value: _selectedLanguage,
                   onChanged: (String? newLocale) {
@@ -102,10 +109,10 @@ class _SettingsPageState extends State<SettingsPage> {
                       _updateLanguage(newLocale);
                     }
                   },
-                  items: const [
-                    DropdownMenuItem(value: 'en', child: Text('English')),
-                    DropdownMenuItem(value: 'fr', child: Text('French')),
-                    DropdownMenuItem(value: 'ar', child: Text('العربية')),
+                  items: [
+                    DropdownMenuItem(value: 'en', child: Text(loc.english)),
+                    DropdownMenuItem(value: 'fr', child: Text(loc.french)),
+                    DropdownMenuItem(value: 'ar', child: Text(loc.arabic)),
                   ],
                 ),
               ),
@@ -140,7 +147,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ListTile(
                 leading: Icon(Icons.download, color: theme.colorScheme.primary),
                 title: Text(loc.exportData),
-                subtitle: const Text('Export candidates and sessions to CSV'),
+                subtitle: Text(loc.exportCandidatesAndSessionsToCSV),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: _exportData,
               ),
@@ -149,8 +156,8 @@ class _SettingsPageState extends State<SettingsPage> {
               // Developer Tools Section
               ListTile(
                 leading: Icon(Icons.developer_mode, color: theme.colorScheme.tertiary),
-                title: const Text('🛠️ Developer Tools'),
-                subtitle: const Text('Testing and database management'),
+                title: Text(loc.developerTools),
+                subtitle: Text(loc.testingAndDatabaseManagement),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () {
                   Navigator.push(
@@ -233,9 +240,10 @@ class _SettingsPageState extends State<SettingsPage> {
     });
 
     try {
-      final path = await ExportService.exportAllDataToCSV();
+      final paths = await ExportService.exportAllDataToCSV();
       if (mounted) {
-        showCustomSnackBar(context, '${loc.dataExported}\n$path');
+        final message = loc.exportedTo(paths['candidatesPath']!, paths['sessionsPath']!);
+        showCustomSnackBar(context, message);
       }
     } catch (e) {
       if (mounted) {
@@ -274,9 +282,9 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             const SizedBox(height: 8),
-            const Text('Developed for driving school management'),
+            Text(loc.developedForDrivingSchoolManagement),
             const SizedBox(height: 4),
-            const Text('© 2024 All rights reserved'),
+            Text(loc.copyrightAllRightsReserved),
           ],
         ),
         actions: [

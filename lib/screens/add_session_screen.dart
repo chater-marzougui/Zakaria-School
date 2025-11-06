@@ -105,8 +105,8 @@ class _AddSessionScreenState extends State<AddSessionScreen> {
                     // Minute selection (15-minute intervals)
                     Row(
                       children: [
-                        const Expanded(
-                          child: Text('Minute'),
+                        Expanded(
+                          child: Text(t.minute),
                         ),
                         DropdownButton<int>(
                           value: selectedTime.minute,
@@ -135,9 +135,9 @@ class _AddSessionScreenState extends State<AddSessionScreen> {
                           ),
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      '15-minute intervals',
-                      style: TextStyle(fontSize: 12),
+                    Text(
+                      t.fifteenMinuteIntervals,
+                      style: const TextStyle(fontSize: 12),
                     ),
                   ],
                 ),
@@ -149,7 +149,7 @@ class _AddSessionScreenState extends State<AddSessionScreen> {
                 ),
                 TextButton(
                   onPressed: () => Navigator.pop(context, selectedTime),
-                  child: const Text('OK'),
+                  child: Text(t.ok),
                 ),
               ],
             );
@@ -510,9 +510,19 @@ class _AddSessionScreenState extends State<AddSessionScreen> {
       }
     } catch (e) {
       if (mounted) {
+        final t = AppLocalizations.of(context)!;
+        String errorMessage;
+        
+        // Check if it's an overlap error and use localized message
+        if (e.toString().contains('already has a session at this time')) {
+          errorMessage = t.sessionOverlapError;
+        } else {
+          errorMessage = t.error(e.toString());
+        }
+        
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error: $e'),
+            content: Text(errorMessage),
             backgroundColor: Colors.red,
             duration: const Duration(seconds: 4),
           ),
