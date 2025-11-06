@@ -30,7 +30,6 @@ class _SplashScreenState extends State<SplashScreen> {
       setState(() {
         _loadingMessage = 'Initializing app...';
       });
-      await Future.delayed(const Duration(milliseconds: 500)); // Brief delay for UI feedback
 
       if (Firebase.apps.isEmpty) {
         await Firebase.initializeApp(
@@ -38,8 +37,6 @@ class _SplashScreenState extends State<SplashScreen> {
         );
         FirebaseFirestore.instance.settings = const Settings(
           cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
-        );
-        FirebaseFirestore.instance.settings = const Settings(
           persistenceEnabled: true,
         );
       }
@@ -48,13 +45,11 @@ class _SplashScreenState extends State<SplashScreen> {
       setState(() {
         _loadingMessage = 'Loading user data...';
       });
-      await Future.delayed(const Duration(milliseconds: 300));
 
       // Step 3: Check and load candidates
       setState(() {
         _loadingMessage = 'Loading candidates...';
       });
-      await Future.delayed(const Duration(milliseconds: 300));
 
       // Check if we need to create test data
       final candidatesSnapshot = await FirebaseFirestore.instance
@@ -66,7 +61,6 @@ class _SplashScreenState extends State<SplashScreen> {
       setState(() {
         _loadingMessage = 'Loading sessions...';
       });
-      await Future.delayed(const Duration(milliseconds: 300));
 
       final sessionsSnapshot = await FirebaseFirestore.instance
           .collection('sessions')
