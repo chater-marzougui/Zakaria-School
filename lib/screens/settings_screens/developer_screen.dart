@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../services/db_service.dart';
 import '../../helpers/seed_db.dart';
+import '../../l10n/app_localizations.dart';
 
 /// Developer Screen for testing database operations
 /// Allows developers to:
@@ -41,15 +42,17 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
         _isLoading = false;
       });
       if (mounted) {
-        _showError('Failed to load statistics: $e');
+        final t = AppLocalizations.of(context)!;
+        _showError(t.failedToLoadStatistics(e.toString()));
       }
     }
   }
 
   Future<void> _deleteAllData() async {
+    final t = AppLocalizations.of(context)!;
     final confirmed = await _showConfirmDialog(
-      'Delete All Data',
-      'Are you sure you want to delete ALL candidates and sessions? This action cannot be undone!',
+      t.deleteAllData,
+      t.deleteAllDataConfirmation,
       isDangerous: true,
     );
 
@@ -63,12 +66,12 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
       await DatabaseService.deleteAllCandidates();
       
       if (mounted) {
-        _showSuccess('All candidates and sessions deleted successfully');
+        _showSuccess(t.allDataDeletedSuccessfully);
         await _loadStats();
       }
     } catch (e) {
       if (mounted) {
-        _showError('Failed to delete data: $e');
+        _showError(t.failedToDeleteData(e.toString()));
       }
     } finally {
       setState(() {
@@ -78,9 +81,10 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
   }
 
   Future<void> _generateFakeData() async {
+    final t = AppLocalizations.of(context)!;
     final confirmed = await _showConfirmDialog(
-      'Generate Test Data',
-      'This will create fake candidates and sessions for testing. Continue?',
+      t.generateTestData,
+      t.generateTestDataConfirmation,
     );
 
     if (!confirmed) return;
@@ -93,12 +97,12 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
       await TestDataGenerator.ensureTestData();
       
       if (mounted) {
-        _showSuccess('Test data generated successfully');
+        _showSuccess(t.testDataGeneratedSuccessfully);
         await _loadStats();
       }
     } catch (e) {
       if (mounted) {
-        _showError('Failed to generate test data: $e');
+        _showError(t.failedToGenerateTestData(e.toString()));
       }
     } finally {
       setState(() {
@@ -131,12 +135,14 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
       }
       
       if (mounted) {
-        _showSuccess('Created $candidateCount candidates and $sessionCount sessions');
+        final t = AppLocalizations.of(context)!;
+        _showSuccess(t.createdCandidatesAndSessions(candidateCount, sessionCount));
         await _loadStats();
       }
     } catch (e) {
       if (mounted) {
-        _showError('Failed to generate custom data: $e');
+        final t = AppLocalizations.of(context)!;
+        _showError(t.failedToGenerateCustomData(e.toString()));
       }
     } finally {
       setState(() {
@@ -146,6 +152,7 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
   }
 
   Future<bool> _showConfirmDialog(String title, String message, {bool isDangerous = false}) async {
+    final t = AppLocalizations.of(context)!;
     return await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -154,14 +161,14 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(t.cancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             style: TextButton.styleFrom(
               foregroundColor: isDangerous ? Colors.red : null,
             ),
-            child: Text(isDangerous ? 'Delete' : 'Confirm'),
+            child: Text(isDangerous ? t.delete : t.confirm),
           ),
         ],
       ),
@@ -189,15 +196,16 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('🛠️ Developer Tools'),
+        title: Text(t.developerTools),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: _isLoading ? null : _loadStats,
-            tooltip: 'Refresh Statistics',
+            tooltip: t.refreshStatistics,
           ),
         ],
       ),
@@ -219,7 +227,7 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
                           const SizedBox(width: 12),
                           Expanded(
                             child: Text(
-                              '⚠️ Warning: These tools are for testing only. Use with caution!',
+                              t.developerToolsWarning,
                               style: TextStyle(
                                 color: Colors.orange[900],
                                 fontWeight: FontWeight.bold,
@@ -235,7 +243,7 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
 
                   // Statistics Section
                   Text(
-                    '📊 Database Statistics',
+                    t.databaseStatistics,
                     style: theme.textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -244,35 +252,35 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
                   
                   if (_stats != null) ...[
                     _StatCard(
-                      title: 'Candidates',
+                      title: t.candidates,
                       stats: {
-                        'Total': _stats!['totalCandidates'],
-                        'Active': _stats!['activeCandidates'],
-                        'Graduated': _stats!['graduatedCandidates'],
-                        'Inactive': _stats!['inactiveCandidates'],
+                        t.total: _stats!['totalCandidates'],
+                        t.active: _stats!['activeCandidates'],
+                        t.graduated: _stats!['graduatedCandidates'],
+                        t.inactive: _stats!['inactiveCandidates'],
                       },
                       icon: Icons.people,
                       color: Colors.blue,
                     ),
                     const SizedBox(height: 12),
                     _StatCard(
-                      title: 'Sessions',
+                      title: t.sessions,
                       stats: {
-                        'Total': _stats!['totalSessions'],
-                        'Scheduled': _stats!['scheduledSessions'],
-                        'Done': _stats!['doneSessions'],
-                        'Missed': _stats!['missedSessions'],
-                        'Rescheduled': _stats!['rescheduledSessions'],
+                        t.total: _stats!['totalSessions'],
+                        t.scheduled: _stats!['scheduledSessions'],
+                        t.done: _stats!['doneSessions'],
+                        t.missed: _stats!['missedSessions'],
+                        t.rescheduled: _stats!['rescheduledSessions'],
                       },
                       icon: Icons.event,
                       color: Colors.green,
                     ),
                     const SizedBox(height: 12),
                     _StatCard(
-                      title: 'Payments',
+                      title: t.payments,
                       stats: {
-                        'Paid': _stats!['paidSessions'],
-                        'Unpaid': _stats!['unpaidSessions'],
+                        t.paid: _stats!['paidSessions'],
+                        t.unpaid: _stats!['unpaidSessions'],
                       },
                       icon: Icons.payment,
                       color: Colors.purple,
@@ -283,7 +291,7 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
 
                   // Actions Section
                   Text(
-                    '⚡ Quick Actions',
+                    t.quickActions,
                     style: theme.textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -293,8 +301,8 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
                   // Generate Test Data Button
                   _ActionButton(
                     icon: Icons.data_usage,
-                    label: 'Generate Test Data',
-                    description: 'Create 21 candidates and 180 sessions',
+                    label: t.generateTestData,
+                    description: t.createTestDataDescription,
                     color: Colors.blue,
                     onPressed: _generateFakeData,
                   ),
@@ -304,8 +312,8 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
                   // Custom Data Button
                   _ActionButton(
                     icon: Icons.tune,
-                    label: 'Custom Test Data',
-                    description: 'Specify number of candidates and sessions',
+                    label: t.customTestData,
+                    description: t.specifyNumberOfCandidatesAndSessions,
                     color: Colors.teal,
                     onPressed: _addCustomFakeData,
                   ),
@@ -315,8 +323,8 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
                   // Delete All Button
                   _ActionButton(
                     icon: Icons.delete_forever,
-                    label: 'Delete All Data',
-                    description: 'Remove all candidates and sessions',
+                    label: t.deleteAllData,
+                    description: t.removeAllCandidatesAndSessions,
                     color: Colors.red,
                     onPressed: _deleteAllData,
                     isDangerous: true,
@@ -337,7 +345,7 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
                               Icon(Icons.info_outline, color: theme.colorScheme.primary),
                               const SizedBox(width: 8),
                               Text(
-                                'Information',
+                                t.information,
                                 style: theme.textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -521,26 +529,27 @@ class _CustomDataDialogState extends State<_CustomDataDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return AlertDialog(
-      title: const Text('Custom Test Data'),
+      title: Text(t.customTestData),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           TextField(
             controller: _candidatesController,
             keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
-              labelText: 'Number of Candidates',
-              border: OutlineInputBorder(),
+            decoration: InputDecoration(
+              labelText: t.numberOfCandidates,
+              border: const OutlineInputBorder(),
             ),
           ),
           const SizedBox(height: 16),
           TextField(
             controller: _sessionsController,
             keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
-              labelText: 'Number of Sessions',
-              border: OutlineInputBorder(),
+            decoration: InputDecoration(
+              labelText: t.numberOfSessions,
+              border: const OutlineInputBorder(),
             ),
           ),
         ],
@@ -548,7 +557,7 @@ class _CustomDataDialogState extends State<_CustomDataDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel'),
+          child: Text(t.cancel),
         ),
         TextButton(
           onPressed: () {
@@ -559,7 +568,7 @@ class _CustomDataDialogState extends State<_CustomDataDialog> {
             if (candidates > maxCandidates) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Maximum $maxCandidates candidates allowed'),
+                  content: Text(t.maximumCandidatesAllowed(maxCandidates)),
                   backgroundColor: Colors.red,
                 ),
               );
@@ -569,7 +578,7 @@ class _CustomDataDialogState extends State<_CustomDataDialog> {
             if (sessions > maxSessions) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Maximum $maxSessions sessions allowed'),
+                  content: Text(t.maximumSessionsAllowed(maxSessions)),
                   backgroundColor: Colors.red,
                 ),
               );
@@ -583,7 +592,7 @@ class _CustomDataDialogState extends State<_CustomDataDialog> {
               });
             }
           },
-          child: const Text('Generate'),
+          child: Text(t.generate),
         ),
       ],
     );

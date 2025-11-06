@@ -236,7 +236,8 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> with Sing
         }
 
         if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
+          final t = AppLocalizations.of(context)!;
+          return Center(child: Text(t.error(snapshot.error.toString())));
         }
 
         final candidate = structs.Candidate.fromFirestore(snapshot.data!);
@@ -361,7 +362,8 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> with Sing
         }
 
         if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
+          final t = AppLocalizations.of(context)!;
+          return Center(child: Text(t.error(snapshot.error.toString())));
         }
 
         final sessions = snapshot.data?.docs
@@ -418,7 +420,8 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> with Sing
         }
 
         if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
+          final t = AppLocalizations.of(context)!;
+          return Center(child: Text(t.error(snapshot.error.toString())));
         }
 
         final sessions = snapshot.data?.docs
