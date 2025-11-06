@@ -71,11 +71,14 @@ class ExportService {
     return _saveToFile('sessions', csv.toString());
   }
 
-  static Future<String> exportAllDataToCSV() async {
+  static Future<Map<String, String>> exportAllDataToCSV() async {
     final candidatesPath = await exportCandidatesToCSV();
     final sessionsPath = await exportSessionsToCSV();
     
-    return 'Exported to:\n$candidatesPath\n$sessionsPath';
+    return {
+      'candidatesPath': candidatesPath,
+      'sessionsPath': sessionsPath,
+    };
   }
 
   static Future<String> _saveToFile(String name, String content) async {

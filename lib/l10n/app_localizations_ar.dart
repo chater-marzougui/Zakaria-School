@@ -494,4 +494,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get availabilitySchedule => 'جدول التوفر';
+
+  @override
+  String get loading => 'جارٍ التحميل...';
 }

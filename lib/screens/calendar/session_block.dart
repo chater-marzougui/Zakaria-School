@@ -79,6 +79,19 @@ class SessionBlock extends StatelessWidget {
                 fontSize: 9,
               ),
             ),
+            if (session.note.isNotEmpty) ...[
+              const SizedBox(height: 2),
+              Text(
+                session.note,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: Colors.white.withAlpha(200),
+                  fontSize: 8,
+                  fontStyle: FontStyle.italic,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
           ],
         ),
       ),

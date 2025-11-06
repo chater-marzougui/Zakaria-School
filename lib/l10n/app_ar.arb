@@ -186,5 +186,66 @@
   "showingResults": "عرض {count} من {total} المرشحين",
   "totalCandidates": "إجمالي المرشحين",
   "optional": "اختياري",
-  "cinExample": "12345678"
+  "cinExample": "12345678",
+  "confirm": "تأكيد",
+  "delete": "حذف",
+  "developerTools": "🛠️ أدوات المطور",
+  "customTestData": "بيانات اختبار مخصصة",
+  "generate": "إنشاء",
+  "deleteAllData": "حذف جميع البيانات",
+  "deleteAllDataConfirmation": "هل أنت متأكد من رغبتك في حذف جميع المرشحين والجلسات؟ لا يمكن التراجع عن هذا الإجراء!",
+  "allDataDeletedSuccessfully": "تم حذف جميع المرشحين والجلسات بنجاح",
+  "failedToDeleteData": "فشل حذف البيانات: {error}",
+  "generateTestData": "إنشاء بيانات اختبار",
+  "generateTestDataConfirmation": "سيؤدي هذا إلى إنشاء مرشحين وجلسات وهمية للاختبار. هل تريد المتابعة؟",
+  "testDataGeneratedSuccessfully": "تم إنشاء بيانات الاختبار بنجاح",
+  "failedToGenerateTestData": "فشل إنشاء بيانات الاختبار: {error}",
+  "createdCandidatesAndSessions": "تم إنشاء {candidateCount} مرشحًا و {sessionCount} جلسة",
+  "failedToGenerateCustomData": "فشل إنشاء البيانات المخصصة: {error}",
+  "failedToLoadStatistics": "فشل تحميل الإحصائيات: {error}",
+  "refreshStatistics": "تحديث الإحصائيات",
+  "total": "المجموع",
+  "createTestDataDescription": "إنشاء 21 مرشحًا و 180 جلسة",
+  "specifyNumberOfCandidatesAndSessions": "تحديد عدد المرشحين والجلسات",
+  "removeAllCandidatesAndSessions": "إزالة جميع المرشحين والجلسات",
+  "information": "معلومات",
+  "numberOfCandidates": "عدد المرشحين",
+  "numberOfSessions": "عدد الجلسات",
+  "maximumCandidatesAllowed": "الحد الأقصى {max} مرشحًا مسموحًا",
+  "maximumSessionsAllowed": "الحد الأقصى {max} جلسة مسموحة",
+  "language": "اللغة",
+  "currentLanguage": "الحالية: {language}",
+  "english": "الإنجليزية",
+  "french": "الفرنسية",
+  "arabic": "العربية",
+  "exportCandidatesAndSessionsToCSV": "تصدير المرشحين والجلسات إلى CSV",
+  "testingAndDatabaseManagement": "الاختبار وإدارة قاعدة البيانات",
+  "developedForDrivingSchoolManagement": "تم تطويره لإدارة مدرسة القيادة",
+  "copyrightAllRightsReserved": "© 2024 جميع الحقوق محفوظة",
+  "minute": "دقيقة",
+  "ok": "حسناً",
+  "fifteenMinuteIntervals": "فواصل زمنية مدتها 15 دقيقة",
+  "error": "خطأ: {error}",
+  "failedToCreateCandidate2": "فشل إنشاء المرشح: {error}",
+  "failedToGetCandidate": "فشل الحصول على المرشح: {error}",
+  "failedToGetCandidates": "فشل الحصول على المرشحين: {error}",
+  "failedToUpdateCandidate2": "فشل تحديث المرشح: {error}",
+  "failedToDeleteCandidate2": "فشل حذف المرشح: {error}",
+  "failedToDeleteAllCandidates": "فشل حذف جميع المرشحين: {error}",
+  "sessionOverlapError": "هذا المرشح لديه جلسة بالفعل في هذا الوقت. لا يمكن أن تتداخل الجلسات لنفس المرشح.",
+  "failedToCreateSession": "فشل إنشاء الجلسة: {error}",
+  "failedToGetSession": "فشل الحصول على الجلسة: {error}",
+  "failedToGetSessions": "فشل الحصول على الجلسات: {error}",
+  "failedToGetSessionsInDateRange": "فشل الحصول على الجلسات في نطاق التاريخ: {error}",
+  "sessionNotFound": "لم يتم العثور على الجلسة",
+  "failedToUpdateSession": "فشل تحديث الجلسة: {error}",
+  "failedToDeleteSession": "فشل حذف الجلسة: {error}",
+  "failedToDeleteAllSessions": "فشل حذف جميع الجلسات: {error}",
+  "failedToCheckSessionOverlap": "فشل التحقق من تداخل الجلسات: {error}",
+  "failedToGetStatistics": "فشل الحصول على الإحصائيات: {error}",
+  "exportedTo": "تم التصدير إلى:\n{candidatesPath}\n{sessionsPath}",
+  "failedToSaveFile": "فشل حفظ الملف: {error}",
+  "developerToolsWarning": "⚠️ تحذير: هذه الأدوات للاختبار فقط. استخدمها بحذر!",
+  "databaseStatistics": "📊 إحصائيات قاعدة البيانات",
+  "quickActions": "⚡ إجراءات سريعة"
 }
