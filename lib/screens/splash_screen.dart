@@ -41,33 +41,29 @@ class _SplashScreenState extends State<SplashScreen> {
         );
       }
 
-      // Step 2: Load user data
-      setState(() {
-        _loadingMessage = 'Loading user data...';
-      });
-
-      // Step 3: Check and load candidates
+      // Step 2: Load candidates
       setState(() {
         _loadingMessage = 'Loading candidates...';
       });
 
-      // Check if we need to create test data
+      // Check if candidates exist
       final candidatesSnapshot = await FirebaseFirestore.instance
           .collection('candidates')
           .limit(1)
           .get();
 
-      // Step 4: Check and load sessions
+      // Step 3: Load sessions
       setState(() {
         _loadingMessage = 'Loading sessions...';
       });
 
+      // Check if sessions exist
       final sessionsSnapshot = await FirebaseFirestore.instance
           .collection('sessions')
           .limit(1)
           .get();
 
-      // Step 5: Ensure test data if needed
+      // Step 4: Ensure test data if needed
       if (candidatesSnapshot.docs.isEmpty || sessionsSnapshot.docs.isEmpty) {
         setState(() {
           _loadingMessage = 'Setting up initial data...';
@@ -80,7 +76,7 @@ class _SplashScreenState extends State<SplashScreen> {
         _initialized = true;
       });
 
-      // Navigate to AuthWrapper
+      // Navigate to AuthWrapper which will load user data
       if (mounted) {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
