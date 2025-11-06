@@ -48,7 +48,7 @@ class AuthWrapper extends StatelessWidget {
     return const Scaffold(
       body: Center(
         child: CustomLoadingScreen(
-          message: "Loading",
+          message: "Checking authentication...",
         ),
       ),
     );
