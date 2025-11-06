@@ -247,5 +247,12 @@
   "failedToSaveFile": "Failed to save file: {error}",
   "developerToolsWarning": "⚠️ Warning: These tools are for testing only. Use with caution!",
   "databaseStatistics": "📊 Database Statistics",
-  "quickActions": "⚡ Quick Actions"
+  "quickActions": "⚡ Quick Actions",
+  "initializingApp": "Initializing app...",
+  "loadingCandidates": "Loading candidates...",
+  "loadingSessions": "Loading sessions...",
+  "settingUpInitialData": "Setting up initial data...",
+  "errorInitializingApp": "Error initializing app",
+  "retry": "Retry",
+  "loading": "Loading..."
 }

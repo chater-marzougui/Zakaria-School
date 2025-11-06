@@ -46,11 +46,11 @@ class AuthWrapper extends StatelessWidget {
   }
 
   Widget _loadingScreen(BuildContext context) {
-    final t = AppLocalizations.of(context);
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
       body: Center(
         child: CustomLoadingScreen(
-          message: t?.loading ?? "Loading...",
+          message: t.loading,
         ),
       ),
     );

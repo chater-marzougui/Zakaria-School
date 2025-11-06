@@ -496,5 +496,350 @@ class AppLocalizationsAr extends AppLocalizations {
   String get availabilitySchedule => 'جدول التوفر';
 
   @override
-  String get loading => 'جارٍ التحميل...';
+  String get editCandidate => 'تعديل المرشح';
+
+  @override
+  String get updateCandidate => 'تحديث المرشح';
+
+  @override
+  String get deleteCandidate => 'حذف المرشح';
+
+  @override
+  String get deleteCandidateMessage => 'هل أنت متأكد من حذف هذا المرشح؟ سيؤدي هذا أيضًا إلى حذف جميع جلساته.';
+
+  @override
+  String get candidateCreatedSuccessfully => 'تم إنشاء المرشح بنجاح';
+
+  @override
+  String get candidateUpdatedSuccessfully => 'تم تحديث المرشح بنجاح';
+
+  @override
+  String get candidateDeletedSuccessfully => 'تم حذف المرشح بنجاح';
+
+  @override
+  String get failedToCreateCandidate => 'فشل إنشاء المرشح';
+
+  @override
+  String get failedToUpdateCandidate => 'فشل تحديث المرشح';
+
+  @override
+  String get failedToDeleteCandidate => 'فشل حذف المرشح';
+
+  @override
+  String get active => 'نشط';
+
+  @override
+  String get inactive => 'غير نشط';
+
+  @override
+  String get graduated => 'متخرج';
+
+  @override
+  String get selectStatus => 'اختر الحالة';
+
+  @override
+  String get phoneNumberInvalid => 'رقم الهاتف غير صالح';
+
+  @override
+  String get cinInvalid => 'يجب أن يتكون رقم البطاقة من 8 أرقام';
+
+  @override
+  String get nameRequired => 'الاسم مطلوب';
+
+  @override
+  String get filterByStatus => 'تصفية حسب الحالة';
+
+  @override
+  String get allStatuses => 'جميع الحالات';
+
+  @override
+  String get sortBy => 'ترتيب حسب';
+
+  @override
+  String get sortByName => 'ترتيب حسب الاسم';
+
+  @override
+  String get sortByStartDate => 'ترتيب حسب تاريخ البدء';
+
+  @override
+  String get sortByProgress => 'ترتيب حسب التقدم';
+
+  @override
+  String get sortByRemainingHours => 'ترتيب حسب الساعات المتبقية';
+
+  @override
+  String get ascending => 'تصاعدي';
+
+  @override
+  String get descending => 'تنازلي';
+
+  @override
+  String showingResults(Object count, Object total) {
+    return 'عرض $count من $total المرشحين';
+  }
+
+  @override
+  String get totalCandidates => 'إجمالي المرشحين';
+
+  @override
+  String get optional => 'اختياري';
+
+  @override
+  String get cinExample => '12345678';
+
+  @override
+  String get confirm => 'تأكيد';
+
+  @override
+  String get delete => 'حذف';
+
+  @override
+  String get developerTools => '🛠️ أدوات المطور';
+
+  @override
+  String get customTestData => 'بيانات اختبار مخصصة';
+
+  @override
+  String get generate => 'إنشاء';
+
+  @override
+  String get deleteAllData => 'حذف جميع البيانات';
+
+  @override
+  String get deleteAllDataConfirmation => 'هل أنت متأكد من رغبتك في حذف جميع المرشحين والجلسات؟ لا يمكن التراجع عن هذا الإجراء!';
+
+  @override
+  String get allDataDeletedSuccessfully => 'تم حذف جميع المرشحين والجلسات بنجاح';
+
+  @override
+  String failedToDeleteData(Object error) {
+    return 'فشل حذف البيانات: $error';
+  }
+
+  @override
+  String get generateTestData => 'إنشاء بيانات اختبار';
+
+  @override
+  String get generateTestDataConfirmation => 'سيؤدي هذا إلى إنشاء مرشحين وجلسات وهمية للاختبار. هل تريد المتابعة؟';
+
+  @override
+  String get testDataGeneratedSuccessfully => 'تم إنشاء بيانات الاختبار بنجاح';
+
+  @override
+  String failedToGenerateTestData(Object error) {
+    return 'فشل إنشاء بيانات الاختبار: $error';
+  }
+
+  @override
+  String createdCandidatesAndSessions(Object candidateCount, Object sessionCount) {
+    return 'تم إنشاء $candidateCount مرشحًا و $sessionCount جلسة';
+  }
+
+  @override
+  String failedToGenerateCustomData(Object error) {
+    return 'فشل إنشاء البيانات المخصصة: $error';
+  }
+
+  @override
+  String failedToLoadStatistics(Object error) {
+    return 'فشل تحميل الإحصائيات: $error';
+  }
+
+  @override
+  String get refreshStatistics => 'تحديث الإحصائيات';
+
+  @override
+  String get total => 'المجموع';
+
+  @override
+  String get createTestDataDescription => 'إنشاء 21 مرشحًا و 180 جلسة';
+
+  @override
+  String get specifyNumberOfCandidatesAndSessions => 'تحديد عدد المرشحين والجلسات';
+
+  @override
+  String get removeAllCandidatesAndSessions => 'إزالة جميع المرشحين والجلسات';
+
+  @override
+  String get information => 'معلومات';
+
+  @override
+  String get numberOfCandidates => 'عدد المرشحين';
+
+  @override
+  String get numberOfSessions => 'عدد الجلسات';
+
+  @override
+  String maximumCandidatesAllowed(Object max) {
+    return 'الحد الأقصى $max مرشحًا مسموحًا';
+  }
+
+  @override
+  String maximumSessionsAllowed(Object max) {
+    return 'الحد الأقصى $max جلسة مسموحة';
+  }
+
+  @override
+  String get language => 'اللغة';
+
+  @override
+  String currentLanguage(Object language) {
+    return 'الحالية: $language';
+  }
+
+  @override
+  String get english => 'الإنجليزية';
+
+  @override
+  String get french => 'الفرنسية';
+
+  @override
+  String get arabic => 'العربية';
+
+  @override
+  String get exportCandidatesAndSessionsToCSV => 'تصدير المرشحين والجلسات إلى CSV';
+
+  @override
+  String get testingAndDatabaseManagement => 'الاختبار وإدارة قاعدة البيانات';
+
+  @override
+  String get developedForDrivingSchoolManagement => 'تم تطويره لإدارة مدرسة القيادة';
+
+  @override
+  String get copyrightAllRightsReserved => '© 2024 جميع الحقوق محفوظة';
+
+  @override
+  String get minute => 'دقيقة';
+
+  @override
+  String get ok => 'حسناً';
+
+  @override
+  String get fifteenMinuteIntervals => 'فواصل زمنية مدتها 15 دقيقة';
+
+  @override
+  String error(Object error) {
+    return 'خطأ: $error';
+  }
+
+  @override
+  String failedToCreateCandidate2(Object error) {
+    return 'فشل إنشاء المرشح: $error';
+  }
+
+  @override
+  String failedToGetCandidate(Object error) {
+    return 'فشل الحصول على المرشح: $error';
+  }
+
+  @override
+  String failedToGetCandidates(Object error) {
+    return 'فشل الحصول على المرشحين: $error';
+  }
+
+  @override
+  String failedToUpdateCandidate2(Object error) {
+    return 'فشل تحديث المرشح: $error';
+  }
+
+  @override
+  String failedToDeleteCandidate2(Object error) {
+    return 'فشل حذف المرشح: $error';
+  }
+
+  @override
+  String failedToDeleteAllCandidates(Object error) {
+    return 'فشل حذف جميع المرشحين: $error';
+  }
+
+  @override
+  String get sessionOverlapError => 'هذا المرشح لديه جلسة بالفعل في هذا الوقت. لا يمكن أن تتداخل الجلسات لنفس المرشح.';
+
+  @override
+  String failedToCreateSession(Object error) {
+    return 'فشل إنشاء الجلسة: $error';
+  }
+
+  @override
+  String failedToGetSession(Object error) {
+    return 'فشل الحصول على الجلسة: $error';
+  }
+
+  @override
+  String failedToGetSessions(Object error) {
+    return 'فشل الحصول على الجلسات: $error';
+  }
+
+  @override
+  String failedToGetSessionsInDateRange(Object error) {
+    return 'فشل الحصول على الجلسات في نطاق التاريخ: $error';
+  }
+
+  @override
+  String get sessionNotFound => 'لم يتم العثور على الجلسة';
+
+  @override
+  String failedToUpdateSession(Object error) {
+    return 'فشل تحديث الجلسة: $error';
+  }
+
+  @override
+  String failedToDeleteSession(Object error) {
+    return 'فشل حذف الجلسة: $error';
+  }
+
+  @override
+  String failedToDeleteAllSessions(Object error) {
+    return 'فشل حذف جميع الجلسات: $error';
+  }
+
+  @override
+  String failedToCheckSessionOverlap(Object error) {
+    return 'فشل التحقق من تداخل الجلسات: $error';
+  }
+
+  @override
+  String failedToGetStatistics(Object error) {
+    return 'فشل الحصول على الإحصائيات: $error';
+  }
+
+  @override
+  String exportedTo(Object candidatesPath, Object sessionsPath) {
+    return 'تم التصدير إلى:\n$candidatesPath\n$sessionsPath';
+  }
+
+  @override
+  String failedToSaveFile(Object error) {
+    return 'فشل حفظ الملف: $error';
+  }
+
+  @override
+  String get developerToolsWarning => '⚠️ تحذير: هذه الأدوات للاختبار فقط. استخدمها بحذر!';
+
+  @override
+  String get databaseStatistics => '📊 إحصائيات قاعدة البيانات';
+
+  @override
+  String get quickActions => '⚡ إجراءات سريعة';
+
+  @override
+  String get initializingApp => 'جاري تهيئة التطبيق...';
+
+  @override
+  String get loadingCandidates => 'جاري تحميل المرشحين...';
+
+  @override
+  String get loadingSessions => 'جاري تحميل الجلسات...';
+
+  @override
+  String get settingUpInitialData => 'جاري إعداد البيانات الأولية...';
+
+  @override
+  String get errorInitializingApp => 'خطأ في تهيئة التطبيق';
+
+  @override
+  String get retry => 'إعادة محاولة';
+
+  @override
+  String get loading => 'جاري التحميل...';
 }

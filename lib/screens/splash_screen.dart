@@ -5,6 +5,7 @@ import '../controllers/auth_wrapper.dart';
 import '../firebase_options.dart';
 import '../helpers/seed_db.dart';
 import '../widgets/widgets.dart';
+import '../l10n/app_localizations.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -14,8 +15,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  String _loadingMessage = 'Initializing app...';
-  bool _initialized = false;
+  String _loadingMessage = '...';
   String? _error;
 
   @override
@@ -26,9 +26,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _initializeApp() async {
     try {
+      final t = AppLocalizations.of(context)!;
+      
       // Step 1: Initialize Firebase
       setState(() {
-        _loadingMessage = 'Initializing app...';
+        _loadingMessage = t.initializingApp;
       });
 
       if (Firebase.apps.isEmpty) {
@@ -39,11 +41,12 @@ class _SplashScreenState extends State<SplashScreen> {
           cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
           persistenceEnabled: true,
         );
+        FirebaseFirestore.setLoggingEnabled(true);
       }
 
       // Step 2: Load candidates
       setState(() {
-        _loadingMessage = 'Loading candidates...';
+        _loadingMessage = t.loadingCandidates;
       });
 
       // Check if candidates exist
@@ -54,7 +57,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
       // Step 3: Load sessions
       setState(() {
-        _loadingMessage = 'Loading sessions...';
+        _loadingMessage = t.loadingSessions;
       });
 
       // Check if sessions exist
@@ -66,15 +69,10 @@ class _SplashScreenState extends State<SplashScreen> {
       // Step 4: Ensure test data if needed
       if (candidatesSnapshot.docs.isEmpty || sessionsSnapshot.docs.isEmpty) {
         setState(() {
-          _loadingMessage = 'Setting up initial data...';
+          _loadingMessage = t.settingUpInitialData;
         });
         await TestDataGenerator.ensureTestData();
       }
-
-      // Mark as initialized
-      setState(() {
-        _initialized = true;
-      });
 
       // Navigate to AuthWrapper which will load user data
       if (mounted) {
@@ -93,6 +91,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+    
     if (_error != null) {
       return Scaffold(
         body: Center(
@@ -106,7 +106,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
               const SizedBox(height: 16),
               Text(
-                'Error initializing app',
+                t.errorInitializingApp,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               const SizedBox(height: 8),
@@ -123,11 +123,10 @@ class _SplashScreenState extends State<SplashScreen> {
                 onPressed: () {
                   setState(() {
                     _error = null;
-                    _initialized = false;
                   });
                   _initializeApp();
                 },
-                child: const Text('Retry'),
+                child: Text(t.retry),
               ),
             ],
           ),

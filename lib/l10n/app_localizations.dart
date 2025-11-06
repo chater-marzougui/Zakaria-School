@@ -1039,6 +1039,588 @@ abstract class AppLocalizations {
   /// **'Availability Schedule'**
   String get availabilitySchedule;
 
+  /// No description provided for @editCandidate.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Candidate'**
+  String get editCandidate;
+
+  /// No description provided for @updateCandidate.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Candidate'**
+  String get updateCandidate;
+
+  /// No description provided for @deleteCandidate.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Candidate'**
+  String get deleteCandidate;
+
+  /// No description provided for @deleteCandidateMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this candidate? This will also delete all their sessions.'**
+  String get deleteCandidateMessage;
+
+  /// No description provided for @candidateCreatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Candidate created successfully'**
+  String get candidateCreatedSuccessfully;
+
+  /// No description provided for @candidateUpdatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Candidate updated successfully'**
+  String get candidateUpdatedSuccessfully;
+
+  /// No description provided for @candidateDeletedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Candidate deleted successfully'**
+  String get candidateDeletedSuccessfully;
+
+  /// No description provided for @failedToCreateCandidate.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to create candidate'**
+  String get failedToCreateCandidate;
+
+  /// No description provided for @failedToUpdateCandidate.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update candidate'**
+  String get failedToUpdateCandidate;
+
+  /// No description provided for @failedToDeleteCandidate.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete candidate'**
+  String get failedToDeleteCandidate;
+
+  /// No description provided for @active.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get active;
+
+  /// No description provided for @inactive.
+  ///
+  /// In en, this message translates to:
+  /// **'Inactive'**
+  String get inactive;
+
+  /// No description provided for @graduated.
+  ///
+  /// In en, this message translates to:
+  /// **'Graduated'**
+  String get graduated;
+
+  /// No description provided for @selectStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Status'**
+  String get selectStatus;
+
+  /// No description provided for @phoneNumberInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number is invalid'**
+  String get phoneNumberInvalid;
+
+  /// No description provided for @cinInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'CIN must be 8 digits'**
+  String get cinInvalid;
+
+  /// No description provided for @nameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Name is required'**
+  String get nameRequired;
+
+  /// No description provided for @filterByStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by Status'**
+  String get filterByStatus;
+
+  /// No description provided for @allStatuses.
+  ///
+  /// In en, this message translates to:
+  /// **'All Statuses'**
+  String get allStatuses;
+
+  /// No description provided for @sortBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort By'**
+  String get sortBy;
+
+  /// No description provided for @sortByName.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by Name'**
+  String get sortByName;
+
+  /// No description provided for @sortByStartDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by Start Date'**
+  String get sortByStartDate;
+
+  /// No description provided for @sortByProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by Progress'**
+  String get sortByProgress;
+
+  /// No description provided for @sortByRemainingHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by Remaining Hours'**
+  String get sortByRemainingHours;
+
+  /// No description provided for @ascending.
+  ///
+  /// In en, this message translates to:
+  /// **'Ascending'**
+  String get ascending;
+
+  /// No description provided for @descending.
+  ///
+  /// In en, this message translates to:
+  /// **'Descending'**
+  String get descending;
+
+  /// No description provided for @showingResults.
+  ///
+  /// In en, this message translates to:
+  /// **'Showing {count} of {total} candidates'**
+  String showingResults(Object count, Object total);
+
+  /// No description provided for @totalCandidates.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Candidates'**
+  String get totalCandidates;
+
+  /// No description provided for @optional.
+  ///
+  /// In en, this message translates to:
+  /// **'optional'**
+  String get optional;
+
+  /// No description provided for @cinExample.
+  ///
+  /// In en, this message translates to:
+  /// **'12345678'**
+  String get cinExample;
+
+  /// No description provided for @confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confirm;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @developerTools.
+  ///
+  /// In en, this message translates to:
+  /// **'🛠️ Developer Tools'**
+  String get developerTools;
+
+  /// No description provided for @customTestData.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Test Data'**
+  String get customTestData;
+
+  /// No description provided for @generate.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate'**
+  String get generate;
+
+  /// No description provided for @deleteAllData.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete All Data'**
+  String get deleteAllData;
+
+  /// No description provided for @deleteAllDataConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete ALL candidates and sessions? This action cannot be undone!'**
+  String get deleteAllDataConfirmation;
+
+  /// No description provided for @allDataDeletedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'All candidates and sessions deleted successfully'**
+  String get allDataDeletedSuccessfully;
+
+  /// No description provided for @failedToDeleteData.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete data: {error}'**
+  String failedToDeleteData(Object error);
+
+  /// No description provided for @generateTestData.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate Test Data'**
+  String get generateTestData;
+
+  /// No description provided for @generateTestDataConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'This will create fake candidates and sessions for testing. Continue?'**
+  String get generateTestDataConfirmation;
+
+  /// No description provided for @testDataGeneratedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Test data generated successfully'**
+  String get testDataGeneratedSuccessfully;
+
+  /// No description provided for @failedToGenerateTestData.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to generate test data: {error}'**
+  String failedToGenerateTestData(Object error);
+
+  /// No description provided for @createdCandidatesAndSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Created {candidateCount} candidates and {sessionCount} sessions'**
+  String createdCandidatesAndSessions(Object candidateCount, Object sessionCount);
+
+  /// No description provided for @failedToGenerateCustomData.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to generate custom data: {error}'**
+  String failedToGenerateCustomData(Object error);
+
+  /// No description provided for @failedToLoadStatistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load statistics: {error}'**
+  String failedToLoadStatistics(Object error);
+
+  /// No description provided for @refreshStatistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh Statistics'**
+  String get refreshStatistics;
+
+  /// No description provided for @total.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get total;
+
+  /// No description provided for @createTestDataDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Create 21 candidates and 180 sessions'**
+  String get createTestDataDescription;
+
+  /// No description provided for @specifyNumberOfCandidatesAndSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Specify number of candidates and sessions'**
+  String get specifyNumberOfCandidatesAndSessions;
+
+  /// No description provided for @removeAllCandidatesAndSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove all candidates and sessions'**
+  String get removeAllCandidatesAndSessions;
+
+  /// No description provided for @information.
+  ///
+  /// In en, this message translates to:
+  /// **'Information'**
+  String get information;
+
+  /// No description provided for @numberOfCandidates.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of Candidates'**
+  String get numberOfCandidates;
+
+  /// No description provided for @numberOfSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of Sessions'**
+  String get numberOfSessions;
+
+  /// No description provided for @maximumCandidatesAllowed.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum {max} candidates allowed'**
+  String maximumCandidatesAllowed(Object max);
+
+  /// No description provided for @maximumSessionsAllowed.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum {max} sessions allowed'**
+  String maximumSessionsAllowed(Object max);
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @currentLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Current: {language}'**
+  String currentLanguage(Object language);
+
+  /// No description provided for @english.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get english;
+
+  /// No description provided for @french.
+  ///
+  /// In en, this message translates to:
+  /// **'French'**
+  String get french;
+
+  /// No description provided for @arabic.
+  ///
+  /// In en, this message translates to:
+  /// **'العربية'**
+  String get arabic;
+
+  /// No description provided for @exportCandidatesAndSessionsToCSV.
+  ///
+  /// In en, this message translates to:
+  /// **'Export candidates and sessions to CSV'**
+  String get exportCandidatesAndSessionsToCSV;
+
+  /// No description provided for @testingAndDatabaseManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Testing and database management'**
+  String get testingAndDatabaseManagement;
+
+  /// No description provided for @developedForDrivingSchoolManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Developed for driving school management'**
+  String get developedForDrivingSchoolManagement;
+
+  /// No description provided for @copyrightAllRightsReserved.
+  ///
+  /// In en, this message translates to:
+  /// **'© 2024 All rights reserved'**
+  String get copyrightAllRightsReserved;
+
+  /// No description provided for @minute.
+  ///
+  /// In en, this message translates to:
+  /// **'Minute'**
+  String get minute;
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
+
+  /// No description provided for @fifteenMinuteIntervals.
+  ///
+  /// In en, this message translates to:
+  /// **'15-minute intervals'**
+  String get fifteenMinuteIntervals;
+
+  /// No description provided for @error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {error}'**
+  String error(Object error);
+
+  /// No description provided for @failedToCreateCandidate2.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to create candidate: {error}'**
+  String failedToCreateCandidate2(Object error);
+
+  /// No description provided for @failedToGetCandidate.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to get candidate: {error}'**
+  String failedToGetCandidate(Object error);
+
+  /// No description provided for @failedToGetCandidates.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to get candidates: {error}'**
+  String failedToGetCandidates(Object error);
+
+  /// No description provided for @failedToUpdateCandidate2.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update candidate: {error}'**
+  String failedToUpdateCandidate2(Object error);
+
+  /// No description provided for @failedToDeleteCandidate2.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete candidate: {error}'**
+  String failedToDeleteCandidate2(Object error);
+
+  /// No description provided for @failedToDeleteAllCandidates.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete all candidates: {error}'**
+  String failedToDeleteAllCandidates(Object error);
+
+  /// No description provided for @sessionOverlapError.
+  ///
+  /// In en, this message translates to:
+  /// **'This candidate already has a session at this time. Sessions cannot overlap for the same candidate.'**
+  String get sessionOverlapError;
+
+  /// No description provided for @failedToCreateSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to create session: {error}'**
+  String failedToCreateSession(Object error);
+
+  /// No description provided for @failedToGetSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to get session: {error}'**
+  String failedToGetSession(Object error);
+
+  /// No description provided for @failedToGetSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to get sessions: {error}'**
+  String failedToGetSessions(Object error);
+
+  /// No description provided for @failedToGetSessionsInDateRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to get sessions in date range: {error}'**
+  String failedToGetSessionsInDateRange(Object error);
+
+  /// No description provided for @sessionNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Session not found'**
+  String get sessionNotFound;
+
+  /// No description provided for @failedToUpdateSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update session: {error}'**
+  String failedToUpdateSession(Object error);
+
+  /// No description provided for @failedToDeleteSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete session: {error}'**
+  String failedToDeleteSession(Object error);
+
+  /// No description provided for @failedToDeleteAllSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete all sessions: {error}'**
+  String failedToDeleteAllSessions(Object error);
+
+  /// No description provided for @failedToCheckSessionOverlap.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to check session overlap: {error}'**
+  String failedToCheckSessionOverlap(Object error);
+
+  /// No description provided for @failedToGetStatistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to get statistics: {error}'**
+  String failedToGetStatistics(Object error);
+
+  /// No description provided for @exportedTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Exported to:\n{candidatesPath}\n{sessionsPath}'**
+  String exportedTo(Object candidatesPath, Object sessionsPath);
+
+  /// No description provided for @failedToSaveFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save file: {error}'**
+  String failedToSaveFile(Object error);
+
+  /// No description provided for @developerToolsWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'⚠️ Warning: These tools are for testing only. Use with caution!'**
+  String get developerToolsWarning;
+
+  /// No description provided for @databaseStatistics.
+  ///
+  /// In en, this message translates to:
+  /// **'📊 Database Statistics'**
+  String get databaseStatistics;
+
+  /// No description provided for @quickActions.
+  ///
+  /// In en, this message translates to:
+  /// **'⚡ Quick Actions'**
+  String get quickActions;
+
+  /// No description provided for @initializingApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Initializing app...'**
+  String get initializingApp;
+
+  /// No description provided for @loadingCandidates.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading candidates...'**
+  String get loadingCandidates;
+
+  /// No description provided for @loadingSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading sessions...'**
+  String get loadingSessions;
+
+  /// No description provided for @settingUpInitialData.
+  ///
+  /// In en, this message translates to:
+  /// **'Setting up initial data...'**
+  String get settingUpInitialData;
+
+  /// No description provided for @errorInitializingApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Error initializing app'**
+  String get errorInitializingApp;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
   /// No description provided for @loading.
   ///
   /// In en, this message translates to:

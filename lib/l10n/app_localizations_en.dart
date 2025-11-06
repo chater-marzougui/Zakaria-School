@@ -496,5 +496,350 @@ class AppLocalizationsEn extends AppLocalizations {
   String get availabilitySchedule => 'Availability Schedule';
 
   @override
+  String get editCandidate => 'Edit Candidate';
+
+  @override
+  String get updateCandidate => 'Update Candidate';
+
+  @override
+  String get deleteCandidate => 'Delete Candidate';
+
+  @override
+  String get deleteCandidateMessage => 'Are you sure you want to delete this candidate? This will also delete all their sessions.';
+
+  @override
+  String get candidateCreatedSuccessfully => 'Candidate created successfully';
+
+  @override
+  String get candidateUpdatedSuccessfully => 'Candidate updated successfully';
+
+  @override
+  String get candidateDeletedSuccessfully => 'Candidate deleted successfully';
+
+  @override
+  String get failedToCreateCandidate => 'Failed to create candidate';
+
+  @override
+  String get failedToUpdateCandidate => 'Failed to update candidate';
+
+  @override
+  String get failedToDeleteCandidate => 'Failed to delete candidate';
+
+  @override
+  String get active => 'Active';
+
+  @override
+  String get inactive => 'Inactive';
+
+  @override
+  String get graduated => 'Graduated';
+
+  @override
+  String get selectStatus => 'Select Status';
+
+  @override
+  String get phoneNumberInvalid => 'Phone number is invalid';
+
+  @override
+  String get cinInvalid => 'CIN must be 8 digits';
+
+  @override
+  String get nameRequired => 'Name is required';
+
+  @override
+  String get filterByStatus => 'Filter by Status';
+
+  @override
+  String get allStatuses => 'All Statuses';
+
+  @override
+  String get sortBy => 'Sort By';
+
+  @override
+  String get sortByName => 'Sort by Name';
+
+  @override
+  String get sortByStartDate => 'Sort by Start Date';
+
+  @override
+  String get sortByProgress => 'Sort by Progress';
+
+  @override
+  String get sortByRemainingHours => 'Sort by Remaining Hours';
+
+  @override
+  String get ascending => 'Ascending';
+
+  @override
+  String get descending => 'Descending';
+
+  @override
+  String showingResults(Object count, Object total) {
+    return 'Showing $count of $total candidates';
+  }
+
+  @override
+  String get totalCandidates => 'Total Candidates';
+
+  @override
+  String get optional => 'optional';
+
+  @override
+  String get cinExample => '12345678';
+
+  @override
+  String get confirm => 'Confirm';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get developerTools => '🛠️ Developer Tools';
+
+  @override
+  String get customTestData => 'Custom Test Data';
+
+  @override
+  String get generate => 'Generate';
+
+  @override
+  String get deleteAllData => 'Delete All Data';
+
+  @override
+  String get deleteAllDataConfirmation => 'Are you sure you want to delete ALL candidates and sessions? This action cannot be undone!';
+
+  @override
+  String get allDataDeletedSuccessfully => 'All candidates and sessions deleted successfully';
+
+  @override
+  String failedToDeleteData(Object error) {
+    return 'Failed to delete data: $error';
+  }
+
+  @override
+  String get generateTestData => 'Generate Test Data';
+
+  @override
+  String get generateTestDataConfirmation => 'This will create fake candidates and sessions for testing. Continue?';
+
+  @override
+  String get testDataGeneratedSuccessfully => 'Test data generated successfully';
+
+  @override
+  String failedToGenerateTestData(Object error) {
+    return 'Failed to generate test data: $error';
+  }
+
+  @override
+  String createdCandidatesAndSessions(Object candidateCount, Object sessionCount) {
+    return 'Created $candidateCount candidates and $sessionCount sessions';
+  }
+
+  @override
+  String failedToGenerateCustomData(Object error) {
+    return 'Failed to generate custom data: $error';
+  }
+
+  @override
+  String failedToLoadStatistics(Object error) {
+    return 'Failed to load statistics: $error';
+  }
+
+  @override
+  String get refreshStatistics => 'Refresh Statistics';
+
+  @override
+  String get total => 'Total';
+
+  @override
+  String get createTestDataDescription => 'Create 21 candidates and 180 sessions';
+
+  @override
+  String get specifyNumberOfCandidatesAndSessions => 'Specify number of candidates and sessions';
+
+  @override
+  String get removeAllCandidatesAndSessions => 'Remove all candidates and sessions';
+
+  @override
+  String get information => 'Information';
+
+  @override
+  String get numberOfCandidates => 'Number of Candidates';
+
+  @override
+  String get numberOfSessions => 'Number of Sessions';
+
+  @override
+  String maximumCandidatesAllowed(Object max) {
+    return 'Maximum $max candidates allowed';
+  }
+
+  @override
+  String maximumSessionsAllowed(Object max) {
+    return 'Maximum $max sessions allowed';
+  }
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String currentLanguage(Object language) {
+    return 'Current: $language';
+  }
+
+  @override
+  String get english => 'English';
+
+  @override
+  String get french => 'French';
+
+  @override
+  String get arabic => 'العربية';
+
+  @override
+  String get exportCandidatesAndSessionsToCSV => 'Export candidates and sessions to CSV';
+
+  @override
+  String get testingAndDatabaseManagement => 'Testing and database management';
+
+  @override
+  String get developedForDrivingSchoolManagement => 'Developed for driving school management';
+
+  @override
+  String get copyrightAllRightsReserved => '© 2024 All rights reserved';
+
+  @override
+  String get minute => 'Minute';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get fifteenMinuteIntervals => '15-minute intervals';
+
+  @override
+  String error(Object error) {
+    return 'Error: $error';
+  }
+
+  @override
+  String failedToCreateCandidate2(Object error) {
+    return 'Failed to create candidate: $error';
+  }
+
+  @override
+  String failedToGetCandidate(Object error) {
+    return 'Failed to get candidate: $error';
+  }
+
+  @override
+  String failedToGetCandidates(Object error) {
+    return 'Failed to get candidates: $error';
+  }
+
+  @override
+  String failedToUpdateCandidate2(Object error) {
+    return 'Failed to update candidate: $error';
+  }
+
+  @override
+  String failedToDeleteCandidate2(Object error) {
+    return 'Failed to delete candidate: $error';
+  }
+
+  @override
+  String failedToDeleteAllCandidates(Object error) {
+    return 'Failed to delete all candidates: $error';
+  }
+
+  @override
+  String get sessionOverlapError => 'This candidate already has a session at this time. Sessions cannot overlap for the same candidate.';
+
+  @override
+  String failedToCreateSession(Object error) {
+    return 'Failed to create session: $error';
+  }
+
+  @override
+  String failedToGetSession(Object error) {
+    return 'Failed to get session: $error';
+  }
+
+  @override
+  String failedToGetSessions(Object error) {
+    return 'Failed to get sessions: $error';
+  }
+
+  @override
+  String failedToGetSessionsInDateRange(Object error) {
+    return 'Failed to get sessions in date range: $error';
+  }
+
+  @override
+  String get sessionNotFound => 'Session not found';
+
+  @override
+  String failedToUpdateSession(Object error) {
+    return 'Failed to update session: $error';
+  }
+
+  @override
+  String failedToDeleteSession(Object error) {
+    return 'Failed to delete session: $error';
+  }
+
+  @override
+  String failedToDeleteAllSessions(Object error) {
+    return 'Failed to delete all sessions: $error';
+  }
+
+  @override
+  String failedToCheckSessionOverlap(Object error) {
+    return 'Failed to check session overlap: $error';
+  }
+
+  @override
+  String failedToGetStatistics(Object error) {
+    return 'Failed to get statistics: $error';
+  }
+
+  @override
+  String exportedTo(Object candidatesPath, Object sessionsPath) {
+    return 'Exported to:\n$candidatesPath\n$sessionsPath';
+  }
+
+  @override
+  String failedToSaveFile(Object error) {
+    return 'Failed to save file: $error';
+  }
+
+  @override
+  String get developerToolsWarning => '⚠️ Warning: These tools are for testing only. Use with caution!';
+
+  @override
+  String get databaseStatistics => '📊 Database Statistics';
+
+  @override
+  String get quickActions => '⚡ Quick Actions';
+
+  @override
+  String get initializingApp => 'Initializing app...';
+
+  @override
+  String get loadingCandidates => 'Loading candidates...';
+
+  @override
+  String get loadingSessions => 'Loading sessions...';
+
+  @override
+  String get settingUpInitialData => 'Setting up initial data...';
+
+  @override
+  String get errorInitializingApp => 'Error initializing app';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
   String get loading => 'Loading...';
 }

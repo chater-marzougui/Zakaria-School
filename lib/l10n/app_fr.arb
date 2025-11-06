@@ -247,5 +247,12 @@
   "failedToSaveFile": "Échec de l'enregistrement du fichier : {error}",
   "developerToolsWarning": "⚠️ Attention : Ces outils sont à des fins de test uniquement. Utilisez avec précaution !",
   "databaseStatistics": "📊 Statistiques de la base de données",
-  "quickActions": "⚡ Actions rapides"
+  "quickActions": "⚡ Actions rapides",
+  "initializingApp": "Initialisation de l'application...",
+  "loadingCandidates": "Chargement des candidats...",
+  "loadingSessions": "Chargement des sessions...",
+  "settingUpInitialData": "Configuration des données initiales...",
+  "errorInitializingApp": "Erreur lors de l'initialisation de l'application",
+  "retry": "Réessayer",
+  "loading": "Chargement en cours..."
 }

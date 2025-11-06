@@ -496,5 +496,350 @@ class AppLocalizationsFr extends AppLocalizations {
   String get availabilitySchedule => 'Calendrier de disponibilité';
 
   @override
-  String get loading => 'Chargement...';
+  String get editCandidate => 'Modifier le candidat';
+
+  @override
+  String get updateCandidate => 'Mettre à jour le candidat';
+
+  @override
+  String get deleteCandidate => 'Supprimer le candidat';
+
+  @override
+  String get deleteCandidateMessage => 'Êtes-vous sûr de vouloir supprimer ce candidat ? Cela supprimera également toutes ses séances.';
+
+  @override
+  String get candidateCreatedSuccessfully => 'Candidat créé avec succès';
+
+  @override
+  String get candidateUpdatedSuccessfully => 'Candidat mis à jour avec succès';
+
+  @override
+  String get candidateDeletedSuccessfully => 'Candidat supprimé avec succès';
+
+  @override
+  String get failedToCreateCandidate => 'Échec de la création du candidat';
+
+  @override
+  String get failedToUpdateCandidate => 'Échec de la mise à jour du candidat';
+
+  @override
+  String get failedToDeleteCandidate => 'Échec de la suppression du candidat';
+
+  @override
+  String get active => 'Actif';
+
+  @override
+  String get inactive => 'Inactif';
+
+  @override
+  String get graduated => 'Diplômé';
+
+  @override
+  String get selectStatus => 'Sélectionner le statut';
+
+  @override
+  String get phoneNumberInvalid => 'Le numéro de téléphone est invalide';
+
+  @override
+  String get cinInvalid => 'Le CIN doit comporter 8 chiffres';
+
+  @override
+  String get nameRequired => 'Le nom est obligatoire';
+
+  @override
+  String get filterByStatus => 'Filtrer par statut';
+
+  @override
+  String get allStatuses => 'Tous les statuts';
+
+  @override
+  String get sortBy => 'Trier par';
+
+  @override
+  String get sortByName => 'Trier par nom';
+
+  @override
+  String get sortByStartDate => 'Trier par date de début';
+
+  @override
+  String get sortByProgress => 'Trier par progression';
+
+  @override
+  String get sortByRemainingHours => 'Trier par heures restantes';
+
+  @override
+  String get ascending => 'Croissant';
+
+  @override
+  String get descending => 'Décroissant';
+
+  @override
+  String showingResults(Object count, Object total) {
+    return 'Affichage de $count sur $total candidats';
+  }
+
+  @override
+  String get totalCandidates => 'Total de candidats';
+
+  @override
+  String get optional => 'facultatif';
+
+  @override
+  String get cinExample => '12345678';
+
+  @override
+  String get confirm => 'Confirmer';
+
+  @override
+  String get delete => 'Supprimer';
+
+  @override
+  String get developerTools => '🛠️ Outils de développement';
+
+  @override
+  String get customTestData => 'Données de test personnalisées';
+
+  @override
+  String get generate => 'Générer';
+
+  @override
+  String get deleteAllData => 'Supprimer toutes les données';
+
+  @override
+  String get deleteAllDataConfirmation => 'Êtes-vous sûr de vouloir supprimer TOUS les candidats et sessions ? Cette action est irréversible !';
+
+  @override
+  String get allDataDeletedSuccessfully => 'Tous les candidats et sessions ont été supprimés avec succès';
+
+  @override
+  String failedToDeleteData(Object error) {
+    return 'Échec de la suppression des données : $error';
+  }
+
+  @override
+  String get generateTestData => 'Générer des données de test';
+
+  @override
+  String get generateTestDataConfirmation => 'Cela créera de faux candidats et sessions pour les tests. Continuer ?';
+
+  @override
+  String get testDataGeneratedSuccessfully => 'Données de test générées avec succès';
+
+  @override
+  String failedToGenerateTestData(Object error) {
+    return 'Échec de la génération des données de test : $error';
+  }
+
+  @override
+  String createdCandidatesAndSessions(Object candidateCount, Object sessionCount) {
+    return '$candidateCount candidats et $sessionCount sessions créés';
+  }
+
+  @override
+  String failedToGenerateCustomData(Object error) {
+    return 'Échec de la génération des données personnalisées : $error';
+  }
+
+  @override
+  String failedToLoadStatistics(Object error) {
+    return 'Échec du chargement des statistiques : $error';
+  }
+
+  @override
+  String get refreshStatistics => 'Actualiser les statistiques';
+
+  @override
+  String get total => 'Total';
+
+  @override
+  String get createTestDataDescription => 'Créer 21 candidats et 180 sessions';
+
+  @override
+  String get specifyNumberOfCandidatesAndSessions => 'Spécifier le nombre de candidats et de sessions';
+
+  @override
+  String get removeAllCandidatesAndSessions => 'Supprimer tous les candidats et sessions';
+
+  @override
+  String get information => 'Information';
+
+  @override
+  String get numberOfCandidates => 'Nombre de candidats';
+
+  @override
+  String get numberOfSessions => 'Nombre de sessions';
+
+  @override
+  String maximumCandidatesAllowed(Object max) {
+    return 'Maximum $max candidats autorisés';
+  }
+
+  @override
+  String maximumSessionsAllowed(Object max) {
+    return 'Maximum $max sessions autorisées';
+  }
+
+  @override
+  String get language => 'Langue';
+
+  @override
+  String currentLanguage(Object language) {
+    return 'Actuel : $language';
+  }
+
+  @override
+  String get english => 'Anglais';
+
+  @override
+  String get french => 'Français';
+
+  @override
+  String get arabic => 'العربية';
+
+  @override
+  String get exportCandidatesAndSessionsToCSV => 'Exporter les candidats et sessions en CSV';
+
+  @override
+  String get testingAndDatabaseManagement => 'Tests et gestion de la base de données';
+
+  @override
+  String get developedForDrivingSchoolManagement => 'Développé pour la gestion d\'auto-école';
+
+  @override
+  String get copyrightAllRightsReserved => '© 2024 Tous droits réservés';
+
+  @override
+  String get minute => 'Minute';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get fifteenMinuteIntervals => 'Intervalles de 15 minutes';
+
+  @override
+  String error(Object error) {
+    return 'Erreur : $error';
+  }
+
+  @override
+  String failedToCreateCandidate2(Object error) {
+    return 'Échec de la création du candidat : $error';
+  }
+
+  @override
+  String failedToGetCandidate(Object error) {
+    return 'Échec de la récupération du candidat : $error';
+  }
+
+  @override
+  String failedToGetCandidates(Object error) {
+    return 'Échec de la récupération des candidats : $error';
+  }
+
+  @override
+  String failedToUpdateCandidate2(Object error) {
+    return 'Échec de la mise à jour du candidat : $error';
+  }
+
+  @override
+  String failedToDeleteCandidate2(Object error) {
+    return 'Échec de la suppression du candidat : $error';
+  }
+
+  @override
+  String failedToDeleteAllCandidates(Object error) {
+    return 'Échec de la suppression de tous les candidats : $error';
+  }
+
+  @override
+  String get sessionOverlapError => 'Ce candidat a déjà une session à cette heure. Les sessions ne peuvent pas se chevaucher pour le même candidat.';
+
+  @override
+  String failedToCreateSession(Object error) {
+    return 'Échec de la création de la session : $error';
+  }
+
+  @override
+  String failedToGetSession(Object error) {
+    return 'Échec de la récupération de la session : $error';
+  }
+
+  @override
+  String failedToGetSessions(Object error) {
+    return 'Échec de la récupération des sessions : $error';
+  }
+
+  @override
+  String failedToGetSessionsInDateRange(Object error) {
+    return 'Échec de la récupération des sessions dans la plage de dates : $error';
+  }
+
+  @override
+  String get sessionNotFound => 'Session introuvable';
+
+  @override
+  String failedToUpdateSession(Object error) {
+    return 'Échec de la mise à jour de la session : $error';
+  }
+
+  @override
+  String failedToDeleteSession(Object error) {
+    return 'Échec de la suppression de la session : $error';
+  }
+
+  @override
+  String failedToDeleteAllSessions(Object error) {
+    return 'Échec de la suppression de toutes les sessions : $error';
+  }
+
+  @override
+  String failedToCheckSessionOverlap(Object error) {
+    return 'Échec de la vérification du chevauchement des sessions : $error';
+  }
+
+  @override
+  String failedToGetStatistics(Object error) {
+    return 'Échec de la récupération des statistiques : $error';
+  }
+
+  @override
+  String exportedTo(Object candidatesPath, Object sessionsPath) {
+    return 'Exporté vers :\n$candidatesPath\n$sessionsPath';
+  }
+
+  @override
+  String failedToSaveFile(Object error) {
+    return 'Échec de l\'enregistrement du fichier : $error';
+  }
+
+  @override
+  String get developerToolsWarning => '⚠️ Attention : Ces outils sont à des fins de test uniquement. Utilisez avec précaution !';
+
+  @override
+  String get databaseStatistics => '📊 Statistiques de la base de données';
+
+  @override
+  String get quickActions => '⚡ Actions rapides';
+
+  @override
+  String get initializingApp => 'Initialisation de l\'application...';
+
+  @override
+  String get loadingCandidates => 'Chargement des candidats...';
+
+  @override
+  String get loadingSessions => 'Chargement des sessions...';
+
+  @override
+  String get settingUpInitialData => 'Configuration des données initiales...';
+
+  @override
+  String get errorInitializingApp => 'Erreur lors de l\'initialisation de l\'application';
+
+  @override
+  String get retry => 'Réessayer';
+
+  @override
+  String get loading => 'Chargement en cours...';
 }
