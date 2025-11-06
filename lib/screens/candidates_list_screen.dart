@@ -79,20 +79,20 @@ class _CandidatesListScreenState extends State<CandidatesListScreen> {
                 // Status Filter
                 Expanded(
                   child: DropdownButtonFormField<String>(
-                    value: _statusFilter,
+                    initialValue: _statusFilter,
                     decoration: InputDecoration(
                       labelText: t.filterByStatus,
                       prefixIcon: const Icon(Icons.filter_list),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                     ),
                     items: [
-                      DropdownMenuItem(value: 'all', child: Text(t.allStatuses)),
-                      DropdownMenuItem(value: 'active', child: Text(t.active)),
-                      DropdownMenuItem(value: 'inactive', child: Text(t.inactive)),
-                      DropdownMenuItem(value: 'graduated', child: Text(t.graduated)),
+                      DropdownMenuItem(value: 'all', child: Text(t.allStatuses, overflow: TextOverflow.ellipsis)),
+                      DropdownMenuItem(value: 'active', child: Text(t.active, overflow: TextOverflow.ellipsis)),
+                      DropdownMenuItem(value: 'inactive', child: Text(t.inactive, overflow: TextOverflow.ellipsis)),
+                      DropdownMenuItem(value: 'graduated', child: Text(t.graduated, overflow: TextOverflow.ellipsis)),
                     ],
                     onChanged: (value) {
                       if (value != null) {
@@ -107,7 +107,7 @@ class _CandidatesListScreenState extends State<CandidatesListScreen> {
                 // Sort By
                 Expanded(
                   child: DropdownButtonFormField<String>(
-                    value: _sortBy,
+                    initialValue: _sortBy,
                     decoration: InputDecoration(
                       labelText: t.sortBy,
                       prefixIcon: const Icon(Icons.sort),
@@ -218,9 +218,7 @@ class _CandidatesListScreenState extends State<CandidatesListScreen> {
                             Icon(Icons.info_outline, size: 16, color: theme.textTheme.bodySmall?.color),
                             const SizedBox(width: 8),
                             Text(
-                              t.showingResults
-                                  .replaceAll('{count}', candidates.length.toString())
-                                  .replaceAll('{total}', allCandidates.length.toString()),
+                              t.showingResults(candidates.length, allCandidates.length),
                               style: theme.textTheme.bodySmall,
                             ),
                           ],
@@ -322,7 +320,7 @@ class _CandidatesListScreenState extends State<CandidatesListScreen> {
                   validator: (value) => Validators.validatePhone(
                     value,
                     errorMessage: value == null || value.trim().isEmpty
-                        ? t.pleaseEnterLabel.replaceAll('{label}', t.phoneNumber)
+                        ? t.pleaseEnterLabel(t.phoneNumber)
                         : t.phoneNumberInvalid,
                   ),
                 ),

@@ -68,13 +68,11 @@ class SessionOverlapCalculator {
     // Calculate column positions for each session
     for (int i = 0; i < sortedSessions.length; i++) {
       // Find which group this session belongs to
-      int groupIndex = 0;
       int positionInGroup = 0;
       int groupSize = 1;
       
       for (int g = 0; g < groups.length; g++) {
         if (groups[g].contains(i)) {
-          groupIndex = g;
           positionInGroup = groups[g].indexOf(i);
           groupSize = groups[g].length;
           break;

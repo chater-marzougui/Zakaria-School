@@ -569,7 +569,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> with Sing
                     validator: (value) => Validators.validatePhone(
                       value,
                       errorMessage: value == null || value.trim().isEmpty
-                          ? t.pleaseEnterLabel.replaceAll('{label}', t.phoneNumber)
+                          ? t.pleaseEnterLabel(t.phoneNumber)
                           : t.phoneNumberInvalid,
                     ),
                   ),
@@ -604,7 +604,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> with Sing
                   ),
                   const SizedBox(height: 16),
                   DropdownButtonFormField<String>(
-                    value: selectedStatus,
+                    initialValue: selectedStatus,
                     decoration: InputDecoration(
                       labelText: t.status,
                       prefixIcon: const Icon(Icons.info_outline),
