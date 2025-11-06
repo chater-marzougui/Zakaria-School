@@ -409,7 +409,7 @@ class _AddSessionScreenState extends State<AddSessionScreen> {
                       controller: _noteController,
                       maxLines: 3,
                       decoration: InputDecoration(
-                        labelText: t.sessionNote,
+                        labelText: '${t.sessionNote} (${t.optional})',
                         hintText: t.notes,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),

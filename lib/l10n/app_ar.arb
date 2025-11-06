@@ -186,5 +186,6 @@
   "showingResults": "عرض {count} من {total} المرشحين",
   "totalCandidates": "إجمالي المرشحين",
   "optional": "اختياري",
-  "cinExample": "12345678"
+  "cinExample": "12345678",
+  "loading": "جارٍ التحميل..."
 }

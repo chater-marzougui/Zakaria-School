@@ -186,5 +186,6 @@
   "showingResults": "Showing {count} of {total} candidates",
   "totalCandidates": "Total Candidates",
   "optional": "optional",
-  "cinExample": "12345678"
+  "cinExample": "12345678",
+  "loading": "Loading..."
 }

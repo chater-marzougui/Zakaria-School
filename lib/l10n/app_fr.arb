@@ -186,5 +186,6 @@
   "showingResults": "Affichage de {count} sur {total} candidats",
   "totalCandidates": "Total de candidats",
   "optional": "facultatif",
-  "cinExample": "12345678"
+  "cinExample": "12345678",
+  "loading": "Chargement..."
 }
