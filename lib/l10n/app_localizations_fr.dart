@@ -842,4 +842,19 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get loading => 'Chargement en cours...';
+
+  @override
+  String get unsavedChanges => 'Modifications non enregistrées';
+
+  @override
+  String get unsavedChangesMessage => 'Vous avez des modifications non enregistrées. Voulez-vous les enregistrer avant de partir ?';
+
+  @override
+  String get discard => 'Abandonner';
+
+  @override
+  String get changesSaved => 'Modifications enregistrées avec succès';
+
+  @override
+  String get availabilityInstructions => 'Appuyez longtemps et glissez pour créer des créneaux de disponibilité';
 }

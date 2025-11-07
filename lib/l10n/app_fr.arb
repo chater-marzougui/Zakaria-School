@@ -254,5 +254,10 @@
   "settingUpInitialData": "Configuration des données initiales...",
   "errorInitializingApp": "Erreur lors de l'initialisation de l'application",
   "retry": "Réessayer",
-  "loading": "Chargement en cours..."
+  "loading": "Chargement en cours...",
+  "unsavedChanges": "Modifications non enregistrées",
+  "unsavedChangesMessage": "Vous avez des modifications non enregistrées. Voulez-vous les enregistrer avant de partir ?",
+  "discard": "Abandonner",
+  "changesSaved": "Modifications enregistrées avec succès",
+  "availabilityInstructions": "Appuyez longtemps et glissez pour créer des créneaux de disponibilité"
 }

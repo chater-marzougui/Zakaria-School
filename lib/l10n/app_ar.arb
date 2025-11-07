@@ -254,5 +254,10 @@
   "settingUpInitialData": "جاري إعداد البيانات الأولية...",
   "errorInitializingApp": "خطأ في تهيئة التطبيق",
   "retry": "إعادة محاولة",
-  "loading": "جاري التحميل..."
+  "loading": "جاري التحميل...",
+  "unsavedChanges": "تغييرات غير محفوظة",
+  "unsavedChangesMessage": "لديك تغييرات غير محفوظة. هل تريد حفظها قبل المغادرة؟",
+  "discard": "تجاهل",
+  "changesSaved": "تم حفظ التغييرات بنجاح",
+  "availabilityInstructions": "اضغط لفترة طويلة واسحب لإنشاء فترات توفر"
 }

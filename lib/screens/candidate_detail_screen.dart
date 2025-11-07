@@ -6,6 +6,8 @@ import '../l10n/app_localizations.dart';
 import '../models/structs.dart' as structs;
 import '../services/db_service.dart';
 import '../helpers/validators.dart';
+import 'candidate_details/availability_tab.dart';
+import 'candidate_details/info_tab.dart';
 
 class CandidateDetailScreen extends StatefulWidget {
   final structs.Candidate candidate;
@@ -18,19 +20,16 @@ class CandidateDetailScreen extends StatefulWidget {
 
 class _CandidateDetailScreenState extends State<CandidateDetailScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  final _notesController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
-    _notesController.text = widget.candidate.notes;
   }
 
   @override
   void dispose() {
     _tabController.dispose();
-    _notesController.dispose();
     super.dispose();
   }
 
@@ -110,239 +109,12 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> with Sing
       body: TabBarView(
         controller: _tabController,
         children: [
-          _buildInfoTab(),
-          _buildAvailabilityTab(),
+          buildInfoTab(context, widget.candidate),
+          AvailabilityCalendarTab(candidate: widget.candidate),
           _buildScheduleTab(),
           _buildPaymentsTab(),
         ],
       ),
-    );
-  }
-
-  Widget _buildInfoTab() {
-    final theme = Theme.of(context);
-    final t = AppLocalizations.of(context)!;
-
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _InfoCard(
-            icon: Icons.person,
-            title: t.candidateName,
-            value: widget.candidate.name,
-          ),
-          _InfoCard(
-            icon: Icons.phone,
-            title: t.candidatePhone,
-            value: widget.candidate.phone,
-          ),
-          _InfoCard(
-            icon: Icons.credit_card,
-            title: t.cin,
-            value: widget.candidate.cin.isEmpty ? '-' : widget.candidate.cin,
-          ),
-          _InfoCard(
-            icon: Icons.calendar_today,
-            title: t.startDate,
-            value: DateFormat('dd/MM/yyyy').format(widget.candidate.startDate),
-          ),
-          _InfoCard(
-            icon: Icons.school,
-            title: t.theoryPassed,
-            value: widget.candidate.theoryPassed ? t.yes : t.no,
-          ),
-          _InfoCard(
-            icon: Icons.access_time,
-            title: t.totalPaidHours,
-            value: '${widget.candidate.totalPaidHours.toStringAsFixed(1)} ${t.hours}',
-          ),
-          _InfoCard(
-            icon: Icons.done,
-            title: t.totalTakenHours,
-            value: '${widget.candidate.totalTakenHours.toStringAsFixed(1)} ${t.hours}',
-          ),
-          _InfoCard(
-            icon: Icons.hourglass_empty,
-            title: t.remainingHours,
-            value: '${widget.candidate.remainingHours.toStringAsFixed(1)} ${t.hours}',
-          ),
-          _InfoCard(
-            icon: Icons.account_balance_wallet,
-            title: t.balance,
-            value: '${widget.candidate.balance.toStringAsFixed(2)} TND',
-          ),
-          _InfoCard(
-            icon: Icons.person_outline,
-            title: t.assignedInstructor,
-            value: widget.candidate.assignedInstructor.isEmpty
-                ? '-'
-                : widget.candidate.assignedInstructor,
-          ),
-          _InfoCard(
-            icon: Icons.info_outline,
-            title: t.status,
-            value: widget.candidate.status,
-          ),
-          const SizedBox(height: 24),
-          Text(
-            t.notes,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 12),
-          TextField(
-            controller: _notesController,
-            maxLines: 5,
-            decoration: InputDecoration(
-              hintText: t.notes,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            onChanged: (value) {
-              _updateNotes(value);
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildAvailabilityTab() {
-    final theme = Theme.of(context);
-    final t = AppLocalizations.of(context)!;
-    
-    final daysOfWeek = [
-      {'key': 'monday', 'label': t.monday},
-      {'key': 'tuesday', 'label': t.tuesday},
-      {'key': 'wednesday', 'label': t.wednesday},
-      {'key': 'thursday', 'label': t.thursday},
-      {'key': 'friday', 'label': t.friday},
-      {'key': 'saturday', 'label': t.saturday},
-      {'key': 'sunday', 'label': t.sunday},
-    ];
-
-    return StreamBuilder<DocumentSnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('candidates')
-          .doc(widget.candidate.id)
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (snapshot.hasError) {
-          final t = AppLocalizations.of(context)!;
-          return Center(child: Text(t.error(snapshot.error.toString())));
-        }
-
-        final candidate = structs.Candidate.fromFirestore(snapshot.data!);
-        final availability = candidate.availability;
-
-        return SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                t.weeklyAvailability,
-                style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                t.availabilitySchedule,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.textTheme.bodyMedium?.color?.withAlpha(180),
-                ),
-              ),
-              const SizedBox(height: 24),
-              ...daysOfWeek.map((day) {
-                final dayKey = day['key'] as String;
-                final dayLabel = day['label'] as String;
-                final daySlots = availability[dayKey] ?? [];
-
-                return Card(
-                  margin: const EdgeInsets.only(bottom: 16),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              dayLabel,
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.add_circle),
-                              color: theme.colorScheme.primary,
-                              onPressed: () => _addTimeSlot(context, dayKey),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        if (daySlots.isEmpty)
-                          Text(
-                            t.noAvailabilitySet,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.textTheme.bodySmall?.color?.withAlpha(150),
-                            ),
-                          )
-                        else
-                          ...daySlots.map((slot) => Padding(
-                            padding: const EdgeInsets.only(bottom: 8),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Container(
-                                    padding: const EdgeInsets.all(12),
-                                    decoration: BoxDecoration(
-                                      color: theme.colorScheme.primaryContainer.withAlpha(100),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.access_time,
-                                          size: 16,
-                                          color: theme.colorScheme.primary,
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Text(
-                                          '${slot.startTime} - ${slot.endTime}',
-                                          style: theme.textTheme.bodyMedium,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.delete),
-                                  color: theme.colorScheme.error,
-                                  onPressed: () => _deleteTimeSlot(context, dayKey, slot),
-                                ),
-                              ],
-                            ),
-                          )),
-                      ],
-                    ),
-                  ),
-                );
-              }),
-            ],
-          ),
-        );
-      },
     );
   }
 
@@ -485,13 +257,6 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> with Sing
         );
       },
     );
-  }
-
-  void _updateNotes(String notes) {
-    FirebaseFirestore.instance
-        .collection('candidates')
-        .doc(widget.candidate.id)
-        .update({'notes': notes});
   }
 
   void _makeCall(String phone) async {
@@ -751,211 +516,6 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> with Sing
         );
       }
     }
-  }
-
-  void _addTimeSlot(BuildContext context, String dayKey) async {
-    final t = AppLocalizations.of(context)!;
-    TimeOfDay? startTime;
-    TimeOfDay? endTime;
-
-    await showDialog(
-      context: context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setState) => AlertDialog(
-          title: Text(t.addAvailability),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: const Icon(Icons.access_time),
-                title: Text(t.from),
-                subtitle: Text(
-                  startTime != null
-                      ? '${startTime!.hour.toString().padLeft(2, '0')}:${startTime!.minute.toString().padLeft(2, '0')}'
-                      : t.selectDate,
-                ),
-                onTap: () async {
-                  final time = await showTimePicker(
-                    context: context,
-                    initialTime: TimeOfDay.now(),
-                  );
-                  if (time != null) {
-                    setState(() => startTime = time);
-                  }
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.access_time),
-                title: Text(t.to),
-                subtitle: Text(
-                  endTime != null
-                      ? '${endTime!.hour.toString().padLeft(2, '0')}:${endTime!.minute.toString().padLeft(2, '0')}'
-                      : t.selectDate,
-                ),
-                onTap: () async {
-                  final time = await showTimePicker(
-                    context: context,
-                    initialTime: TimeOfDay.now(),
-                  );
-                  if (time != null) {
-                    setState(() => endTime = time);
-                  }
-                },
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(t.cancel),
-            ),
-            ElevatedButton(
-              onPressed: startTime != null && endTime != null
-                  ? () async {
-                      final startTimeStr =
-                          '${startTime!.hour.toString().padLeft(2, '0')}:${startTime!.minute.toString().padLeft(2, '0')}';
-                      final endTimeStr =
-                          '${endTime!.hour.toString().padLeft(2, '0')}:${endTime!.minute.toString().padLeft(2, '0')}';
-
-                      // Get current availability
-                      final doc = await FirebaseFirestore.instance
-                          .collection('candidates')
-                          .doc(widget.candidate.id)
-                          .get();
-                      
-                      final candidate = structs.Candidate.fromFirestore(doc);
-                      final currentAvailability = Map<String, List<structs.TimeSlot>>.from(candidate.availability);
-                      
-                      // Add new time slot
-                      if (!currentAvailability.containsKey(dayKey)) {
-                        currentAvailability[dayKey] = [];
-                      }
-                      currentAvailability[dayKey]!.add(
-                        structs.TimeSlot(
-                          startTime: startTimeStr,
-                          endTime: endTimeStr,
-                        ),
-                      );
-
-                      // Convert to Map for Firestore
-                      Map<String, dynamic> availabilityMap = {};
-                      currentAvailability.forEach((day, slots) {
-                        availabilityMap[day] = slots.map((slot) => slot.toMap()).toList();
-                      });
-
-                      // Update Firestore
-                      await FirebaseFirestore.instance
-                          .collection('candidates')
-                          .doc(widget.candidate.id)
-                          .update({'availability': availabilityMap});
-
-                      if (context.mounted) {
-                        Navigator.pop(context);
-                      }
-                    }
-                  : null,
-              child: Text(t.save),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _deleteTimeSlot(BuildContext context, String dayKey, structs.TimeSlot slot) async {
-    final t = AppLocalizations.of(context)!;
-
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(t.deleteTimeSlot),
-        content: Text('${t.deleteTimeSlot}?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(t.cancel),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.error,
-            ),
-            child: Text(t.confirmDelete),
-          ),
-        ],
-      ),
-    );
-
-    if (confirmed == true) {
-      // Get current availability
-      final doc = await FirebaseFirestore.instance
-          .collection('candidates')
-          .doc(widget.candidate.id)
-          .get();
-      
-      final candidate = structs.Candidate.fromFirestore(doc);
-      final currentAvailability = Map<String, List<structs.TimeSlot>>.from(candidate.availability);
-      
-      // Remove the time slot
-      if (currentAvailability.containsKey(dayKey)) {
-        currentAvailability[dayKey]!.removeWhere(
-          (s) => s.startTime == slot.startTime && s.endTime == slot.endTime,
-        );
-        
-        // Remove day if no slots left
-        if (currentAvailability[dayKey]!.isEmpty) {
-          currentAvailability.remove(dayKey);
-        }
-      }
-
-      // Convert to Map for Firestore
-      Map<String, dynamic> availabilityMap = {};
-      currentAvailability.forEach((day, slots) {
-        availabilityMap[day] = slots.map((slot) => slot.toMap()).toList();
-      });
-
-      // Update Firestore
-      await FirebaseFirestore.instance
-          .collection('candidates')
-          .doc(widget.candidate.id)
-          .update({'availability': availabilityMap});
-    }
-  }
-}
-
-class _InfoCard extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String value;
-
-  const _InfoCard({
-    required this.icon,
-    required this.title,
-    required this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: ListTile(
-        leading: Icon(icon, color: theme.colorScheme.primary),
-        title: Text(
-          title,
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.textTheme.bodySmall?.color?.withAlpha(180),
-          ),
-        ),
-        subtitle: Text(
-          value,
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
   }
 }
 

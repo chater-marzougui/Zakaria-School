@@ -17,20 +17,22 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   String _loadingMessage = '...';
   String? _error;
+  late AppLocalizations _localizations;
 
   @override
-  void initState() {
-    super.initState();
-    _initializeApp();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _localizations = AppLocalizations.of(context)!;
+    if (_loadingMessage == '...') {
+      _initializeApp();
+    }
   }
 
   Future<void> _initializeApp() async {
     try {
-      final t = AppLocalizations.of(context)!;
-      
       // Step 1: Initialize Firebase
       setState(() {
-        _loadingMessage = t.initializingApp;
+        _loadingMessage = _localizations.initializingApp;
       });
 
       if (Firebase.apps.isEmpty) {
@@ -41,12 +43,11 @@ class _SplashScreenState extends State<SplashScreen> {
           cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
           persistenceEnabled: true,
         );
-        FirebaseFirestore.setLoggingEnabled(true);
       }
 
       // Step 2: Load candidates
       setState(() {
-        _loadingMessage = t.loadingCandidates;
+        _loadingMessage = _localizations.loadingCandidates;
       });
 
       // Check if candidates exist
@@ -57,7 +58,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
       // Step 3: Load sessions
       setState(() {
-        _loadingMessage = t.loadingSessions;
+        _loadingMessage = _localizations.loadingSessions;
       });
 
       // Check if sessions exist
@@ -69,7 +70,7 @@ class _SplashScreenState extends State<SplashScreen> {
       // Step 4: Ensure test data if needed
       if (candidatesSnapshot.docs.isEmpty || sessionsSnapshot.docs.isEmpty) {
         setState(() {
-          _loadingMessage = t.settingUpInitialData;
+          _loadingMessage = _localizations.settingUpInitialData;
         });
         await TestDataGenerator.ensureTestData();
       }
@@ -94,6 +95,7 @@ class _SplashScreenState extends State<SplashScreen> {
     final t = AppLocalizations.of(context)!;
     
     if (_error != null) {
+      print('Error during app initialization: $_error');
       return Scaffold(
         body: Center(
           child: Column(

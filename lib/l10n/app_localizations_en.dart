@@ -842,4 +842,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get loading => 'Loading...';
+
+  @override
+  String get unsavedChanges => 'Unsaved Changes';
+
+  @override
+  String get unsavedChangesMessage => 'You have unsaved changes. Do you want to save them before leaving?';
+
+  @override
+  String get discard => 'Discard';
+
+  @override
+  String get changesSaved => 'Changes saved successfully';
+
+  @override
+  String get availabilityInstructions => 'Long press and drag to create availability slots';
 }

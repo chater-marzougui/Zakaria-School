@@ -842,4 +842,19 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get loading => 'جاري التحميل...';
+
+  @override
+  String get unsavedChanges => 'تغييرات غير محفوظة';
+
+  @override
+  String get unsavedChangesMessage => 'لديك تغييرات غير محفوظة. هل تريد حفظها قبل المغادرة؟';
+
+  @override
+  String get discard => 'تجاهل';
+
+  @override
+  String get changesSaved => 'تم حفظ التغييرات بنجاح';
+
+  @override
+  String get availabilityInstructions => 'اضغط لفترة طويلة واسحب لإنشاء فترات توفر';
 }
