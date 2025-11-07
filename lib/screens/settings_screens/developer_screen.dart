@@ -5,6 +5,7 @@ import '../../helpers/seed_db.dart';
 import '../../l10n/app_localizations.dart';
 import '../../widgets/widgets.dart';
 import '../../models/structs.dart' as structs;
+import '../../controllers/user_controller.dart';
 
 /// Developer Screen for testing database operations and user management
 /// Allows developers to:
@@ -12,6 +13,8 @@ import '../../models/structs.dart' as structs;
 /// - Delete all candidates and sessions
 /// - Generate fake test data
 /// - Manage users (instructors, secretaries)
+/// 
+/// IMPORTANT: This screen should only be accessible to users with role = 'developer'
 class DeveloperScreen extends StatefulWidget {
   const DeveloperScreen({super.key});
 
@@ -231,6 +234,45 @@ class _DeveloperScreenState extends State<DeveloperScreen> with SingleTickerProv
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final t = AppLocalizations.of(context)!;
+
+    // Verify user has developer role
+    final currentUser = UserController().currentUser;
+    if (currentUser?.role != 'developer') {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(t.developerTools),
+        ),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.lock,
+                  size: 64,
+                  color: theme.colorScheme.error,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'Access Denied',
+                  style: theme.textTheme.headlineMedium?.copyWith(
+                    color: theme.colorScheme.error,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'This screen is only accessible to users with developer role.',
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodyLarge,
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(

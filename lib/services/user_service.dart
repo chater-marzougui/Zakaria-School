@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import '../models/structs.dart';
 
-/// Service for managing user accounts (instructors and secretaries)
+/// Service for managing user accounts (instructors, secretaries, and developers)
 /// Handles both Firebase Auth and Firestore operations
 class UserService {
   static final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -16,11 +16,8 @@ class UserService {
     required String firstName,
     required String lastName,
     required String phoneNumber,
-    required String role, // 'instructor' or 'secretary'
+    required String role, // 'instructor', 'secretary', or 'developer'
   }) async {
-    // Store current user to sign back in later
-    final currentUser = _auth.currentUser;
-    
     try {
       // Validate role
       if (role != 'instructor' && role != 'secretary' && role != 'developer') {
@@ -51,14 +48,13 @@ class UserService {
       await _db.collection('users').doc(uid).set(user.toFirestore());
 
       // Sign out the newly created user
+      // Note: The AuthWrapper will detect the sign-out and redirect to login
+      // The developer will need to sign back in with their credentials
       await _auth.signOut();
-      
-      // Note: The AuthWrapper will automatically re-authenticate the original user
-      // when Firebase Auth state changes to null and then back
       
       return uid;
     } catch (e) {
-      // Try to restore original user session if creation failed
+      // Sign out to ensure clean state on error
       await _auth.signOut();
       throw Exception('Failed to create user: $e');
     }
