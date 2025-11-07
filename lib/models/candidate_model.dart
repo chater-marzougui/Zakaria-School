@@ -37,6 +37,7 @@ class Candidate {
   final String assignedInstructor;
   final String status; // 'active', 'graduated', 'inactive'
   final Map<String, List<TimeSlot>> availability; // Weekly availability schedule
+  final DateTime? examDate; // Date of the driving exam
 
   Candidate({
     required this.id,
@@ -51,6 +52,7 @@ class Candidate {
     this.assignedInstructor = '',
     this.status = 'active',
     this.availability = const {},
+    this.examDate,
   });
 
   // Factory method to create a Candidate from Firestore document
@@ -81,6 +83,7 @@ class Candidate {
       assignedInstructor: data['assigned_instructor'] ?? '',
       status: data['status'] ?? 'active',
       availability: availability,
+      examDate: (data['exam_date'] as Timestamp?)?.toDate(),
     );
   }
 
@@ -104,6 +107,7 @@ class Candidate {
       'assigned_instructor': assignedInstructor,
       'status': status,
       'availability': availabilityMap,
+      'exam_date': examDate != null ? Timestamp.fromDate(examDate!) : null,
     };
   }
 
