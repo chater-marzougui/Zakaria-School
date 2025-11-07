@@ -166,7 +166,7 @@ class TestDataGenerator {
       totalPaidHours: totalPaidHours,
       totalTakenHours: double.parse(totalTakenHours.toStringAsFixed(1)),
       notes: _notes[_random.nextInt(_notes.length)],
-      assignedInstructor: _instructorIds[_random.nextInt(_instructorIds.length)],
+      assignedInstructorId: _instructorIds[_random.nextInt(_instructorIds.length)],
       status: status,
     );
   }

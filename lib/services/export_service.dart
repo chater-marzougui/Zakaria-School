@@ -29,7 +29,7 @@ class ExportService {
         '${candidate.totalPaidHours},'
         '${candidate.totalTakenHours},'
         '${candidate.remainingHours},'
-        '"${candidate.assignedInstructor}",'
+        '"${candidate.assignedInstructorId}",'
         '${candidate.status},'
         '"${candidate.notes.replaceAll('"', '""')}"'
       );

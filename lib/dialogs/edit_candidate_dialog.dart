@@ -35,7 +35,7 @@ class _EditCandidateDialogState extends State<EditCandidateDialog> {
     nameController = TextEditingController(text: widget.candidate.name);
     phoneController = TextEditingController(text: widget.candidate.phone);
     cinController = TextEditingController(text: widget.candidate.cin);
-    instructorController = TextEditingController(text: widget.candidate.assignedInstructor);
+    instructorController = TextEditingController(text: widget.candidate.assignedInstructorId);
 
     theoryPassed = widget.candidate.theoryPassed;
     selectedStatus = widget.candidate.status;
@@ -200,7 +200,7 @@ class _EditCandidateDialogState extends State<EditCandidateDialog> {
         'name': nameController.text.trim(),
         'phone': phoneController.text.trim(),
         'cin': cinController.text.trim(),
-        'assigned_instructor': instructorController.text.trim(),
+        'assigned_instructor_id': instructorController.text.trim(),
         'status': selectedStatus,
         'theory_passed': theoryPassed,
       });

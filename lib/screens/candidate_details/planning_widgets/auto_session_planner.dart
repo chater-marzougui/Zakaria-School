@@ -98,7 +98,7 @@ class AutoSessionPlanner {
       double requestedHours,
       ) async {
     // Get instructor's existing sessions
-    final instructorId = candidate.assignedInstructor;
+    final instructorId = candidate.assignedInstructorId;
 
     if (instructorId.isEmpty) {
       return {

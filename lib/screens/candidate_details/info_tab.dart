@@ -84,9 +84,9 @@ class _CandidateInfoTabState extends State<CandidateInfoTab> {
           _InfoCard(
             icon: Icons.person_outline,
             title: t.assignedInstructor,
-            value: widget.candidate.assignedInstructor.isEmpty
+            value: widget.candidate.assignedInstructorId.isEmpty
                 ? '-'
-                : widget.candidate.assignedInstructor,
+                : widget.candidate.assignedInstructorId,
           ),
           _InfoCard(
             icon: Icons.info_outline,

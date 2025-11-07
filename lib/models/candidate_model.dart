@@ -34,7 +34,7 @@ class Candidate {
   final double totalPaidHours;
   final double totalTakenHours;
   final String notes;
-  final String assignedInstructor;
+  final String assignedInstructorId;
   final String status; // 'active', 'graduated', 'inactive'
   final Map<String, List<TimeSlot>> availability; // Weekly availability schedule
   final DateTime? examDate; // Date of the driving exam
@@ -49,7 +49,7 @@ class Candidate {
     this.totalPaidHours = 0.0,
     this.totalTakenHours = 0.0,
     this.notes = '',
-    this.assignedInstructor = '',
+    this.assignedInstructorId = '',
     this.status = 'active',
     this.availability = const {},
     this.examDate,
@@ -80,7 +80,7 @@ class Candidate {
       totalPaidHours: (data['total_paid_hours'] ?? 0.0).toDouble(),
       totalTakenHours: (data['total_taken_hours'] ?? 0.0).toDouble(),
       notes: data['notes'] ?? '',
-      assignedInstructor: data['assigned_instructor'] ?? '',
+      assignedInstructorId: data['assigned_instructor_id'] ?? '',
       status: data['status'] ?? 'active',
       availability: availability,
       examDate: (data['exam_date'] as Timestamp?)?.toDate(),
@@ -104,7 +104,7 @@ class Candidate {
       'total_paid_hours': totalPaidHours,
       'total_taken_hours': totalTakenHours,
       'notes': notes,
-      'assigned_instructor': assignedInstructor,
+      'assigned_instructor_id': assignedInstructorId,
       'status': status,
       'availability': availabilityMap,
       'exam_date': examDate != null ? Timestamp.fromDate(examDate!) : null,
