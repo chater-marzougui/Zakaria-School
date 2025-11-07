@@ -3,8 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../l10n/app_localizations.dart';
 import '../models/structs.dart' as structs;
 import '../services/db_service.dart';
-import '../helpers/validators.dart';
 import '../widgets/widgets.dart';
+import '../dialogs/add_candidate_dialog.dart';
 import 'candidate_detail_screen.dart';
 
 class CandidatesListScreen extends StatefulWidget {
@@ -280,117 +280,31 @@ class _CandidatesListScreenState extends State<CandidatesListScreen> {
 
   void _showAddCandidateDialog(BuildContext context) {
     final t = AppLocalizations.of(context)!;
-    final nameController = TextEditingController();
-    final phoneController = TextEditingController();
-    final cinController = TextEditingController();
-    final formKey = GlobalKey<FormState>();
 
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(t.addCandidate),
-        content: SingleChildScrollView(
-          child: Form(
-            key: formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextFormField(
-                  controller: nameController,
-                  decoration: InputDecoration(
-                    labelText: t.candidateName,
-                    prefixIcon: const Icon(Icons.person),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return t.nameRequired;
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: phoneController,
-                  decoration: InputDecoration(
-                    labelText: t.candidatePhone,
-                    prefixIcon: const Icon(Icons.phone),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  keyboardType: TextInputType.phone,
-                  validator: (value) => Validators.validatePhone(
-                    value,
-                    errorMessage: value == null || value.trim().isEmpty
-                        ? t.pleaseEnterLabel(t.phoneNumber)
-                        : t.phoneNumberInvalid,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: cinController,
-                  decoration: InputDecoration(
-                    labelText: t.candidateCin,
-                    prefixIcon: const Icon(Icons.credit_card),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    hintText: '${t.cinExample} (${t.optional})',
-                  ),
-                  keyboardType: TextInputType.number,
-                  maxLength: 8,
-                  validator: (value) => Validators.validateCIN(
-                    value,
-                    errorMessage: t.cinInvalid,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(t.cancel),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              if (formKey.currentState!.validate()) {
-                try {
-                  final candidate = structs.Candidate(
-                    id: '',
-                    name: nameController.text.trim(),
-                    phone: phoneController.text.trim(),
-                    cin: cinController.text.trim(),
-                    startDate: DateTime.now(),
-                  );
+      barrierDismissible: false,
+      builder: (context) => AddCandidateDialog(
+        onSave: (candidate) async {
+          try {
+            await DatabaseService.createCandidate(candidate);
 
-                  await DatabaseService.createCandidate(candidate);
+            if (!context.mounted) return;
 
-                  if (!context.mounted) return;
-                  Navigator.pop(context);
-                  
-                  showCustomSnackBar(
-                    context,
-                    t.candidateCreatedSuccessfully,
-                    type: SnackBarType.success,
-                  );
-                } catch (e) {
-                  if (!context.mounted) return;
-                  showCustomSnackBar(
-                    context,
-                    '${t.failedToCreateCandidate}: $e',
-                    type: SnackBarType.error,
-                  );
-                }
-              }
-            },
-            child: Text(t.save),
-          ),
-        ],
+            showCustomSnackBar(
+              context,
+              t.candidateCreatedSuccessfully,
+              type: SnackBarType.success,
+            );
+          } catch (e) {
+            if (!context.mounted) return;
+            showCustomSnackBar(
+              context,
+              '${t.failedToCreateCandidate}: $e',
+              type: SnackBarType.error,
+            );
+          }
+        },
       ),
     );
   }

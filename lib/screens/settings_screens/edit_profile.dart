@@ -6,6 +6,9 @@ import 'package:image_picker/image_picker.dart';
 import '../../controllers/user_controller.dart';
 import '../../l10n/app_localizations.dart';
 import '../../widgets/widgets.dart';
+import '../../dialogs/update_profile_password_dialog.dart';
+import '../../dialogs/update_password_dialog.dart';
+import '../../dialogs/recover_password_dialog.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -188,37 +191,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   void _showUpdateProfileDialog(AppLocalizations loc) => showDialog(
     context: context,
-    builder:
-        (context) => Theme(
-          data: Theme.of(context),
-          child: Dialog(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const SizedBox(height: 16),
-                  Text(loc.typeYourPasswordToApplyChanges),
-                  const SizedBox(height: 16),
-                  buildTextField(
-                    context,
-                    _passwordController,
-                    "Password",
-                    obscureText: true,
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      _updateProfile(loc);
-                      Navigator.of(context).pop();
-                    },
-                    child: Text(loc.applyChanges),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
+    barrierDismissible: false,
+    builder: (context) => UpdateProfilePasswordDialog(
+      onConfirm: (password) async {
+        _passwordController.text = password;
+        await _updateProfile(loc);
+      },
+    ),
   );
 
   Future<void> _pickImage(AppLocalizations loc) async {
@@ -279,124 +258,44 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   void _showUpdatePasswordDialog(AppLocalizations loc) => showDialog(
     context: context,
-    builder:
-        (context) => Theme(
-          data: Theme.of(context),
-          child: Dialog(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const SizedBox(height: 16),
-                  Text(
-                    loc.typeYourOldPasswordAndTheNewOneToApplyChanges,
-                  ),
-                  const SizedBox(height: 16),
-                  buildTextField(
-                    context,
-                    _passwordController,
-                    loc.oldPassword,
-                    obscureText: true,
-                  ),
-                  const SizedBox(height: 16),
-                  buildTextField(
-                    context,
-                    _newPasswordController,
-                    loc.newPassword,
-                    obscureText: true,
-                  ),
-                  const SizedBox(height: 16),
-                  buildTextField(
-                    context,
-                    _confirmPasswordController,
-                    loc.confirmPassword,
-                    obscureText: true,
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () async {
-                      // Validate the passwords
-                      if (_newPasswordController.text !=
-                          _confirmPasswordController.text) {
-                        showCustomSnackBar(context, loc.passwordsDoNotMatch);
-                        return;
-                      }
-                      try {
-                        _updatePassword(loc);
-                        Navigator.of(context).pop();
-                        showCustomSnackBar(context, loc.passwordUpdatedSuccessfully);
-                      } catch (e) {
-                        if (mounted) showCustomSnackBar(context, loc.errorUpdatingPassword(e));
-                      }
-                    },
-                    child: Text(loc.applyChanges),
-                  ),
-                  TextButton(
-                    onPressed: () async {
-                      Navigator.of(context).pop();
-                      _showRecoverPasswordDialog(loc);
-                    },
-                    child: Text(loc.forgotPassword),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
+    barrierDismissible: false,
+    builder: (context) => UpdatePasswordDialog(
+      onUpdatePassword: (oldPassword, newPassword) async {
+        _passwordController.text = oldPassword;
+        _newPasswordController.text = newPassword;
+        await _updatePassword(loc);
+
+        if (!context.mounted) return;
+        showCustomSnackBar(context, loc.passwordUpdatedSuccessfully);
+      },
+      onForgotPassword: () {
+        _showRecoverPasswordDialog(loc);
+      },
+    ),
   );
 
   void _showRecoverPasswordDialog(AppLocalizations loc) => showDialog(
     context: context,
-    builder:
-        (dialogContext) => Theme(
-          data: Theme.of(context),
-          child: Dialog(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const SizedBox(height: 16),
-                  Text(loc.enterYourEmailToRecoverYourPassword),
-                  const SizedBox(height: 16),
-                  buildTextField(
-                    dialogContext,
-                    _emailController,
-                    "Email",
-                    obscureText: false,
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () async {
-                      try {
-                        await FirebaseAuth.instance.sendPasswordResetEmail(
-                          email: _emailController.text,
-                        );
+    barrierDismissible: false,
+    builder: (context) => RecoverPasswordDialog(
+      onRecoverPassword: (email) async {
+        try {
+          await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
 
-                        if (mounted) {
-                          Navigator.of(dialogContext).pop();
-                          showCustomSnackBar(
-                            context,
-                            'Password recovery email sent to ${_emailController.text}',
-                          );
-                        }
-                      } catch (e) {
-                        if (mounted) {
-                          showCustomSnackBar(
-                            context,
-                            loc.errorSendingPasswordRecoveryEmail(e),
-                          );
-                        }
-                      }
-                    },
-                    child: Text(loc.recoverPassword),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
+          if (!context.mounted) return;
+          showCustomSnackBar(
+            context,
+            'Password recovery email sent to $email',
+          );
+        } catch (e) {
+          if (!context.mounted) return;
+          showCustomSnackBar(
+            context,
+            loc.errorSendingPasswordRecoveryEmail(e),
+          );
+        }
+      },
+    ),
   );
 
   String? _emailValidator(String? value, AppLocalizations loc) {
