@@ -4,6 +4,7 @@ import '../l10n/app_localizations.dart';
 import '../models/structs.dart' as structs;
 import '../services/db_service.dart';
 import '../helpers/validators.dart';
+import '../widgets/widgets.dart';
 import 'candidate_detail_screen.dart';
 
 class CandidatesListScreen extends StatefulWidget {
@@ -82,12 +83,14 @@ class _CandidatesListScreenState extends State<CandidatesListScreen> {
                     initialValue: _statusFilter,
                     decoration: InputDecoration(
                       labelText: t.filterByStatus,
-                      prefixIcon: const Icon(Icons.filter_list),
+                      prefixIcon: const Icon(Icons.filter_list, size: 20),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+                      isDense: true,
                     ),
+                    isExpanded: true,
                     items: [
                       DropdownMenuItem(value: 'all', child: Text(t.allStatuses, overflow: TextOverflow.ellipsis)),
                       DropdownMenuItem(value: 'active', child: Text(t.active, overflow: TextOverflow.ellipsis)),
@@ -110,12 +113,14 @@ class _CandidatesListScreenState extends State<CandidatesListScreen> {
                     initialValue: _sortBy,
                     decoration: InputDecoration(
                       labelText: t.sortBy,
-                      prefixIcon: const Icon(Icons.sort),
+                      prefixIcon: const Icon(Icons.sort, size: 20),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+                      isDense: true,
                     ),
+                    isExpanded: true,
                     items: [
                       DropdownMenuItem(value: 'name', child: Text(t.sortByName)),
                       DropdownMenuItem(value: 'startDate', child: Text(t.sortByStartDate)),
@@ -274,7 +279,6 @@ class _CandidatesListScreenState extends State<CandidatesListScreen> {
 
   void _showAddCandidateDialog(BuildContext context) {
     final t = AppLocalizations.of(context)!;
-    final theme = Theme.of(context);
     final nameController = TextEditingController();
     final phoneController = TextEditingController();
     final cinController = TextEditingController();
@@ -368,19 +372,17 @@ class _CandidatesListScreenState extends State<CandidatesListScreen> {
                   if (!context.mounted) return;
                   Navigator.pop(context);
                   
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(t.candidateCreatedSuccessfully),
-                      backgroundColor: theme.colorScheme.primary,
-                    ),
+                  showCustomSnackBar(
+                    context,
+                    t.candidateCreatedSuccessfully,
+                    type: SnackBarType.success,
                   );
                 } catch (e) {
                   if (!context.mounted) return;
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('${t.failedToCreateCandidate}: $e'),
-                      backgroundColor: theme.colorScheme.error,
-                    ),
+                  showCustomSnackBar(
+                    context,
+                    '${t.failedToCreateCandidate}: $e',
+                    type: SnackBarType.error,
                   );
                 }
               }

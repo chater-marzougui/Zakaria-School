@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../services/db_service.dart';
 import '../../helpers/seed_db.dart';
 import '../../l10n/app_localizations.dart';
+import '../../widgets/widgets.dart';
 
 /// Developer Screen for testing database operations
 /// Allows developers to:
@@ -176,20 +177,18 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
   }
 
   void _showSuccess(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.green,
-      ),
+    showCustomSnackBar(
+      context,
+      message,
+      type: SnackBarType.success,
     );
   }
 
   void _showError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-      ),
+    showCustomSnackBar(
+      context,
+      message,
+      type: SnackBarType.error,
     );
   }
 
@@ -566,21 +565,19 @@ class _CustomDataDialogState extends State<_CustomDataDialog> {
             
             // Validate reasonable limits
             if (candidates > maxCandidates) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(t.maximumCandidatesAllowed(maxCandidates)),
-                  backgroundColor: Colors.red,
-                ),
+              showCustomSnackBar(
+                context,
+                t.maximumCandidatesAllowed(maxCandidates),
+                type: SnackBarType.error,
               );
               return;
             }
             
             if (sessions > maxSessions) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(t.maximumSessionsAllowed(maxSessions)),
-                  backgroundColor: Colors.red,
-                ),
+              showCustomSnackBar(
+                context,
+                t.maximumSessionsAllowed(maxSessions),
+                type: SnackBarType.error,
               );
               return;
             }

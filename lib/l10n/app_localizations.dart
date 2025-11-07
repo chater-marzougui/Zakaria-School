@@ -1656,6 +1656,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Long press and drag to create availability slots'**
   String get availabilityInstructions;
+
+  /// No description provided for @noSessionsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No sessions found'**
+  String get noSessionsFound;
+
+  /// No description provided for @paymentMarkedAsPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment marked as paid'**
+  String get paymentMarkedAsPaid;
+
+  /// No description provided for @paymentMarkedAsUnpaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment marked as unpaid'**
+  String get paymentMarkedAsUnpaid;
+
+  /// No description provided for @confirmPaymentStatusChange.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to change the payment status?'**
+  String get confirmPaymentStatusChange;
+
+  /// No description provided for @markAsPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as Paid'**
+  String get markAsPaid;
+
+  /// No description provided for @markAsUnpaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as Unpaid'**
+  String get markAsUnpaid;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

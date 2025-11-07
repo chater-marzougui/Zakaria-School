@@ -259,5 +259,11 @@
   "unsavedChangesMessage": "Vous avez des modifications non enregistrées. Voulez-vous les enregistrer avant de partir ?",
   "discard": "Abandonner",
   "changesSaved": "Modifications enregistrées avec succès",
-  "availabilityInstructions": "Appuyez longtemps et glissez pour créer des créneaux de disponibilité"
+  "availabilityInstructions": "Appuyez longtemps et glissez pour créer des créneaux de disponibilité",
+  "noSessionsFound": "Aucune séance trouvée",
+  "paymentMarkedAsPaid": "Paiement marqué comme payé",
+  "paymentMarkedAsUnpaid": "Paiement marqué comme non payé",
+  "confirmPaymentStatusChange": "Êtes-vous sûr de vouloir modifier le statut de paiement ?",
+  "markAsPaid": "Marquer comme payé",
+  "markAsUnpaid": "Marquer comme non payé"
 }

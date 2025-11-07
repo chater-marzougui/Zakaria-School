@@ -23,10 +23,6 @@ class DayColumn extends StatelessWidget {
   final Function(LongPressMoveUpdateDetails) onLongPressMoveUpdate;
   final Function(LongPressEndDetails) onLongPressEnd;
   final Function(structs.TimeSlot) onRemoveSlot;
-  final Function(structs.TimeSlot, LongPressStartDetails) onSlotLongPressStart;
-  final Function(structs.TimeSlot, LongPressMoveUpdateDetails)
-      onSlotLongPressMoveUpdate;
-  final Function(structs.TimeSlot, LongPressEndDetails) onSlotLongPressEnd;
 
   const DayColumn({
     super.key,
@@ -47,10 +43,7 @@ class DayColumn extends StatelessWidget {
     required this.onLongPressStart,
     required this.onLongPressMoveUpdate,
     required this.onLongPressEnd,
-    required this.onRemoveSlot,
-    required this.onSlotLongPressStart,
-    required this.onSlotLongPressMoveUpdate,
-    required this.onSlotLongPressEnd,
+    required this.onRemoveSlot
   });
 
   String _getDayLabel(BuildContext context) {
@@ -182,13 +175,7 @@ class DayColumn extends StatelessWidget {
                         slot: slot,
                         dayKey: dayKey,
                         height: height,
-                        onRemove: () => onRemoveSlot(slot),
-                        onLongPressStart: (details) =>
-                            onSlotLongPressStart(slot, details),
-                        onLongPressMoveUpdate: (details) =>
-                            onSlotLongPressMoveUpdate(slot, details),
-                        onLongPressEnd: (details) =>
-                            onSlotLongPressEnd(slot, details),
+                        onRemove: () => onRemoveSlot(slot)
                       ),
                     );
                   }),

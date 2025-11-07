@@ -857,4 +857,22 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get availabilityInstructions => 'اضغط لفترة طويلة واسحب لإنشاء فترات توفر';
+
+  @override
+  String get noSessionsFound => 'لم يتم العثور على جلسات';
+
+  @override
+  String get paymentMarkedAsPaid => 'تم تحديد الدفع كمدفوع';
+
+  @override
+  String get paymentMarkedAsUnpaid => 'تم تحديد الدفع كغير مدفوع';
+
+  @override
+  String get confirmPaymentStatusChange => 'هل أنت متأكد من أنك تريد تغيير حالة الدفع؟';
+
+  @override
+  String get markAsPaid => 'تحديد كمدفوع';
+
+  @override
+  String get markAsUnpaid => 'تحديد كغير مدفوع';
 }

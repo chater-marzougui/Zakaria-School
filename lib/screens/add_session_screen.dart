@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../l10n/app_localizations.dart';
 import '../models/structs.dart' as structs;
 import '../services/db_service.dart';
+import '../widgets/widgets.dart';
 
 class AddSessionScreen extends StatefulWidget {
   final structs.Session? session;
@@ -233,7 +234,7 @@ class _AddSessionScreenState extends State<AddSessionScreen> {
                     StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance
                           .collection('users')
-                          .orderBy('displayName')
+                          .where('role', isEqualTo: 'instructor')
                           .snapshots(),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
@@ -520,12 +521,11 @@ class _AddSessionScreenState extends State<AddSessionScreen> {
           errorMessage = t.error(e.toString());
         }
         
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(errorMessage),
-            backgroundColor: Colors.red,
-            duration: const Duration(seconds: 4),
-          ),
+        showCustomSnackBar(
+          context,
+          errorMessage,
+          type: SnackBarType.error,
+          duration: const Duration(seconds: 4),
         );
       }
     } finally {

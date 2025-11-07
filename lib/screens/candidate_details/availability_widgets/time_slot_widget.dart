@@ -7,9 +7,6 @@ class TimeSlotWidget extends StatelessWidget {
   final String dayKey;
   final double height;
   final VoidCallback onRemove;
-  final Function(LongPressStartDetails) onLongPressStart;
-  final Function(LongPressMoveUpdateDetails) onLongPressMoveUpdate;
-  final Function(LongPressEndDetails) onLongPressEnd;
 
   const TimeSlotWidget({
     super.key,
@@ -17,76 +14,70 @@ class TimeSlotWidget extends StatelessWidget {
     required this.dayKey,
     required this.height,
     required this.onRemove,
-    required this.onLongPressStart,
-    required this.onLongPressMoveUpdate,
-    required this.onLongPressEnd,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return GestureDetector(
-      onLongPressStart: onLongPressStart,
-      onLongPressMoveUpdate: onLongPressMoveUpdate,
-      onLongPressEnd: onLongPressEnd,
-      child: Container(
-        height: height.clamp(40.0, double.infinity),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.primaryContainer.withAlpha(180),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: theme.colorScheme.primary,
-            width: 1,
-          ),
+    return Container(
+      height: height.clamp(40.0, double.infinity),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.primaryContainer.withAlpha(180),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: theme.colorScheme.primary,
+          width: 1,
         ),
-        child: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.access_time,
-                    size: 16,
-                    color: theme.colorScheme.primary,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    slot.startTime,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      fontWeight: FontWeight.bold,
+      ),
+      child: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.access_time,
+                  size: 16,
+                  color: theme.colorScheme.primary,
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Text(
+                      "${slot.startTime} - ",
+                      style: theme.textTheme.labelLarge
                     ),
-                  ),
-                  Text(
-                    slot.endTime,
-                    style: theme.textTheme.bodySmall,
-                  ),
-                ],
-              ),
+                    Text(
+                      slot.endTime,
+                      style: theme.textTheme.labelLarge,
+                    ),
+                  ],
+                ),
+              ],
             ),
-            Positioned(
-              top: 4,
-              right: 4,
-              child: GestureDetector(
-                onTap: onRemove,
-                child: Container(
-                  padding: const EdgeInsets.all(2),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.error,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.close,
-                    size: 14,
-                    color: theme.colorScheme.onError,
-                  ),
+          ),
+          Positioned(
+            top: 4,
+            right: 4,
+            child: GestureDetector(
+              onTap: onRemove,
+              child: Container(
+                padding: const EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.error,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.close,
+                  size: 14,
+                  color: theme.colorScheme.onError,
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

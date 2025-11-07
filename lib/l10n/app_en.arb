@@ -259,5 +259,11 @@
   "unsavedChangesMessage": "You have unsaved changes. Do you want to save them before leaving?",
   "discard": "Discard",
   "changesSaved": "Changes saved successfully",
-  "availabilityInstructions": "Long press and drag to create availability slots"
+  "availabilityInstructions": "Long press and drag to create availability slots",
+  "noSessionsFound": "No sessions found",
+  "paymentMarkedAsPaid": "Payment marked as paid",
+  "paymentMarkedAsUnpaid": "Payment marked as unpaid",
+  "confirmPaymentStatusChange": "Are you sure you want to change the payment status?",
+  "markAsPaid": "Mark as Paid",
+  "markAsUnpaid": "Mark as Unpaid"
 }

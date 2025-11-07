@@ -857,4 +857,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get availabilityInstructions => 'Long press and drag to create availability slots';
+
+  @override
+  String get noSessionsFound => 'No sessions found';
+
+  @override
+  String get paymentMarkedAsPaid => 'Payment marked as paid';
+
+  @override
+  String get paymentMarkedAsUnpaid => 'Payment marked as unpaid';
+
+  @override
+  String get confirmPaymentStatusChange => 'Are you sure you want to change the payment status?';
+
+  @override
+  String get markAsPaid => 'Mark as Paid';
+
+  @override
+  String get markAsUnpaid => 'Mark as Unpaid';
 }

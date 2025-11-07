@@ -1,26 +1,27 @@
 import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/structs.dart' as structs;
+import '../../widgets/widgets.dart';
 import 'availability_widgets/availability_state.dart';
 import 'availability_widgets/availability_header.dart';
 import 'availability_widgets/time_column.dart';
 import 'availability_widgets/day_column.dart';
 
 /// Main availability calendar tab widget
-class AvailabilityCalendarTab extends StatefulWidget {
+  class AvailabilityCalendarTab extends StatefulWidget {
   final structs.Candidate candidate;
 
   const AvailabilityCalendarTab({
-    super.key,
-    required this.candidate,
+  super.key,
+  required this.candidate,
   });
 
   @override
   State<AvailabilityCalendarTab> createState() =>
-      _AvailabilityCalendarTabState();
-}
+  _AvailabilityCalendarTabState();
+  }
 
-class _AvailabilityCalendarTabState extends State<AvailabilityCalendarTab> {
+  class _AvailabilityCalendarTabState extends State<AvailabilityCalendarTab> {
   late AvailabilityState _availabilityState;
   double _zoomLevel = 1.2;
   final ScrollController _horizontalController = ScrollController();
@@ -123,14 +124,18 @@ class _AvailabilityCalendarTabState extends State<AvailabilityCalendarTab> {
     try {
       await _availabilityState.saveChanges();
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(t.changesSaved)),
+        showCustomSnackBar(
+          context,
+          t.changesSaved,
+          type: SnackBarType.success,
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(t.error(e.toString()))),
+        showCustomSnackBar(
+          context,
+          t.error(e.toString()),
+          type: SnackBarType.error,
         );
       }
     }
@@ -203,7 +208,6 @@ class _AvailabilityCalendarTabState extends State<AvailabilityCalendarTab> {
   }
 
   Widget _buildCalendarGrid(ThemeData theme) {
-    final t = AppLocalizations.of(context)!;
     final hourHeight = 60.0 * _zoomLevel;
     final quarterHeight = hourHeight / 4;
     final hours = List.generate(13, (index) => 8 + index);
@@ -262,15 +266,6 @@ class _AvailabilityCalendarTabState extends State<AvailabilityCalendarTab> {
                         dayKey, hourHeight, baseMinutes, totalHeight),
                     onRemoveSlot: (slot) =>
                         _availabilityState.removeTimeSlot(dayKey, slot),
-                    onSlotLongPressStart: (slot, details) =>
-                        _handleSlotLongPressStart(
-                            dayKey, slot, hourHeight, baseMinutes),
-                    onSlotLongPressMoveUpdate: (slot, details) =>
-                        _handleSlotLongPressMoveUpdate(
-                            dayKey, details, totalHeight),
-                    onSlotLongPressEnd: (slot, details) =>
-                        _handleSlotLongPressEnd(
-                            dayKey, slot, hourHeight, baseMinutes),
                   );
                 }),
               ],
@@ -346,60 +341,10 @@ class _AvailabilityCalendarTabState extends State<AvailabilityCalendarTab> {
     }
   }
 
-  // Handlers for moving existing slots
-  void _handleSlotLongPressStart(
-      String dayKey, structs.TimeSlot slot, double hourHeight, int baseMinutes) {
-    setState(() {
-      _movingSlotDayKey = dayKey;
-      _movingSlot = slot;
-      final startMinutes = _timeStringToMinutes(slot.startTime);
-      final topPosition = ((startMinutes - baseMinutes) / 60) * hourHeight;
-      _movingSlotOffset = Offset(0, topPosition);
-    });
-  }
-
-  void _handleSlotLongPressMoveUpdate(
-      String dayKey, LongPressMoveUpdateDetails details, double totalHeight) {
-    if (_movingSlot != null && _movingSlotDayKey == dayKey) {
-      final gridBox = _getRenderBoxForDay(dayKey);
-      if (gridBox == null) return;
-
-      final localPosition = gridBox.globalToLocal(details.globalPosition);
-
-      setState(() {
-        _movingSlotOffset = Offset(0, localPosition.dy.clamp(0.0, totalHeight));
-      });
-    }
-  }
-
-  void _handleSlotLongPressEnd(String dayKey, structs.TimeSlot slot,
-      double hourHeight, int baseMinutes) {
-    if (_movingSlot != null &&
-        _movingSlotDayKey == dayKey &&
-        _movingSlotOffset != null) {
-      final newY = _movingSlotOffset!.dy;
-      final newStartMinutes = _availabilityState
-          .snapToQuarterHour(baseMinutes + ((newY / hourHeight) * 60).round());
-
-      _availabilityState.moveTimeSlot(dayKey, _movingSlot!, dayKey, newStartMinutes);
-    }
-
-    setState(() {
-      _movingSlot = null;
-      _movingSlotDayKey = null;
-      _movingSlotOffset = null;
-    });
-  }
-
   String _minutesToTimeString(int minutes) {
     final hours = (minutes ~/ 60).clamp(0, 23);
     final mins = minutes % 60;
     return '${hours.toString().padLeft(2, '0')}:${mins.toString().padLeft(2, '0')}';
-  }
-
-  int _timeStringToMinutes(String time) {
-    final parts = time.split(':');
-    return int.parse(parts[0]) * 60 + int.parse(parts[1]);
   }
 
   /// Helper to get RenderBox for a day column safely

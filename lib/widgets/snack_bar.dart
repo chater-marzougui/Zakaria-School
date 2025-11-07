@@ -14,7 +14,7 @@ void showCustomSnackBar(
   overlayEntry = OverlayEntry(
     builder: (context) {
       return Positioned(
-        top: 0,
+        top: 50,
         left: 0,
         right: 0,
         child: SafeArea(
@@ -114,7 +114,7 @@ class _SlideTransitionSnackBarState extends State<SlideTransitionSnackBar>
     final theme = Theme.of(context);
     switch (widget.type) {
       case SnackBarType.success:
-        return theme.primaryColor;
+        return Colors.green.shade600;
       case SnackBarType.error:
         return theme.colorScheme.error;
       case SnackBarType.warning:

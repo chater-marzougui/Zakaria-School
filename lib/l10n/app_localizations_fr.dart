@@ -857,4 +857,22 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get availabilityInstructions => 'Appuyez longtemps et glissez pour créer des créneaux de disponibilité';
+
+  @override
+  String get noSessionsFound => 'Aucune séance trouvée';
+
+  @override
+  String get paymentMarkedAsPaid => 'Paiement marqué comme payé';
+
+  @override
+  String get paymentMarkedAsUnpaid => 'Paiement marqué comme non payé';
+
+  @override
+  String get confirmPaymentStatusChange => 'Êtes-vous sûr de vouloir modifier le statut de paiement ?';
+
+  @override
+  String get markAsPaid => 'Marquer comme payé';
+
+  @override
+  String get markAsUnpaid => 'Marquer comme non payé';
 }

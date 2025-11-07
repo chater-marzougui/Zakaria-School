@@ -259,5 +259,11 @@
   "unsavedChangesMessage": "لديك تغييرات غير محفوظة. هل تريد حفظها قبل المغادرة؟",
   "discard": "تجاهل",
   "changesSaved": "تم حفظ التغييرات بنجاح",
-  "availabilityInstructions": "اضغط لفترة طويلة واسحب لإنشاء فترات توفر"
+  "availabilityInstructions": "اضغط لفترة طويلة واسحب لإنشاء فترات توفر",
+  "noSessionsFound": "لم يتم العثور على جلسات",
+  "paymentMarkedAsPaid": "تم تحديد الدفع كمدفوع",
+  "paymentMarkedAsUnpaid": "تم تحديد الدفع كغير مدفوع",
+  "confirmPaymentStatusChange": "هل أنت متأكد من أنك تريد تغيير حالة الدفع؟",
+  "markAsPaid": "تحديد كمدفوع",
+  "markAsUnpaid": "تحديد كغير مدفوع"
 }
