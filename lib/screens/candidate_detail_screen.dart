@@ -108,6 +108,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> with Sing
       ),
       body: TabBarView(
         controller: _tabController,
+        physics: const NeverScrollableScrollPhysics(), // Disable swipe to prevent accidental tab changes with unsaved data
         children: [
           buildInfoTab(context, widget.candidate),
           AvailabilityCalendarTab(candidate: widget.candidate),
