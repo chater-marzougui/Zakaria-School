@@ -622,13 +622,14 @@ class InstructorScheduleImageGenerator {
     textPainter.paint(canvas, Offset(x + 5, offsetY));
   }
 
+  static const String _scheduleShareText = 'Emploi du temps 📅';
+
   static Future<void> _shareViaWhatsApp({
     required BuildContext context,
     required String filePath,
     String? phoneNumber,
   }) async {
     try {
-
       if (phoneNumber != null && phoneNumber.isNotEmpty) {
         // Try to open WhatsApp directly with the phone number
         String cleanPhone = phoneNumber.replaceAll(RegExp(r'[^\d+]'), '');
@@ -637,11 +638,11 @@ class InstructorScheduleImageGenerator {
         }
 
         await SharePlus.instance.share(
-            ShareParams(
+          ShareParams(
             files: [XFile(filePath)],
-            text: 'Emploi du temps 📅',
-            previewThumbnail: XFile(filePath)
-          )
+            text: _scheduleShareText,
+            previewThumbnail: XFile(filePath),
+          ),
         );
         // Then try to open WhatsApp (this might not work on all platforms)
         final whatsappUrl = 'https://wa.me/$cleanPhone';
@@ -651,10 +652,10 @@ class InstructorScheduleImageGenerator {
         // Just share without specific contact
         await SharePlus.instance.share(
           ShareParams(
-              files: [XFile(filePath)],
-              text: 'Emploi du temps 📅',
-              previewThumbnail: XFile(filePath)
-          )
+            files: [XFile(filePath)],
+            text: _scheduleShareText,
+            previewThumbnail: XFile(filePath),
+          ),
         );
       }
     } catch (e) {

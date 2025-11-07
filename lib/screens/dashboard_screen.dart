@@ -30,7 +30,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     if (users.isEmpty) {
       showCustomSnackBar(
         context,
-        'No instructors found',
+        'No users found',
         type: SnackBarType.error,
       );
       return;
@@ -39,7 +39,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: Text('Select Instructor'),
+        title: const Text('Select Instructor'),
         content: SizedBox(
           width: double.maxFinite,
           child: ListView.builder(
@@ -108,7 +108,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       );
     } catch (e) {
       if (mounted) {
-        print('Error generating/sharing instructor schedule: $e');
+        debugPrint('Error generating/sharing instructor schedule: $e');
         showCustomSnackBar(
           context,
           'Error: $e',
@@ -221,9 +221,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                     )
                         : const Icon(Icons.send),
-                    label: Text(
-                      _isGenerating ? 'Generating...' : 'Send Schedule to Instructor',
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    label: const Text(
+                      'Send Schedule to Instructor',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF25D366), // WhatsApp green
