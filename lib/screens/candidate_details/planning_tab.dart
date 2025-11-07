@@ -1,10 +1,12 @@
 import 'package:ecole_zakaria/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
 import '../../helpers/image_generator.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/structs.dart' as structs;
+import 'planning_widgets/planning_summary_cards.dart';
+import 'planning_widgets/planning_session_item.dart';
+import 'planning_widgets/auto_session_planner.dart';
 
 class PlanningTab extends StatefulWidget {
   final structs.Candidate candidate;
@@ -98,43 +100,41 @@ class _PlanningTabState extends State<PlanningTab> {
         return Column(
           children: [
             // Payment Summary Cards
-            SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  _SummaryCard(
-                    title: t.paid,
-                    sessionsCount: paidSessions.length,
-                    hours: totalPaidHours,
-                    color: Colors.green,
-                    icon: Icons.check_circle,
-                    theme: theme,
-                    t: t,
+            PlanningSummaryCards(
+              paidSessionsCount: paidSessions.length,
+              totalPaidHours: totalPaidHours,
+              unpaidSessionsCount: unpaidSessions.length,
+              totalUnpaidHours: totalUnpaidHours,
+              totalSessionsCount: allSessions.length,
+              totalHours: totalPaidHours + totalUnpaidHours,
+            ),
+
+            // Auto Planning Button
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () => AutoSessionPlanner.showAutoPlanningDialog(context, widget.candidate),
+                  icon: const Icon(Icons.auto_awesome),
+                  label: const Text(
+                    'Auto Session Planning',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(width: 12),
-                  _SummaryCard(
-                    title: t.unpaid,
-                    sessionsCount: unpaidSessions.length,
-                    hours: totalUnpaidHours,
-                    color: theme.colorScheme.error,
-                    icon: Icons.pending,
-                    theme: theme,
-                    t: t,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: theme.colorScheme.primary,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 2,
                   ),
-                  const SizedBox(width: 12),
-                  _SummaryCard(
-                    title: t.total,
-                    sessionsCount: allSessions.length,
-                    hours: totalPaidHours + totalUnpaidHours,
-                    color: theme.colorScheme.primary,
-                    icon: Icons.receipt_long,
-                    theme: theme,
-                    t: t,
-                  ),
-                ],
+                ),
               ),
             ),
+
+            const SizedBox(height: 8),
 
             // Share Planning Button
             Padding(
@@ -202,515 +202,13 @@ class _PlanningTabState extends State<PlanningTab> {
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
                 itemCount: allSessions.length,
                 itemBuilder: (context, index) {
-                  return _PaymentItem(session: allSessions[index]);
+                  return PlanningSessionItem(session: allSessions[index]);
                 },
               ),
             ),
           ],
         );
       },
-    );
-  }
-}
-
-class _SummaryCard extends StatelessWidget {
-  final String title;
-  final int sessionsCount;
-  final double hours;
-  final Color color;
-  final IconData icon;
-  final ThemeData theme;
-  final AppLocalizations t;
-
-  const _SummaryCard({
-    required this.title,
-    required this.sessionsCount,
-    required this.hours,
-    required this.color,
-    required this.icon,
-    required this.theme,
-    required this.t,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 140,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: color.withAlpha(25),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withAlpha(75), width: 1.5),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(icon, color: color, size: 20),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  title,
-                  style: theme.textTheme.titleSmall?.copyWith(
-                    color: color,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            '$sessionsCount ${t.sessions}',
-            style: theme.textTheme.bodySmall,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            '${hours.toStringAsFixed(1)} ${t.hours}',
-            style: theme.textTheme.bodySmall,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _PaymentItem extends StatelessWidget {
-  final structs.Session session;
-
-  const _PaymentItem({required this.session});
-
-  void _showPaymentConfirmationDialog(BuildContext context, bool markAsPaid) {
-    final theme = Theme.of(context);
-    final t = AppLocalizations.of(context)!;
-
-    // Controllers for the form fields
-    final amountController = TextEditingController(
-      text: session.paymentAmount > 0 ? session.paymentAmount.toString() : '',
-    );
-    final noteController = TextEditingController(text: session.paymentNote);
-    DateTime selectedDate = session.paymentDate ?? DateTime.now();
-
-    void disposeControllers() {
-      if (amountController.hasListeners || noteController.hasListeners) {
-        return; // Already disposed
-      }
-      amountController.dispose();
-      noteController.dispose();
-    }
-
-    showDialog(
-      context: context,
-      builder: (dialogContext) => StatefulBuilder(
-        builder: (context, setState) => AlertDialog(
-          title: Row(
-            children: [
-              Icon(
-                markAsPaid ? Icons.check_circle : Icons.cancel,
-                color: markAsPaid ? Colors.green : theme.colorScheme.error,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  markAsPaid ? t.markAsPaid : t.markAsUnpaid,
-                  style: theme.textTheme.titleLarge,
-                ),
-              ),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(t.confirmPaymentStatusChange),
-                const SizedBox(height: 16),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Icons.calendar_today, size: 16),
-                          const SizedBox(width: 8),
-                          Text(
-                            DateFormat('dd/MM/yyyy').format(session.date),
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          Icon(Icons.access_time, size: 16),
-                          const SizedBox(width: 8),
-                          Text(
-                            '${session.durationInHours.toStringAsFixed(1)} ${t.hours}',
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                if (markAsPaid) ...[
-                  const SizedBox(height: 16),
-                  const Divider(),
-                  const SizedBox(height: 16),
-                  // Payment Amount
-                  TextField(
-                    controller: amountController,
-                    keyboardType: TextInputType.numberWithOptions(decimal: true),
-                    decoration: InputDecoration(
-                      labelText: 'Payment Amount',
-                      prefixIcon: Icon(Icons.attach_money),
-                      suffixText: 'TND',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  // Payment Date
-                  InkWell(
-                    onTap: () async {
-                      final pickedDate = await showDatePicker(
-                        context: context,
-                        initialDate: selectedDate,
-                        firstDate: DateTime(2020),
-                        lastDate: DateTime.now().add(Duration(days: 365)),
-                      );
-                      if (pickedDate != null) {
-                        setState(() {
-                          selectedDate = pickedDate;
-                        });
-                      }
-                    },
-                    child: InputDecorator(
-                      decoration: InputDecoration(
-                        labelText: 'Payment Date',
-                        prefixIcon: Icon(Icons.calendar_today),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: Text(
-                        DateFormat('dd/MM/yyyy').format(selectedDate),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  // Payment Note
-                  TextField(
-                    controller: noteController,
-                    maxLines: 2,
-                    decoration: InputDecoration(
-                      labelText: 'Note (optional)',
-                      prefixIcon: Icon(Icons.note),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      hintText: 'e.g., Acompte, Full payment, etc.',
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text(t.cancel),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                try {
-                  final updateData = <String, dynamic>{
-                    'payment_status': markAsPaid ? 'paid' : 'unpaid',
-                  };
-
-                  if (markAsPaid) {
-                    // Parse amount
-                    final amount = double.tryParse(amountController.text.trim()) ?? 0.0;
-                    updateData['payment_amount'] = amount;
-                    updateData['payment_date'] = Timestamp.fromDate(selectedDate);
-                    updateData['payment_note'] = noteController.text.trim();
-                  } else {
-                    // Clear payment data when marking as unpaid
-                    updateData['payment_amount'] = 0.0;
-                    updateData['payment_date'] = null;
-                    updateData['payment_note'] = '';
-                  }
-
-                  await FirebaseFirestore.instance
-                      .collection('sessions')
-                      .doc(session.id)
-                      .update(updateData);
-
-                  if (!context.mounted) return;
-                  
-                  Navigator.pop(context);
-
-                  showCustomSnackBar(
-                    context,
-                    markAsPaid
-                        ? t.paymentMarkedAsPaid
-                        : t.paymentMarkedAsUnpaid,
-                    type: SnackBarType.success,
-                  );
-                } catch (e) {
-                  if (!context.mounted) return;
-                  
-                  Navigator.pop(context);
-                  
-                  showCustomSnackBar(
-                    context,
-                    '${t.error}: $e',
-                    type: SnackBarType.error,
-                  );
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor:
-                markAsPaid ? Colors.green : theme.colorScheme.error,
-                foregroundColor: Colors.white,
-              ),
-              child: Text(t.confirm),
-            ),
-          ],
-        ),
-      ),
-    ).then((_) {
-      // Dispose controllers when dialog is dismissed
-      disposeControllers();
-    });
-  }
-
-  void _showDeleteConfirmationDialog(BuildContext context) {
-    final theme = Theme.of(context);
-    final t = AppLocalizations.of(context)!;
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Row(
-          children: [
-            Icon(
-              Icons.delete_outline,
-              color: theme.colorScheme.error,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                t.deleteSession,
-                style: theme.textTheme.titleLarge,
-              ),
-            ),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(t.deleteSessionMessage),
-            const SizedBox(height: 16),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.calendar_today, size: 16),
-                      const SizedBox(width: 8),
-                      Text(
-                        DateFormat('dd/MM/yyyy').format(session.date),
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Icon(Icons.access_time, size: 16),
-                      const SizedBox(width: 8),
-                      Text(
-                        '${session.startTime} - ${session.endTime}',
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(t.cancel),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              try {
-                await FirebaseFirestore.instance
-                    .collection('sessions')
-                    .doc(session.id)
-                    .delete();
-
-                if (!context.mounted) return;
-                Navigator.pop(context);
-
-                showCustomSnackBar(
-                  context,
-                  t.deleteSession,
-                  type: SnackBarType.success,
-                );
-              } catch (e) {
-                if (!context.mounted) return;
-                showCustomSnackBar(
-                  context,
-                  '${t.error}: $e',
-                  type: SnackBarType.error,
-                );
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: theme.colorScheme.error,
-              foregroundColor: Colors.white,
-            ),
-            child: Text(t.delete),
-          ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final t = AppLocalizations.of(context)!;
-    final isPaid = session.paymentStatus == 'paid';
-
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      elevation: 2,
-      child: InkWell(
-        onTap: () {
-          _showPaymentConfirmationDialog(context, !isPaid);
-        },
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              // Status Icon
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: (isPaid ? Colors.green : theme.colorScheme.error)
-                      .withAlpha(25),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  isPaid ? Icons.check_circle : Icons.pending,
-                  color: isPaid ? Colors.green : theme.colorScheme.error,
-                  size: 28,
-                ),
-              ),
-              const SizedBox(width: 16),
-
-              // Session Info
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      DateFormat('EEEE, dd MMMM yyyy').format(session.date),
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        Icon(Icons.access_time,
-                            size: 14,
-                            color: theme.textTheme.bodySmall?.color),
-                        const SizedBox(width: 4),
-                        Text(
-                          '${session.startTime} - ${session.endTime}',
-                          style: theme.textTheme.bodySmall,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          '• ${session.durationInHours.toStringAsFixed(1)} ${t.hours}',
-                          style: theme.textTheme.bodySmall,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-
-              // Action Button
-              Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: (isPaid ? Colors.green : theme.colorScheme.error)
-                          .withAlpha(25),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      isPaid ? t.paid : t.unpaid,
-                      style: theme.textTheme.labelLarge?.copyWith(
-                        color: isPaid ? Colors.green : theme.colorScheme.error,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  GestureDetector(
-                    onTap: () {
-                      _showDeleteConfirmationDialog(context);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(6),
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.error.withAlpha(25),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.delete_outline,
-                        size: 18,
-                        color: theme.colorScheme.error,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }
