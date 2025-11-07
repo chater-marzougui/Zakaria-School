@@ -33,6 +33,9 @@ class _AvailabilityCalendarTabState extends State<AvailabilityCalendarTab> {
   String? _movingSlotDayKey;
   structs.TimeSlot? _movingSlot;
   Offset? _movingSlotOffset;
+  
+  // Key for the day grid to calculate positions
+  final GlobalKey _gridKey = GlobalKey();
 
   final List<String> _dayKeys = [
     'monday',
@@ -48,6 +51,10 @@ class _AvailabilityCalendarTabState extends State<AvailabilityCalendarTab> {
   void initState() {
     super.initState();
     _workingAvailability = _deepCopyAvailability(widget.candidate.availability);
+    // Reload data from Firestore when first opening the tab
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _reloadCandidateData();
+    });
   }
 
   @override
@@ -122,6 +129,8 @@ class _AvailabilityCalendarTabState extends State<AvailabilityCalendarTab> {
 
       setState(() {
         _hasChanges = false;
+        // Update local state to match what was saved to Firebase
+        // This ensures the UI reflects the saved state when returning to this page
       });
 
       if (mounted) {
@@ -135,6 +144,40 @@ class _AvailabilityCalendarTabState extends State<AvailabilityCalendarTab> {
           SnackBar(content: Text(t.error(e.toString()))),
         );
       }
+    }
+  }
+  
+  // Reload candidate data from Firestore to ensure local state is fresh
+  Future<void> _reloadCandidateData() async {
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection('candidates')
+          .doc(widget.candidate.id)
+          .get();
+      
+      if (doc.exists) {
+        final data = doc.data() as Map<String, dynamic>;
+        Map<String, List<structs.TimeSlot>> availability = {};
+        
+        if (data['availability'] != null) {
+          final availabilityData = data['availability'] as Map<String, dynamic>;
+          availabilityData.forEach((day, slots) {
+            if (slots is List) {
+              availability[day] = slots.map((slot) => 
+                structs.TimeSlot.fromMap(slot as Map<String, dynamic>)
+              ).toList();
+            }
+          });
+        }
+        
+        setState(() {
+          _workingAvailability = availability;
+          _hasChanges = false;
+        });
+      }
+    } catch (e) {
+      // Silently fail - user will see old state
+      debugPrint('Failed to reload candidate data: $e');
     }
   }
 
@@ -483,7 +526,6 @@ class _AvailabilityCalendarTabState extends State<AvailabilityCalendarTab> {
       ) {
     final daySlots = _workingAvailability[dayKey] ?? [];
     final dayLabel = _getDayLabel(dayKey, t);
-    final yOffset = 200.0;
 
     return Container(
       width: 120,
@@ -514,25 +556,32 @@ class _AvailabilityCalendarTabState extends State<AvailabilityCalendarTab> {
 
           // Day grid with slots
           GestureDetector(
+            key: dayKey == _dayKeys[0] ? _gridKey : null, // Use key only for first column
             onLongPressStart: (details) {
               if (_movingSlot != null) return; // Don't create if moving
 
-              final RenderBox box = context.findRenderObject() as RenderBox;
-              final localPosition = box.globalToLocal(details.globalPosition);
+              // Get the grid's position relative to the screen
+              final RenderBox? gridBox = _gridKey.currentContext?.findRenderObject() as RenderBox?;
+              if (gridBox == null) return;
+              
+              // Convert global position to local position within the grid
+              final localPosition = gridBox.globalToLocal(details.globalPosition);
 
               setState(() {
                 _dragDayKey = dayKey;
-                _dragStartY = localPosition.dy - yOffset;
+                _dragStartY = localPosition.dy.clamp(0.0, totalHeight);
                 _dragCurrentY = _dragStartY;
               });
             },
             onLongPressMoveUpdate: (details) {
               if (_dragDayKey == dayKey && _dragStartY != null && _movingSlot == null) {
-                final RenderBox box = context.findRenderObject() as RenderBox;
-                final localPosition = box.globalToLocal(details.globalPosition);
+                final RenderBox? gridBox = _gridKey.currentContext?.findRenderObject() as RenderBox?;
+                if (gridBox == null) return;
+                
+                final localPosition = gridBox.globalToLocal(details.globalPosition);
 
                 setState(() {
-                  _dragCurrentY = (localPosition.dy - yOffset).clamp(0.0, totalHeight);
+                  _dragCurrentY = localPosition.dy.clamp(0.0, totalHeight);
                 });
               }
             },
@@ -617,7 +666,7 @@ class _AvailabilityCalendarTabState extends State<AvailabilityCalendarTab> {
                       top: topPosition.clamp(0.0, totalHeight),
                       left: 4,
                       right: 4,
-                      child: _buildTimeSlotBlock(slot, dayKey, height, hourHeight, baseMinutes, totalHeight, theme, yOffset),
+                      child: _buildTimeSlotBlock(slot, dayKey, height, hourHeight, baseMinutes, totalHeight, theme),
                     );
                   }),
 
@@ -651,7 +700,7 @@ class _AvailabilityCalendarTabState extends State<AvailabilityCalendarTab> {
                   // Moving slot overlay
                   if (_movingSlotDayKey == dayKey && _movingSlot != null && _movingSlotOffset != null)
                     Positioned(
-                      top: _movingSlotOffset!.dy,
+                      top: _movingSlotOffset!.dy.clamp(0.0, totalHeight),
                       left: 4,
                       right: 4,
                       child: Opacity(
@@ -676,23 +725,28 @@ class _AvailabilityCalendarTabState extends State<AvailabilityCalendarTab> {
       int baseMinutes,
       double totalHeight,
       ThemeData theme,
-      double yOffset,
       ) {
     return GestureDetector(
       onLongPressStart: (details) {
+        // Store initial touch position within the slot
         setState(() {
           _movingSlotDayKey = dayKey;
           _movingSlot = slot;
-          _movingSlotOffset = Offset(0, details.localPosition.dy);
+          // Calculate initial position based on slot's actual time
+          final startMinutes = _timeStringToMinutes(slot.startTime);
+          final topPosition = ((startMinutes - baseMinutes) / 60) * hourHeight;
+          _movingSlotOffset = Offset(0, topPosition);
         });
       },
       onLongPressMoveUpdate: (details) {
         if (_movingSlot != null && _movingSlotDayKey == dayKey) {
-          final RenderBox box = context.findRenderObject() as RenderBox;
-          final localPosition = box.globalToLocal(details.globalPosition);
+          final RenderBox? gridBox = _gridKey.currentContext?.findRenderObject() as RenderBox?;
+          if (gridBox == null) return;
+          
+          final localPosition = gridBox.globalToLocal(details.globalPosition);
 
           setState(() {
-            _movingSlotOffset = Offset(0, (localPosition.dy - yOffset).clamp(0.0, totalHeight));
+            _movingSlotOffset = Offset(0, localPosition.dy.clamp(0.0, totalHeight));
           });
         }
       },
