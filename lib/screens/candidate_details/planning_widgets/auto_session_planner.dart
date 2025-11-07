@@ -199,12 +199,6 @@ class AutoSessionPlanner {
     final examDateDay = DateTime(endDate.year, endDate.month, endDate.day);
     
     while (currentDate.isBefore(examDateDay) && hoursScheduled < requestedHours) {
-      // Skip if it's in the past
-      if (currentDate.isBefore(DateTime.now())) {
-        currentDate = currentDate.add(Duration(days: 1));
-        continue;
-      }
-
       final dayOfWeek = _getDayOfWeek(currentDate.weekday);
       final dateKey = DateFormat('yyyy-MM-dd').format(currentDate);
       

@@ -25,11 +25,12 @@ class PlanningSessionItem extends StatelessWidget {
     DateTime selectedDate = session.paymentDate ?? DateTime.now();
 
     void disposeControllers() {
-      if (amountController.hasListeners || noteController.hasListeners) {
-        return; // Already disposed
+      try {
+        amountController.dispose();
+        noteController.dispose();
+      } catch (e) {
+        // Controllers already disposed
       }
-      amountController.dispose();
-      noteController.dispose();
     }
 
     showDialog(
