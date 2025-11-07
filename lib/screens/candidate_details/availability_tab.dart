@@ -158,16 +158,21 @@ class _AvailabilityCalendarTabState extends State<AvailabilityCalendarTab> {
           .get();
       
       if (doc.exists) {
-        final data = doc.data() as Map<String, dynamic>;
+        final data = doc.data();
+        if (data == null) return;
+        
         Map<String, List<structs.TimeSlot>> availability = {};
         
-        if (data['availability'] != null) {
+        if (data['availability'] != null && data['availability'] is Map) {
           final availabilityData = data['availability'] as Map<String, dynamic>;
           availabilityData.forEach((day, slots) {
             if (slots is List) {
-              availability[day] = slots.map((slot) => 
-                structs.TimeSlot.fromMap(slot as Map<String, dynamic>)
-              ).toList();
+              availability[day] = slots.map((slot) {
+                if (slot is Map<String, dynamic>) {
+                  return structs.TimeSlot.fromMap(slot);
+                }
+                return null;
+              }).whereType<structs.TimeSlot>().toList();
             }
           });
         }
