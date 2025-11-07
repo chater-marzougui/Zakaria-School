@@ -2,9 +2,127 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../l10n/app_localizations.dart';
 import '../models/structs.dart' as structs;
+import '../helpers/image_generator.dart';
+import '../widgets/widgets.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  bool _isGenerating = false;
+
+  Future<void> _showInstructorSelectionDialog() async {
+    final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
+
+    // Fetch all users (instructors)
+    final usersSnapshot = await FirebaseFirestore.instance.collection('users').get();
+    final users = usersSnapshot.docs
+        .map((doc) => structs.User.fromFirestore(doc))
+        .toList();
+
+    if (!mounted) return;
+
+    if (users.isEmpty) {
+      showCustomSnackBar(
+        context,
+        'No users found',
+        type: SnackBarType.error,
+      );
+      return;
+    }
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Select Instructor'),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: users.length,
+            itemBuilder: (context, index) {
+              final user = users[index];
+              return ListTile(
+                leading: CircleAvatar(
+                  child: Text(user.displayName[0].toUpperCase()),
+                ),
+                title: Text(user.displayName),
+                subtitle: Text(user.phoneNumber),
+                onTap: () {
+                  Navigator.pop(dialogContext);
+                  _handleSendScheduleToInstructor(user);
+                },
+              );
+            },
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(t.cancel),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _handleSendScheduleToInstructor(structs.User instructor) async {
+    setState(() {
+      _isGenerating = true;
+    });
+
+    try {
+      // Fetch all sessions for this instructor
+      final sessionsSnapshot = await FirebaseFirestore.instance
+          .collection('sessions')
+          .where('instructor_id', isEqualTo: instructor.uid)
+          .orderBy('date')
+          .get();
+
+      final sessions = sessionsSnapshot.docs
+          .map((doc) => structs.Session.fromFirestore(doc))
+          .toList();
+
+      if (sessions.isEmpty) {
+        if (mounted) {
+          showCustomSnackBar(
+            context,
+            'No sessions found for this instructor',
+            type: SnackBarType.error,
+          );
+        }
+        return;
+      }
+
+      if (!mounted) return;
+
+      await InstructorScheduleImageGenerator.generateAndShare(
+        context: context,
+        instructor: instructor,
+        sessions: sessions,
+      );
+    } catch (e) {
+      if (mounted) {
+        debugPrint('Error generating/sharing instructor schedule: $e');
+        showCustomSnackBar(
+          context,
+          'Error: $e',
+          type: SnackBarType.error,
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isGenerating = false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +202,41 @@ class DashboardScreen extends StatelessWidget {
                     ),
                   ],
                 ),
+                const SizedBox(height: 16),
+
+                // Send Schedule to Instructor Button
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: _isGenerating
+                        ? null
+                        : _showInstructorSelectionDialog,
+                    icon: _isGenerating
+                        ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      ),
+                    )
+                        : const Icon(Icons.send),
+                    label: const Text(
+                      'Send Schedule to Instructor',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF25D366), // WhatsApp green
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 2,
+                    ),
+                  ),
+                ),
+
                 const SizedBox(height: 24),
 
                 // Today's Sessions
