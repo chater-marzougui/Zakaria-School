@@ -36,9 +36,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get assignedInstructor => 'المدرب المعين';
 
   @override
-  String get balance => 'الرصيد';
-
-  @override
   String get calendar => 'التقويم';
 
   @override

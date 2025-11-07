@@ -36,9 +36,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get assignedInstructor => 'Assigned Instructor';
 
   @override
-  String get balance => 'Balance';
-
-  @override
   String get calendar => 'Calendar';
 
   @override

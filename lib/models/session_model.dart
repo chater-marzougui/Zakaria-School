@@ -10,6 +10,9 @@ class Session {
   final String status; // 'scheduled', 'done', 'missed', 'rescheduled'
   final String note;
   final String paymentStatus; // 'paid', 'unpaid'
+  final double paymentAmount; // amount paid
+  final DateTime? paymentDate;
+  final String paymentNote;
 
   Session({
     required this.id,
@@ -21,6 +24,9 @@ class Session {
     this.status = 'scheduled',
     this.note = '',
     this.paymentStatus = 'unpaid',
+    this.paymentAmount = 0.0,
+    this.paymentDate,
+    this.paymentNote = '',
   });
 
   // Factory method to create a Session from Firestore document
@@ -36,6 +42,9 @@ class Session {
       status: data['status'] ?? 'scheduled',
       note: data['note'] ?? '',
       paymentStatus: data['payment_status'] ?? 'unpaid',
+      paymentAmount: (data['payment_amount'] as num?)?.toDouble() ?? 0.0,
+      paymentDate: (data['payment_date'] as Timestamp?)?.toDate(),
+      paymentNote: data['payment_note'] ?? '',
     );
   }
 
@@ -50,6 +59,9 @@ class Session {
       'status': status,
       'note': note,
       'payment_status': paymentStatus,
+      'payment_amount': paymentAmount,
+      'payment_date': paymentDate != null ? Timestamp.fromDate(paymentDate!) : null,
+      'payment_note': paymentNote,
     };
   }
 

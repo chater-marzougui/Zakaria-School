@@ -7,7 +7,7 @@ import '../helpers/validators.dart';
 import '../widgets/widgets.dart';
 import 'candidate_details/availability_tab.dart';
 import 'candidate_details/info_tab.dart';
-import 'candidate_details/payment_tab.dart';
+import 'candidate_details/planning_tab.dart';
 
 class CandidateDetailScreen extends StatefulWidget {
   final structs.Candidate candidate;
@@ -111,7 +111,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> with Sing
         children: [
           buildInfoTab(context, widget.candidate),
           AvailabilityCalendarTab(candidate: widget.candidate),
-          PaymentsTab(candidate: widget.candidate,),
+          PlanningTab(candidate: widget.candidate,),
         ],
       ),
     );

@@ -39,7 +39,6 @@ class Candidate {
   final bool theoryPassed;
   final double totalPaidHours;
   final double totalTakenHours;
-  final double balance;
   final String notes;
   final String assignedInstructor;
   final String status; // 'active', 'graduated', 'inactive'

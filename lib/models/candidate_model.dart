@@ -33,7 +33,6 @@ class Candidate {
   final bool theoryPassed;
   final double totalPaidHours;
   final double totalTakenHours;
-  final double balance;
   final String notes;
   final String assignedInstructor;
   final String status; // 'active', 'graduated', 'inactive'
@@ -48,7 +47,6 @@ class Candidate {
     this.theoryPassed = false,
     this.totalPaidHours = 0.0,
     this.totalTakenHours = 0.0,
-    this.balance = 0.0,
     this.notes = '',
     this.assignedInstructor = '',
     this.status = 'active',
@@ -79,7 +77,6 @@ class Candidate {
       theoryPassed: data['theory_passed'] ?? false,
       totalPaidHours: (data['total_paid_hours'] ?? 0.0).toDouble(),
       totalTakenHours: (data['total_taken_hours'] ?? 0.0).toDouble(),
-      balance: (data['balance'] ?? 0.0).toDouble(),
       notes: data['notes'] ?? '',
       assignedInstructor: data['assigned_instructor'] ?? '',
       status: data['status'] ?? 'active',
@@ -103,7 +100,6 @@ class Candidate {
       'theory_passed': theoryPassed,
       'total_paid_hours': totalPaidHours,
       'total_taken_hours': totalTakenHours,
-      'balance': balance,
       'notes': notes,
       'assigned_instructor': assignedInstructor,
       'status': status,

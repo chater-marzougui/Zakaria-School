@@ -152,10 +152,9 @@ class TestDataGenerator {
     final theoryPassed = _random.nextBool();
     final status = _statuses[_random.nextInt(_statuses.length)];
 
-    // Generate realistic hours and balance
+    // Generate realistic hours
     final totalPaidHours = (_random.nextInt(30) + 10).toDouble(); // 10-40 hours
     final totalTakenHours = (_random.nextDouble() * totalPaidHours).clamp(0, totalPaidHours);
-    final balance = (_random.nextInt(500) - 200).toDouble(); // -200 to +300
 
     return Candidate(
       id: id,
@@ -166,7 +165,6 @@ class TestDataGenerator {
       theoryPassed: theoryPassed,
       totalPaidHours: totalPaidHours,
       totalTakenHours: double.parse(totalTakenHours.toStringAsFixed(1)),
-      balance: balance,
       notes: _notes[_random.nextInt(_notes.length)],
       assignedInstructor: _instructorIds[_random.nextInt(_instructorIds.length)],
       status: status,

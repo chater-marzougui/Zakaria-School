@@ -130,7 +130,6 @@ lib/
     theory_passed,
     total_paid_hours,
     total_taken_hours,
-    balance,
     notes,
     assigned_instructor,
     status

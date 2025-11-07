@@ -36,9 +36,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get assignedInstructor => 'Moniteur assigné';
 
   @override
-  String get balance => 'Solde';
-
-  @override
   String get calendar => 'Calendrier';
 
   @override

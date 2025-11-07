@@ -100,11 +100,6 @@ Widget buildInfoTab(BuildContext context, structs.Candidate candidate) {
           value: '${candidate.remainingHours.toStringAsFixed(1)} ${t.hours}',
         ),
         _InfoCard(
-          icon: Icons.account_balance_wallet,
-          title: t.balance,
-          value: '${candidate.balance.toStringAsFixed(2)} TND',
-        ),
-        _InfoCard(
           icon: Icons.person_outline,
           title: t.assignedInstructor,
           value: candidate.assignedInstructor.isEmpty

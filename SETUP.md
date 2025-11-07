@@ -131,7 +131,6 @@ Fields:
   "theory_passed": false,
   "total_paid_hours": 30,
   "total_taken_hours": 15,
-  "balance": 0,
   "notes": "Candidate notes here",
   "assigned_instructor": "Test Instructor",
   "status": "active"

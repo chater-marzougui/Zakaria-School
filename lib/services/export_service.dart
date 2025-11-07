@@ -15,7 +15,7 @@ class ExportService {
 
     final csv = StringBuffer();
     // Header
-    csv.writeln('ID,Name,Phone,CIN,Start Date,Theory Passed,Total Paid Hours,Total Taken Hours,Remaining Hours,Balance,Assigned Instructor,Status,Notes');
+    csv.writeln('ID,Name,Phone,CIN,Start Date,Theory Passed,Total Paid Hours,Total Taken Hours,Remaining Hours,Assigned Instructor,Status,Notes');
     
     // Data rows
     for (var candidate in candidates) {
@@ -29,7 +29,6 @@ class ExportService {
         '${candidate.totalPaidHours},'
         '${candidate.totalTakenHours},'
         '${candidate.remainingHours},'
-        '${candidate.balance},'
         '"${candidate.assignedInstructor}",'
         '${candidate.status},'
         '"${candidate.notes.replaceAll('"', '""')}"'

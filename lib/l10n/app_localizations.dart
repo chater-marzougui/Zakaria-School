@@ -151,12 +151,6 @@ abstract class AppLocalizations {
   /// **'Assigned Instructor'**
   String get assignedInstructor;
 
-  /// No description provided for @balance.
-  ///
-  /// In en, this message translates to:
-  /// **'Balance'**
-  String get balance;
-
   /// No description provided for @calendar.
   ///
   /// In en, this message translates to:

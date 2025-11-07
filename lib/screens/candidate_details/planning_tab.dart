@@ -2,22 +2,62 @@ import 'package:ecole_zakaria/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import '../../helpers/image_generator.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/structs.dart' as structs;
 
-class PaymentsTab extends StatefulWidget {
+class PlanningTab extends StatefulWidget {
   final structs.Candidate candidate;
 
-  const PaymentsTab({
+  const PlanningTab({
     super.key,
     required this.candidate,
   });
 
   @override
-  State<PaymentsTab> createState() => _PaymentsTabState();
+  State<PlanningTab> createState() => _PlanningTabState();
 }
 
-class _PaymentsTabState extends State<PaymentsTab> {
+class _PlanningTabState extends State<PlanningTab> {
+  bool _isGenerating = false;
+
+  Future<void> _handleSharePlanning(List<structs.Session> sessions) async {
+    if (sessions.isEmpty) {
+      showCustomSnackBar(
+        context,
+        'No sessions to share',
+        type: SnackBarType.error,
+      );
+      return;
+    }
+
+    setState(() {
+      _isGenerating = true;
+    });
+
+    try {
+      await PlanningImageGenerator.generateAndShare(
+        context: context,
+        candidate: widget.candidate,
+        sessions: sessions,
+      );
+    } catch (e) {
+      if (mounted) {
+        print('Error generating/sharing planning image: $e');
+        showCustomSnackBar(
+          context,
+          'Error: $e',
+          type: SnackBarType.error,
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isGenerating = false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,6 +133,42 @@ class _PaymentsTabState extends State<PaymentsTab> {
                     t: t,
                   ),
                 ],
+              ),
+            ),
+
+            // Share Planning Button
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: _isGenerating 
+                      ? null 
+                      : () => _handleSharePlanning(allSessions),
+                  icon: _isGenerating
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        )
+                      : const Icon(Icons.share),
+                  label: Text(
+                    _isGenerating ? 'Generating...' : 'Share Planning',
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF25D366), // WhatsApp green
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 2,
+                  ),
+                ),
               ),
             ),
 
