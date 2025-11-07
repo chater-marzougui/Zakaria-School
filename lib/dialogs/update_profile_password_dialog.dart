@@ -49,7 +49,7 @@ class _UpdateProfilePasswordDialogState
               controller: passwordController,
               obscureText: true,
               decoration: InputDecoration(
-                labelText: "Password",
+                labelText: t.password,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),

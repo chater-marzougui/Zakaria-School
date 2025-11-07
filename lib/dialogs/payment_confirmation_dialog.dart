@@ -121,7 +121,7 @@ class _PaymentConfirmationDialogState
                 controller: amountController,
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
                 decoration: InputDecoration(
-                  labelText: 'Payment Amount',
+                  labelText: t.paymentAmount,
                   prefixIcon: Icon(Icons.attach_money),
                   suffixText: 'TND',
                   border: OutlineInputBorder(
@@ -147,7 +147,7 @@ class _PaymentConfirmationDialogState
                 },
                 child: InputDecorator(
                   decoration: InputDecoration(
-                    labelText: 'Payment Date',
+                    labelText: t.paymentDate,
                     prefixIcon: Icon(Icons.calendar_today),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -164,12 +164,12 @@ class _PaymentConfirmationDialogState
                 controller: noteController,
                 maxLines: 2,
                 decoration: InputDecoration(
-                  labelText: 'Note (optional)',
+                  labelText: t.noteOptional,
                   prefixIcon: Icon(Icons.note),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  hintText: 'e.g., Acompte, Full payment, etc.',
+                  hintText: t.examplePaymentNote,
                 ),
               ),
             ],

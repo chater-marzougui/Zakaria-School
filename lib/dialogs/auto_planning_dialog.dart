@@ -48,7 +48,7 @@ class _AutoPlanningDialogState extends State<AutoPlanningDialog> {
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              'Auto Session Planning',
+              widget.t.autoSessionPlanning,
               style: widget.theme.textTheme.titleLarge,
             ),
           ),
@@ -59,7 +59,8 @@ class _AutoPlanningDialogState extends State<AutoPlanningDialog> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'How many hours would you like to schedule for ${widget.candidate.name}?',
+            widget.t.howManyHoursToSchedule
+                .replaceAll('{name}', widget.candidate.name),
             style: widget.theme.textTheme.bodyMedium,
           ),
           const SizedBox(height: 16),
@@ -67,20 +68,20 @@ class _AutoPlanningDialogState extends State<AutoPlanningDialog> {
             controller: hoursController,
             keyboardType: TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
-              labelText: 'Hours to Schedule',
+              labelText: widget.t.hoursToSchedule,
               prefixIcon: Icon(Icons.access_time),
-              suffixText: 'hours',
+              suffixText: widget.t.hours,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
-              hintText: 'e.g., 10',
+              hintText: widget.t.exampleHours,
             ),
             autofocus: true,
             enabled: !_isPlanning,
           ),
           const SizedBox(height: 8),
           Text(
-            'The system will try to fit sessions into the instructor\'s schedule based on the candidate\'s availability.',
+            widget.t.systemWillFitSessions,
             style: widget.theme.textTheme.bodySmall?.copyWith(
               color: widget.theme.textTheme.bodySmall?.color?.withAlpha(150),
             ),
@@ -100,7 +101,7 @@ class _AutoPlanningDialogState extends State<AutoPlanningDialog> {
             height: 20,
             child: CircularProgressIndicator(strokeWidth: 2),
           )
-              : Text('Plan Sessions'),
+              : Text(widget.t.planSessions),
         ),
       ],
     );
@@ -113,7 +114,7 @@ class _AutoPlanningDialogState extends State<AutoPlanningDialog> {
     if (hours == null || hours <= 0) {
       showCustomSnackBar(
         context,
-        'Please enter a valid number of hours',
+        widget.t.pleaseEnterValidHours,
         type: SnackBarType.error,
       );
       return;
