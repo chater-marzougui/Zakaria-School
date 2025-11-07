@@ -36,7 +36,7 @@ class Candidate {
   final String notes;
   final String assignedInstructorId;
   final String status; // 'active', 'graduated', 'inactive'
-  final Map<String, List<TimeSlot>> availability; // Weekly availability schedule
+  final Map<String, List<TimeSlot>> availability;
   final DateTime? examDate; // Date of the driving exam
 
   Candidate({

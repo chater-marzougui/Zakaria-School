@@ -117,7 +117,7 @@ class _EditCandidateDialogState extends State<EditCandidateDialog> {
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                value: selectedInstructorId.isEmpty ? null : selectedInstructorId,
+                initialValue: selectedInstructorId.isEmpty ? null : selectedInstructorId,
                 decoration: InputDecoration(
                   labelText: t.assignedInstructor,
                   prefixIcon: const Icon(Icons.person_outline),
@@ -139,7 +139,7 @@ class _EditCandidateDialogState extends State<EditCandidateDialog> {
                             : '${instructor.firstName} ${instructor.lastName}',
                       ),
                     );
-                  }).toList(),
+                  }),
                 ],
                 onChanged: _isSaving ? null : (value) {
                   setState(() {

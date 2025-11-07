@@ -23,6 +23,23 @@ class PlanningTab extends StatefulWidget {
 class _PlanningTabState extends State<PlanningTab> {
   bool _isGenerating = false;
 
+  /// Fetch the latest candidate data from Firestore
+  Future<structs.Candidate?> _getLatestCandidateData() async {
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection('candidates')
+          .doc(widget.candidate.id)
+          .get();
+      
+      if (doc.exists) {
+        return structs.Candidate.fromFirestore(doc);
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<void> _handleSharePlanning(List<structs.Session> sessions) async {
     if (sessions.isEmpty) {
       showCustomSnackBar(
@@ -45,7 +62,6 @@ class _PlanningTabState extends State<PlanningTab> {
       );
     } catch (e) {
       if (mounted) {
-        print('Error generating/sharing planning image: $e');
         showCustomSnackBar(
           context,
           'Error: $e',
@@ -115,7 +131,23 @@ class _PlanningTabState extends State<PlanningTab> {
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
-                  onPressed: () => AutoSessionPlanner.showAutoPlanningDialog(context, widget.candidate),
+                  onPressed: () async {
+                    // Fetch the latest candidate data before planning
+                    final latestCandidate = await _getLatestCandidateData();
+                    if (latestCandidate == null) {
+                      if (mounted) {
+                        showCustomSnackBar(
+                          context,
+                          'Failed to fetch latest candidate data',
+                          type: SnackBarType.error,
+                        );
+                      }
+                      return;
+                    }
+                    if (mounted) {
+                      AutoSessionPlanner.showAutoPlanningDialog(context, latestCandidate);
+                    }
+                  },
                   icon: const Icon(Icons.auto_awesome),
                   label: const Text(
                     'Auto Session Planning',
