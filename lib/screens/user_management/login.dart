@@ -5,7 +5,6 @@ import '../../bottom_navbar.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/structs.dart' as structs;
 import '../../controllers/user_controller.dart';
-
 import '../../widgets/widgets.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -16,118 +15,64 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _auth = FirebaseAuth.instance;
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final UserController _userManager = UserController();
-
   bool _isObscure = true;
   bool _isLoading = false;
-  String errorMessage = '';
 
-  void _navigateToHomePage() {
-    if (mounted) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const BottomNavbar()),
-      );
-    }
-  }
-
-  Future<void> _login(AppLocalizations loc) async {
-    if (!_validateAuthData(loc)) return;
-
-    setState(() {
-      _isLoading = true;
-      errorMessage = '';
-    });
-
-    try {
-      final userCredential = await _auth.signInWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
-
-      if (userCredential.user != null) {
-        DocumentSnapshot userDoc = await FirebaseFirestore.instance
-            .collection('users')
-            .doc(userCredential.user!.uid)
-            .get();
-
-        if (userDoc.exists) {
-          _userManager.setUser(structs.User.fromFirestore(userDoc));
-          _navigateToHomePage();
-        }
-      }
-    } on FirebaseAuthException catch (e) {
-      String message = loc.loginFailed;
-      switch (e.code) {
-        case 'user-not-found':
-          message = loc.noAccountFoundWithThisEmail;
-          break;
-        case 'wrong-password':
-          message = loc.incorrectPassword;
-          break;
-        case 'invalid-email':
-          message = loc.invalidEmailAddress;
-          break;
-        case 'user-disabled':
-          message = loc.thisAccountHasBeenDisabled;
-          break;
-        case 'too-many-requests':
-          message = loc.tooManyFailedAttempts;
-          break;
-        default:
-          message = loc.loginFailedWithMessage(message);
-      }
-
-      setState(() {
-        errorMessage = message;
-      });
-
-      if (mounted) {
-        showCustomSnackBar(context, message);
-      }
-    } catch (e) {
-      setState(() {
-        errorMessage = loc.anUnexpectedErrorOccurred;
-      });
-
-      if (mounted) {
-        showCustomSnackBar(context, loc.anUnexpectedErrorOccurred);
-      }
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
-
-  bool _validateAuthData(AppLocalizations loc) {
+  Future<void> _login() async {
+    final loc = AppLocalizations.of(context)!;
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
 
     if (email.isEmpty || password.isEmpty) {
       showCustomSnackBar(context, loc.pleaseFillInAllFields);
-      return false;
+      return;
     }
 
-    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    if (!emailRegex.hasMatch(email)) {
-      showCustomSnackBar(context, loc.pleaseEnterAValidEmailAddress);
-      return false;
-    }
+    setState(() => _isLoading = true);
 
-    final passwordRegex = RegExp(r'^(?=.*\d).{8,}$');
-    if (!passwordRegex.hasMatch(password)) {
-      showCustomSnackBar(
-        context,
-        loc.passwordRequirements,
+    try {
+      final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
       );
-      return false;
-    }
 
-    return true;
+      if (userCredential.user != null && mounted) {
+        final userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userCredential.user!.uid)
+            .get();
+
+        if (userDoc.exists) {
+          UserController().setUser(structs.User.fromFirestore(userDoc));
+          if (mounted) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const BottomNavbar()),
+            );
+          }
+        }
+      }
+    } on FirebaseAuthException catch (e) {
+      if (mounted) {
+        String message = switch (e.code) {
+          'user-not-found' => loc.noAccountFoundWithThisEmail,
+          'wrong-password' => loc.incorrectPassword,
+          'invalid-email' => loc.invalidEmailAddress,
+          'user-disabled' => loc.thisAccountHasBeenDisabled,
+          'too-many-requests' => loc.tooManyFailedAttempts,
+          _ => loc.loginFailed,
+        };
+        showCustomSnackBar(context, message);
+      }
+    } catch (e) {
+      if (mounted) {
+        showCustomSnackBar(context, loc.anUnexpectedErrorOccurred);
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -141,204 +86,82 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context)!;
-    final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
-        child: Container(
-          height: screenHeight - MediaQuery.of(context).padding.top,
-          padding: EdgeInsets.symmetric(
-            horizontal: screenWidth * 0.08,
-            vertical: 20,
-          ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Logo Section
-              Container(
-                alignment: Alignment.center,
-                margin: const EdgeInsets.only(bottom: 40),
-                child: Column(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      child: Image.asset(
-                        'assets/images/logo.png',
-                        height: 144,
-                        width: 144,
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                    Text(
-                      loc.welcomeBack,
-                      style: theme.textTheme.headlineMedium?.copyWith(
-                        color: theme.colorScheme.primary,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 0.5,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      loc.signInToContinueYourJourney,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.textTheme.bodyMedium?.color?.withAlpha(180),
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
+              const SizedBox(height: 40),
+              
+              // Logo
+              Image.asset(
+                'assets/images/logo.png',
+                height: 120,
+                width: 120,
               ),
-
+              const SizedBox(height: 24),
+              
+              // Title
+              Text(
+                loc.welcomeBack,
+                style: theme.textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                loc.signInToContinueYourJourney,
+                style: theme.textTheme.bodyMedium,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 40),
+              
               // Email Field
-              Container(
-                margin: const EdgeInsets.only(bottom: 16),
-                child: TextField(
-                  controller: _emailController,
-                  enabled: !_isLoading,
-                  keyboardType: TextInputType.emailAddress,
-                  style: theme.textTheme.bodyLarge,
-                  decoration: InputDecoration(
-                    labelText: loc.emailAddress,
-                    labelStyle: TextStyle(
-                      color: theme.colorScheme.primary.withAlpha(205),
-                    ),
-                    hintText: loc.enterYourEmail,
-                    hintStyle: TextStyle(
-                      color: theme.textTheme.bodyLarge?.color?.withAlpha(128),
-                    ),
-                    prefixIcon: Icon(
-                      Icons.email_outlined,
-                      color: theme.colorScheme.primary,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: theme.colorScheme.primary.withAlpha(75),
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: theme.colorScheme.primary.withAlpha(75),
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: theme.colorScheme.primary,
-                        width: 2,
-                      ),
-                    ),
-                    filled: true,
-                    fillColor: theme.colorScheme.surface,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 16,
-                    ),
-                  ),
+              TextField(
+                controller: _emailController,
+                enabled: !_isLoading,
+                keyboardType: TextInputType.emailAddress,
+                decoration: InputDecoration(
+                  labelText: loc.emailAddress,
+                  hintText: loc.enterYourEmail,
+                  prefixIcon: const Icon(Icons.email_outlined),
                 ),
               ),
-
+              const SizedBox(height: 16),
+              
               // Password Field
-              Container(
-                margin: const EdgeInsets.only(bottom: 8),
-                child: TextField(
-                  controller: _passwordController,
-                  enabled: !_isLoading,
-                  obscureText: _isObscure,
-                  style: theme.textTheme.bodyLarge,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    labelStyle: TextStyle(
-                      color: theme.colorScheme.primary.withAlpha(205),
-                    ),
-                    hintText: loc.enterYourPassword,
-                    hintStyle: TextStyle(
-                      color: theme.textTheme.bodyLarge?.color?.withAlpha(128),
-                    ),
-                    prefixIcon: Icon(
-                      Icons.lock_outline,
-                      color: theme.colorScheme.primary,
-                    ),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _isObscure ? Icons.visibility_off : Icons.visibility,
-                        color: theme.colorScheme.primary.withAlpha(180),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _isObscure = !_isObscure;
-                        });
-                      },
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: theme.colorScheme.primary.withAlpha(75),
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: theme.colorScheme.primary.withAlpha(75),
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: theme.colorScheme.primary,
-                        width: 2,
-                      ),
-                    ),
-                    filled: true,
-                    fillColor: theme.colorScheme.surface,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 16,
-                    ),
+              TextField(
+                controller: _passwordController,
+                enabled: !_isLoading,
+                obscureText: _isObscure,
+                decoration: InputDecoration(
+                  labelText: loc.password,
+                  hintText: loc.enterYourPassword,
+                  prefixIcon: const Icon(Icons.lock_outline),
+                  suffixIcon: IconButton(
+                    icon: Icon(_isObscure ? Icons.visibility_off : Icons.visibility),
+                    onPressed: () => setState(() => _isObscure = !_isObscure),
                   ),
                 ),
               ),
-
+              const SizedBox(height: 24),
+              
               // Login Button
-              Container(
-                margin: const EdgeInsets.only(bottom: 20),
-                height: 56,
+              SizedBox(
+                height: 50,
                 child: ElevatedButton(
-                  onPressed: _isLoading ? null : () => _login(loc),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: theme.colorScheme.primary,
-                    foregroundColor: Colors.white,
-                    elevation: 2,
-                    shadowColor: theme.colorScheme.primary.withAlpha(75),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    disabledBackgroundColor: theme.colorScheme.primary.withAlpha(150),
-                  ),
+                  onPressed: _isLoading ? null : _login,
                   child: _isLoading
-                      ? SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        Colors.white,
-                      ),
-                    ),
-                  )
-                      : Text(
-                    loc.signIn,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 0.5,
-                    ),
-                  ),
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : Text(loc.signIn),
                 ),
               ),
             ],

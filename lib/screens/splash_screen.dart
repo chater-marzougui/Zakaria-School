@@ -3,10 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../controllers/auth_wrapper.dart';
 import '../firebase_options.dart';
-import '../helpers/seed_db.dart';
 import '../widgets/widgets.dart';
 import '../l10n/app_localizations.dart';
-import '../services/instructor_service.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -46,41 +44,10 @@ class _SplashScreenState extends State<SplashScreen> {
         );
       }
 
-      // Step 2: Load candidates
+      // Step 2: Complete initialization
       setState(() {
         _loadingMessage = _localizations.loadingCandidates;
       });
-
-      // Check if candidates exist
-      final candidatesSnapshot = await FirebaseFirestore.instance
-          .collection('candidates')
-          .limit(1)
-          .get();
-
-      // Step 3: Load sessions
-      setState(() {
-        _loadingMessage = _localizations.loadingSessions;
-      });
-
-      // Check if sessions exist
-      final sessionsSnapshot = await FirebaseFirestore.instance
-          .collection('sessions')
-          .limit(1)
-          .get();
-
-      // Step 4: Ensure test data if needed
-      if (candidatesSnapshot.docs.isEmpty || sessionsSnapshot.docs.isEmpty) {
-        setState(() {
-          _loadingMessage = _localizations.settingUpInitialData;
-        });
-        await TestDataGenerator.ensureTestData();
-      }
-
-      // Step 5: Initialize instructor service
-      setState(() {
-        _loadingMessage = 'Loading instructors...';
-      });
-      await InstructorService().initialize();
 
       // Navigate to AuthWrapper which will load user data
       if (mounted) {
