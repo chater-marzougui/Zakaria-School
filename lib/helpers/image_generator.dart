@@ -638,11 +638,11 @@ class InstructorScheduleImageGenerator {
         }
 
         await SharePlus.instance.share(
-          ShareParams(
+            ShareParams(
             files: [XFile(filePath)],
             text: _scheduleShareText,
-            previewThumbnail: XFile(filePath),
-          ),
+            previewThumbnail: XFile(filePath)
+          )
         );
         // Then try to open WhatsApp (this might not work on all platforms)
         final whatsappUrl = 'https://wa.me/$cleanPhone';
@@ -652,10 +652,10 @@ class InstructorScheduleImageGenerator {
         // Just share without specific contact
         await SharePlus.instance.share(
           ShareParams(
-            files: [XFile(filePath)],
-            text: _scheduleShareText,
-            previewThumbnail: XFile(filePath),
-          ),
+              files: [XFile(filePath)],
+              text: _scheduleShareText,
+              previewThumbnail: XFile(filePath)
+          )
         );
       }
     } catch (e) {
