@@ -207,7 +207,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get invalidEmailAddress => 'عنوان البريد الإلكتروني غير صالح';
 
   @override
-  String get lastName => 'الاسم الأخير';
+  String get lastName => 'اسم العائلة';
 
   @override
   String get location => 'الموقع';
@@ -872,4 +872,102 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get markAsUnpaid => 'تحديد كغير مدفوع';
+
+  @override
+  String get userManagement => '👥 إدارة المستخدمين';
+
+  @override
+  String get addUser => 'إضافة مستخدم';
+
+  @override
+  String get editUser => 'تعديل المستخدم';
+
+  @override
+  String get firstNameRequired => 'الاسم الأول مطلوب';
+
+  @override
+  String get lastNameRequired => 'اسم العائلة مطلوب';
+
+  @override
+  String get phoneNumberRequired => 'رقم الهاتف مطلوب';
+
+  @override
+  String get emailRequired => 'البريد الإلكتروني مطلوب';
+
+  @override
+  String get passwordRequired => 'كلمة المرور مطلوبة';
+
+  @override
+  String get password => 'كلمة المرور';
+
+  @override
+  String get selectRole => 'اختر الدور';
+
+  @override
+  String get instructor => 'مدرب';
+
+  @override
+  String get secretary => 'سكرتير';
+
+  @override
+  String get developer => 'مطور';
+
+  @override
+  String get userCreatedSuccessfully => 'تم إنشاء المستخدم بنجاح. سيتم تسجيل خروجك وستحتاج إلى تسجيل الدخول مرة أخرى.';
+
+  @override
+  String failedToCreateUser(Object error) {
+    return 'فشل في إنشاء المستخدم: $error';
+  }
+
+  @override
+  String get userUpdatedSuccessfully => 'تم تحديث المستخدم بنجاح';
+
+  @override
+  String failedToUpdateUser(Object error) {
+    return 'فشل في تحديث المستخدم: $error';
+  }
+
+  @override
+  String get deleteUser => 'حذف المستخدم';
+
+  @override
+  String get deleteUserConfirmation => 'هل أنت متأكد من أنك تريد حذف هذا المستخدم؟ لا يمكن التراجع عن هذا الإجراء.';
+
+  @override
+  String get userDeletedSuccessfully => 'تم حذف المستخدم بنجاح';
+
+  @override
+  String failedToDeleteUser(Object error) {
+    return 'فشل في حذف المستخدم: $error';
+  }
+
+  @override
+  String failedToLoadUsers(Object error) {
+    return 'فشل في تحميل المستخدمين: $error';
+  }
+
+  @override
+  String get noUsers => 'لم يتم العثور على مستخدمين';
+
+  @override
+  String get instructors => 'المدربون';
+
+  @override
+  String get secretaries => 'السكرتيرات';
+
+  @override
+  String get allUsers => 'جميع المستخدمين';
+
+  @override
+  String get passwordMinLength => 'يجب أن تحتوي كلمة المرور على 6 أحرف على الأقل';
+
+  @override
+  String get invalidEmail => 'عنوان البريد الإلكتروني غير صالح';
+
+  @override
+  String get accessDenied => 'تم رفض الوصول';
+
+  @override
+  String get developerAccessOnly => 'هذه الشاشة متاحة فقط للمستخدمين ذوي دور المطور.';
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../helpers/validators.dart';
-import '../../l10n/app_localizations.dart';
-import '../../models/structs.dart' as structs;
+import '../helpers/validators.dart';
+import '../l10n/app_localizations.dart';
+import '../models/structs.dart' as structs;
 
 class EditCandidateDialog extends StatefulWidget {
   final structs.Candidate candidate;

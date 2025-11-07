@@ -1686,6 +1686,186 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Mark as Unpaid'**
   String get markAsUnpaid;
+
+  /// No description provided for @userManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'👥 User Management'**
+  String get userManagement;
+
+  /// No description provided for @addUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Add User'**
+  String get addUser;
+
+  /// No description provided for @editUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit User'**
+  String get editUser;
+
+  /// No description provided for @firstNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'First name is required'**
+  String get firstNameRequired;
+
+  /// No description provided for @lastNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Last name is required'**
+  String get lastNameRequired;
+
+  /// No description provided for @phoneNumberRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number is required'**
+  String get phoneNumberRequired;
+
+  /// No description provided for @emailRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Email is required'**
+  String get emailRequired;
+
+  /// No description provided for @passwordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Password is required'**
+  String get passwordRequired;
+
+  /// No description provided for @password.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get password;
+
+  /// No description provided for @selectRole.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Role'**
+  String get selectRole;
+
+  /// No description provided for @instructor.
+  ///
+  /// In en, this message translates to:
+  /// **'Instructor'**
+  String get instructor;
+
+  /// No description provided for @secretary.
+  ///
+  /// In en, this message translates to:
+  /// **'Secretary'**
+  String get secretary;
+
+  /// No description provided for @developer.
+  ///
+  /// In en, this message translates to:
+  /// **'Developer'**
+  String get developer;
+
+  /// No description provided for @userCreatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'User created successfully. You will be signed out and need to sign in again.'**
+  String get userCreatedSuccessfully;
+
+  /// No description provided for @failedToCreateUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to create user: {error}'**
+  String failedToCreateUser(Object error);
+
+  /// No description provided for @userUpdatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'User updated successfully'**
+  String get userUpdatedSuccessfully;
+
+  /// No description provided for @failedToUpdateUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update user: {error}'**
+  String failedToUpdateUser(Object error);
+
+  /// No description provided for @deleteUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete User'**
+  String get deleteUser;
+
+  /// No description provided for @deleteUserConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this user? This action cannot be undone.'**
+  String get deleteUserConfirmation;
+
+  /// No description provided for @userDeletedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'User deleted successfully'**
+  String get userDeletedSuccessfully;
+
+  /// No description provided for @failedToDeleteUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete user: {error}'**
+  String failedToDeleteUser(Object error);
+
+  /// No description provided for @failedToLoadUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load users: {error}'**
+  String failedToLoadUsers(Object error);
+
+  /// No description provided for @noUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'No users found'**
+  String get noUsers;
+
+  /// No description provided for @instructors.
+  ///
+  /// In en, this message translates to:
+  /// **'Instructors'**
+  String get instructors;
+
+  /// No description provided for @secretaries.
+  ///
+  /// In en, this message translates to:
+  /// **'Secretaries'**
+  String get secretaries;
+
+  /// No description provided for @allUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'All Users'**
+  String get allUsers;
+
+  /// No description provided for @passwordMinLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 6 characters'**
+  String get passwordMinLength;
+
+  /// No description provided for @invalidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email address'**
+  String get invalidEmail;
+
+  /// No description provided for @accessDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Access Denied'**
+  String get accessDenied;
+
+  /// No description provided for @developerAccessOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'This screen is only accessible to users with developer role.'**
+  String get developerAccessOnly;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -872,4 +872,102 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get markAsUnpaid => 'Mark as Unpaid';
+
+  @override
+  String get userManagement => '👥 User Management';
+
+  @override
+  String get addUser => 'Add User';
+
+  @override
+  String get editUser => 'Edit User';
+
+  @override
+  String get firstNameRequired => 'First name is required';
+
+  @override
+  String get lastNameRequired => 'Last name is required';
+
+  @override
+  String get phoneNumberRequired => 'Phone number is required';
+
+  @override
+  String get emailRequired => 'Email is required';
+
+  @override
+  String get passwordRequired => 'Password is required';
+
+  @override
+  String get password => 'Password';
+
+  @override
+  String get selectRole => 'Select Role';
+
+  @override
+  String get instructor => 'Instructor';
+
+  @override
+  String get secretary => 'Secretary';
+
+  @override
+  String get developer => 'Developer';
+
+  @override
+  String get userCreatedSuccessfully => 'User created successfully. You will be signed out and need to sign in again.';
+
+  @override
+  String failedToCreateUser(Object error) {
+    return 'Failed to create user: $error';
+  }
+
+  @override
+  String get userUpdatedSuccessfully => 'User updated successfully';
+
+  @override
+  String failedToUpdateUser(Object error) {
+    return 'Failed to update user: $error';
+  }
+
+  @override
+  String get deleteUser => 'Delete User';
+
+  @override
+  String get deleteUserConfirmation => 'Are you sure you want to delete this user? This action cannot be undone.';
+
+  @override
+  String get userDeletedSuccessfully => 'User deleted successfully';
+
+  @override
+  String failedToDeleteUser(Object error) {
+    return 'Failed to delete user: $error';
+  }
+
+  @override
+  String failedToLoadUsers(Object error) {
+    return 'Failed to load users: $error';
+  }
+
+  @override
+  String get noUsers => 'No users found';
+
+  @override
+  String get instructors => 'Instructors';
+
+  @override
+  String get secretaries => 'Secretaries';
+
+  @override
+  String get allUsers => 'All Users';
+
+  @override
+  String get passwordMinLength => 'Password must be at least 6 characters';
+
+  @override
+  String get invalidEmail => 'Invalid email address';
+
+  @override
+  String get accessDenied => 'Access Denied';
+
+  @override
+  String get developerAccessOnly => 'This screen is only accessible to users with developer role.';
 }

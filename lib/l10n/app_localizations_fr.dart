@@ -207,7 +207,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get invalidEmailAddress => 'Adresse e-mail invalide';
 
   @override
-  String get lastName => 'Nom de famille';
+  String get lastName => 'Nom';
 
   @override
   String get location => 'Emplacement';
@@ -872,4 +872,102 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get markAsUnpaid => 'Marquer comme non payé';
+
+  @override
+  String get userManagement => '👥 Gestion des utilisateurs';
+
+  @override
+  String get addUser => 'Ajouter un utilisateur';
+
+  @override
+  String get editUser => 'Modifier l\'utilisateur';
+
+  @override
+  String get firstNameRequired => 'Le prénom est requis';
+
+  @override
+  String get lastNameRequired => 'Le nom est requis';
+
+  @override
+  String get phoneNumberRequired => 'Le numéro de téléphone est requis';
+
+  @override
+  String get emailRequired => 'L\'email est requis';
+
+  @override
+  String get passwordRequired => 'Le mot de passe est requis';
+
+  @override
+  String get password => 'Mot de passe';
+
+  @override
+  String get selectRole => 'Sélectionner le rôle';
+
+  @override
+  String get instructor => 'Instructeur';
+
+  @override
+  String get secretary => 'Secrétaire';
+
+  @override
+  String get developer => 'Développeur';
+
+  @override
+  String get userCreatedSuccessfully => 'Utilisateur créé avec succès. Vous serez déconnecté et devrez vous reconnecter.';
+
+  @override
+  String failedToCreateUser(Object error) {
+    return 'Échec de la création de l\'utilisateur: $error';
+  }
+
+  @override
+  String get userUpdatedSuccessfully => 'Utilisateur mis à jour avec succès';
+
+  @override
+  String failedToUpdateUser(Object error) {
+    return 'Échec de la mise à jour de l\'utilisateur: $error';
+  }
+
+  @override
+  String get deleteUser => 'Supprimer l\'utilisateur';
+
+  @override
+  String get deleteUserConfirmation => 'Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action ne peut pas être annulée.';
+
+  @override
+  String get userDeletedSuccessfully => 'Utilisateur supprimé avec succès';
+
+  @override
+  String failedToDeleteUser(Object error) {
+    return 'Échec de la suppression de l\'utilisateur: $error';
+  }
+
+  @override
+  String failedToLoadUsers(Object error) {
+    return 'Échec du chargement des utilisateurs: $error';
+  }
+
+  @override
+  String get noUsers => 'Aucun utilisateur trouvé';
+
+  @override
+  String get instructors => 'Instructeurs';
+
+  @override
+  String get secretaries => 'Secrétaires';
+
+  @override
+  String get allUsers => 'Tous les utilisateurs';
+
+  @override
+  String get passwordMinLength => 'Le mot de passe doit contenir au moins 6 caractères';
+
+  @override
+  String get invalidEmail => 'Adresse email invalide';
+
+  @override
+  String get accessDenied => 'Accès refusé';
+
+  @override
+  String get developerAccessOnly => 'Cet écran n\'est accessible qu\'aux utilisateurs ayant le rôle de développeur.';
 }

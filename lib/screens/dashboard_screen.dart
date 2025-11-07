@@ -16,7 +16,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   bool _isGenerating = false;
 
   Future<void> _showInstructorSelectionDialog() async {
-    final theme = Theme.of(context);
     final t = AppLocalizations.of(context)!;
 
     // Fetch all users (instructors)

@@ -466,8 +466,7 @@ class _DeveloperScreenState extends State<DeveloperScreen> with SingleTickerProv
                   ),
                 ],
               ),
-            ),
-          );
+            );
   }
 
   Widget _buildUserManagementTab() {
@@ -862,7 +861,6 @@ class _UserCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final t = AppLocalizations.of(context)!;
 
     Color roleColor;
@@ -1033,7 +1031,7 @@ class _UserDialogState extends State<_UserDialog> {
               TextFormField(
                 controller: _emailController,
                 decoration: InputDecoration(
-                  labelText: t.email,
+                  labelText: "Email",
                   border: const OutlineInputBorder(),
                 ),
                 keyboardType: TextInputType.emailAddress,
@@ -1070,7 +1068,7 @@ class _UserDialogState extends State<_UserDialog> {
               ],
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                value: _selectedRole,
+                initialValue: _selectedRole,
                 decoration: InputDecoration(
                   labelText: t.selectRole,
                   border: const OutlineInputBorder(),

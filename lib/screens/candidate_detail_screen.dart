@@ -3,9 +3,9 @@ import 'package:url_launcher/url_launcher.dart';
 import '../l10n/app_localizations.dart';
 import '../models/structs.dart' as structs;
 import '../services/db_service.dart';
-import '../helpers/validators.dart';
 import '../widgets/widgets.dart';
 import 'candidate_details/availability_tab.dart';
+import '../dialogs/edit_candidate_dialog.dart';
 import 'candidate_details/info_tab.dart';
 import 'candidate_details/planning_tab.dart';
 
@@ -149,189 +149,6 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> with Sing
     }
   }
 
-  void _showEditDialog() async {
-    final t = AppLocalizations.of(context)!;
-    // Controllers for the form
-    final nameController = TextEditingController(text: widget.candidate.name);
-    final phoneController = TextEditingController(text: widget.candidate.phone);
-    final cinController = TextEditingController(text: widget.candidate.cin);
-    final instructorController = TextEditingController(text: widget.candidate.assignedInstructor);
-    
-    bool theoryPassed = widget.candidate.theoryPassed;
-    String selectedStatus = widget.candidate.status;
-    
-    final formKey = GlobalKey<FormState>();
-
-    try {
-      await showDialog(
-      context: context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setState) => AlertDialog(
-          title: Text(t.editCandidate),
-          content: SingleChildScrollView(
-            child: Form(
-              key: formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextFormField(
-                    controller: nameController,
-                    decoration: InputDecoration(
-                      labelText: t.candidateName,
-                      prefixIcon: const Icon(Icons.person),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return t.nameRequired;
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: phoneController,
-                    decoration: InputDecoration(
-                      labelText: t.candidatePhone,
-                      prefixIcon: const Icon(Icons.phone),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    keyboardType: TextInputType.phone,
-                    validator: (value) => Validators.validatePhone(
-                      value,
-                      errorMessage: value == null || value.trim().isEmpty
-                          ? t.pleaseEnterLabel(t.phoneNumber)
-                          : t.phoneNumberInvalid,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: cinController,
-                    decoration: InputDecoration(
-                      labelText: t.cin,
-                      prefixIcon: const Icon(Icons.credit_card),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      hintText: t.cinExample,
-                    ),
-                    keyboardType: TextInputType.number,
-                    maxLength: 8,
-                    validator: (value) => Validators.validateCIN(
-                      value,
-                      errorMessage: t.cinInvalid,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: instructorController,
-                    decoration: InputDecoration(
-                      labelText: t.assignedInstructor,
-                      prefixIcon: const Icon(Icons.person_outline),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  DropdownButtonFormField<String>(
-                    key: const Key('statusDropdown'),
-                    initialValue: selectedStatus,
-                    decoration: InputDecoration(
-                      labelText: t.status,
-                      prefixIcon: const Icon(Icons.info_outline),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    items: [
-                      DropdownMenuItem(value: 'active', child: Text(t.active)),
-                      DropdownMenuItem(value: 'inactive', child: Text(t.inactive)),
-                      DropdownMenuItem(value: 'graduated', child: Text(t.graduated)),
-                    ],
-                    onChanged: (value) {
-                      if (value != null) {
-                        setState(() {
-                          selectedStatus = value;
-                        });
-                      }
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  SwitchListTile(
-                    title: Text(t.theoryPassed),
-                    value: theoryPassed,
-                    onChanged: (value) {
-                      setState(() {
-                        theoryPassed = value;
-                      });
-                    },
-                    secondary: const Icon(Icons.school),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          actions: [
-            TextButton(
-              key: const Key('cancelEditCandidateButton'),
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(t.cancel),
-            ),
-            ElevatedButton(
-              key: const Key('saveCandidateButton'),
-              onPressed: () async {
-                if (formKey.currentState!.validate()) {
-                  try {
-                    // Update candidate in Firestore
-                    await DatabaseService.updateCandidate(
-                      widget.candidate.id,
-                      {
-                        'name': nameController.text.trim(),
-                        'phone': phoneController.text.trim(),
-                        'cin': cinController.text.trim(),
-                        'assigned_instructor': instructorController.text.trim(),
-                        'status': selectedStatus,
-                        'theory_passed': theoryPassed,
-                      },
-                    );
-
-                    if (!mounted) return;
-                    Navigator.of(context).pop();
-                    showCustomSnackBar(
-                      context,
-                      t.candidateUpdatedSuccessfully,
-                      type: SnackBarType.success,
-                    );
-                  } catch (e) {
-                    if (!mounted) return;
-                    showCustomSnackBar(
-                      context,
-                      '${t.failedToUpdateCandidate}: $e',
-                      type: SnackBarType.error,
-                    );
-                  }
-                }
-              },
-              child: Text(t.save),
-            ),
-          ],
-        ),
-      ),
-    );
-    } finally {
-      // Clean up controllers
-      nameController.dispose();
-      phoneController.dispose();
-      cinController.dispose();
-      instructorController.dispose();
-    }
-  }
-
   void _showDeleteConfirmation() async {
     final t = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
@@ -366,10 +183,10 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> with Sing
         await DatabaseService.deleteCandidate(widget.candidate.id);
 
         if (!mounted) return;
-        
+
         // Pop back to the previous screen (candidates list)
         Navigator.of(context).pop();
-        
+
         showCustomSnackBar(
           context,
           t.candidateDeletedSuccessfully,
@@ -385,4 +202,42 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> with Sing
       }
     }
   }
+
+  void _showEditDialog() async {
+    final t = AppLocalizations.of(context)!;
+
+    // Use a separate context for the dialog to avoid disposal issues
+    final dialogContext = context;
+
+    await showDialog(
+      context: dialogContext,
+      barrierDismissible: false, // Prevent accidental dismissal during state updates
+      builder: (context) => EditCandidateDialog(
+        candidate: widget.candidate,
+        onSave: (updatedData) async {
+          try {
+            await DatabaseService.updateCandidate(
+              widget.candidate.id,
+              updatedData,
+            );
+
+            if (!dialogContext.mounted) return;
+            showCustomSnackBar(
+              dialogContext,
+              t.candidateUpdatedSuccessfully,
+              type: SnackBarType.success,
+            );
+          } catch (e) {
+            if (!dialogContext.mounted) return;
+            showCustomSnackBar(
+              dialogContext,
+              '${t.failedToUpdateCandidate}: $e',
+              type: SnackBarType.error,
+            );
+          }
+        },
+      ),
+    );
+  }
+
 }
