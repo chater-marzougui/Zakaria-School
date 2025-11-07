@@ -2,6 +2,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../controllers/app_preferences.dart';
+import '../../controllers/user_controller.dart';
 import '../../l10n/app_localizations.dart';
 import '../../main.dart';
 import '../../services/export_service.dart';
@@ -153,22 +154,24 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               const Divider(),
 
-              // Developer Tools Section
-              ListTile(
-                leading: Icon(Icons.developer_mode, color: theme.colorScheme.tertiary),
-                title: Text(loc.developerTools),
-                subtitle: Text(loc.testingAndDatabaseManagement),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const DeveloperScreen(),
-                    ),
-                  );
-                },
-              ),
-              const Divider(),
+              // Developer Tools Section (only for developers)
+              if (UserController().currentUser?.role == 'developer') ...[
+                ListTile(
+                  leading: Icon(Icons.developer_mode, color: theme.colorScheme.tertiary),
+                  title: Text(loc.developerTools),
+                  subtitle: Text(loc.testingAndDatabaseManagement),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const DeveloperScreen(),
+                      ),
+                    );
+                  },
+                ),
+                const Divider(),
+              ],
 
               // About Section
               ListTile(

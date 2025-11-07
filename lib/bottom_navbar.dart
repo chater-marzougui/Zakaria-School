@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 import 'l10n/app_localizations.dart';
+import 'controllers/user_controller.dart';
 
 // Screens
 import 'screens/dashboard_screen.dart';
@@ -29,7 +30,9 @@ class _BottomNavbarState extends State<BottomNavbar> {
   @override
   void initState() {
     super.initState();
-    role = "instructor"; // Set a default role since we don't have RBAC
+    // Get the current user's role from UserController
+    final currentUser = UserController().currentUser;
+    role = currentUser?.role ?? 'instructor';
   }
 
   void _onItemTapped(int index) {
