@@ -414,12 +414,14 @@ class InstructorScheduleImageGenerator {
   }) async {
     final recorder = ui.PictureRecorder();
     final canvas = Canvas(recorder);
+    const maxSessions = 25;
+    final limitedSessions = sessions.length > maxSessions ? sessions.sublist(0, maxSessions) : sessions;
 
     // Image dimensions - single column layout
     const double width = 620;
     const double rowHeight = 60.0;
     const double headerHeight = 120.0;
-    final double totalHeight = headerHeight + (sessions.length * rowHeight) + 80;
+    final double totalHeight = headerHeight * 2 + (limitedSessions.length * rowHeight) + 80;
 
     // Background
     final paint = Paint()..color = Colors.white;
@@ -429,7 +431,7 @@ class InstructorScheduleImageGenerator {
     _drawInstructorHeader(canvas, instructorName, instructorPhone, width, headerHeight);
 
     // Draw table
-    _drawInstructorTable(canvas, sessions, width, headerHeight, rowHeight);
+    _drawInstructorTable(canvas, limitedSessions, width, headerHeight, rowHeight);
 
     // Convert to image
     final picture = recorder.endRecording();

@@ -59,8 +59,7 @@ class _AutoPlanningDialogState extends State<AutoPlanningDialog> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            widget.t.howManyHoursToSchedule
-                .replaceAll('{name}', widget.candidate.name),
+            widget.t.howManyHoursToSchedule(widget.candidate.name),
             style: widget.theme.textTheme.bodyMedium,
           ),
           const SizedBox(height: 16),

@@ -703,10 +703,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get testingAndDatabaseManagement => 'Tests et gestion de la base de données';
 
   @override
-  String get developedForDrivingSchoolManagement => 'Développé pour la gestion d\'auto-école';
+  String get developedForDrivingSchoolManagement => 'Développé par Chater Marzougui';
 
   @override
-  String get copyrightAllRightsReserved => '© 2024 Tous droits réservés';
+  String get copyrightAllRightsReserved => '© 2025 Tous droits réservés';
 
   @override
   String get minute => 'Minute';
@@ -973,4 +973,70 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get developerAccessOnly => 'Cet écran n\'est accessible qu\'aux utilisateurs ayant le rôle de développeur.';
+
+  @override
+  String get planningSessions => 'Planification des séances...';
+
+  @override
+  String get creatingSessions => 'Création des séances...';
+
+  @override
+  String get success => 'Succès !';
+
+  @override
+  String get planningFailed => 'Planification échouée';
+
+  @override
+  String successfullyCreatedSessions(Object count) {
+    return '$count séances créées avec succès';
+  }
+
+  @override
+  String totalHoursScheduled(Object hours) {
+    return 'Total des heures programmées : $hours heures';
+  }
+
+  @override
+  String get confirmAndCreate => 'Confirmer et créer';
+
+  @override
+  String get autoSessionPlanning => 'Planification automatique des séances';
+
+  @override
+  String howManyHoursToSchedule(Object name) {
+    return 'Combien d\'heures souhaitez-vous programmer pour $name ?';
+  }
+
+  @override
+  String get hoursToSchedule => 'Heures à programmer';
+
+  @override
+  String get exampleHours => 'par ex., 10';
+
+  @override
+  String get systemWillFitSessions => 'Le système essaiera d\'adapter les séances au calendrier du moniteur en fonction de la disponibilité du candidat.';
+
+  @override
+  String get planSessions => 'Planifier les séances';
+
+  @override
+  String get pleaseEnterValidHours => 'Veuillez entrer un nombre d\'heures valide';
+
+  @override
+  String get paymentAmount => 'Montant du paiement';
+
+  @override
+  String get paymentDate => 'Date de paiement';
+
+  @override
+  String get noteOptional => 'Note (facultatif)';
+
+  @override
+  String get examplePaymentNote => 'par ex., Acompte, Paiement complet, etc.';
+
+  @override
+  String get email => 'E-mail';
+
+  @override
+  String get sendScheduleToInstructor => 'Envoyer le planning au moniteur';
 }

@@ -530,16 +530,14 @@ class AutoSessionPlanner {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              AppLocalizations.of(context)!.successfullyCreatedSessions
-                  .replaceAll('{count}', '${result['sessions_created']}'),
+              AppLocalizations.of(context)!.successfullyCreatedSessions('${result['sessions_created']}'),
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
             SizedBox(height: 8),
             Text(
-              AppLocalizations.of(context)!.totalHoursScheduled
-                  .replaceAll('{hours}', result['hours_scheduled'].toStringAsFixed(1)),
+              AppLocalizations.of(context)!.totalHoursScheduled(result['hours_scheduled'].toStringAsFixed(1)),
             ),
           ],
         ),

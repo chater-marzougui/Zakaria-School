@@ -703,10 +703,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get testingAndDatabaseManagement => 'Testing and database management';
 
   @override
-  String get developedForDrivingSchoolManagement => 'Developed for driving school management';
+  String get developedForDrivingSchoolManagement => 'Developed by Chater Marzougui';
 
   @override
-  String get copyrightAllRightsReserved => '© 2024 All rights reserved';
+  String get copyrightAllRightsReserved => '© 2025 All rights reserved';
 
   @override
   String get minute => 'Minute';
@@ -973,4 +973,70 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get developerAccessOnly => 'This screen is only accessible to users with developer role.';
+
+  @override
+  String get planningSessions => 'Planning sessions...';
+
+  @override
+  String get creatingSessions => 'Creating sessions...';
+
+  @override
+  String get success => 'Success!';
+
+  @override
+  String get planningFailed => 'Planning Failed';
+
+  @override
+  String successfullyCreatedSessions(Object count) {
+    return 'Successfully created $count sessions';
+  }
+
+  @override
+  String totalHoursScheduled(Object hours) {
+    return 'Total hours scheduled: $hours hours';
+  }
+
+  @override
+  String get confirmAndCreate => 'Confirm & Create';
+
+  @override
+  String get autoSessionPlanning => 'Auto Session Planning';
+
+  @override
+  String howManyHoursToSchedule(Object name) {
+    return 'How many hours would you like to schedule for $name?';
+  }
+
+  @override
+  String get hoursToSchedule => 'Hours to Schedule';
+
+  @override
+  String get exampleHours => 'e.g., 10';
+
+  @override
+  String get systemWillFitSessions => 'The system will try to fit sessions into the instructor\'s schedule based on the candidate\'s availability.';
+
+  @override
+  String get planSessions => 'Plan Sessions';
+
+  @override
+  String get pleaseEnterValidHours => 'Please enter a valid number of hours';
+
+  @override
+  String get paymentAmount => 'Payment Amount';
+
+  @override
+  String get paymentDate => 'Payment Date';
+
+  @override
+  String get noteOptional => 'Note (optional)';
+
+  @override
+  String get examplePaymentNote => 'e.g., Acompte, Full payment, etc.';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get sendScheduleToInstructor => 'Send Schedule to Instructor';
 }

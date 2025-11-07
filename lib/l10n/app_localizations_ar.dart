@@ -703,10 +703,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get testingAndDatabaseManagement => 'الاختبار وإدارة قاعدة البيانات';
 
   @override
-  String get developedForDrivingSchoolManagement => 'تم تطويره لإدارة مدرسة القيادة';
+  String get developedForDrivingSchoolManagement => 'تم التطوير بواسطة شاطر مرزوقي';
 
   @override
-  String get copyrightAllRightsReserved => '© 2024 جميع الحقوق محفوظة';
+  String get copyrightAllRightsReserved => '© 2025 جميع الحقوق محفوظة';
 
   @override
   String get minute => 'دقيقة';
@@ -973,4 +973,70 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get developerAccessOnly => 'هذه الشاشة متاحة فقط للمستخدمين ذوي دور المطور.';
+
+  @override
+  String get planningSessions => 'جاري التخطيط للجلسات...';
+
+  @override
+  String get creatingSessions => 'جاري إنشاء الجلسات...';
+
+  @override
+  String get success => 'نجح!';
+
+  @override
+  String get planningFailed => 'فشل التخطيط';
+
+  @override
+  String successfullyCreatedSessions(Object count) {
+    return 'تم إنشاء $count جلسة بنجاح';
+  }
+
+  @override
+  String totalHoursScheduled(Object hours) {
+    return 'إجمالي الساعات المجدولة: $hours ساعة';
+  }
+
+  @override
+  String get confirmAndCreate => 'تأكيد وإنشاء';
+
+  @override
+  String get autoSessionPlanning => 'التخطيط التلقائي للجلسات';
+
+  @override
+  String howManyHoursToSchedule(Object name) {
+    return 'كم عدد الساعات التي تريد جدولتها لـ $name؟';
+  }
+
+  @override
+  String get hoursToSchedule => 'الساعات المراد جدولتها';
+
+  @override
+  String get exampleHours => 'مثلاً، 10';
+
+  @override
+  String get systemWillFitSessions => 'سيحاول النظام ملاءمة الجلسات في جدول المدرب بناءً على توفر المرشح.';
+
+  @override
+  String get planSessions => 'تخطيط الجلسات';
+
+  @override
+  String get pleaseEnterValidHours => 'الرجاء إدخال عدد ساعات صحيح';
+
+  @override
+  String get paymentAmount => 'مبلغ الدفع';
+
+  @override
+  String get paymentDate => 'تاريخ الدفع';
+
+  @override
+  String get noteOptional => 'ملاحظة (اختياري)';
+
+  @override
+  String get examplePaymentNote => 'مثلاً، عربون، دفعة كاملة، إلخ.';
+
+  @override
+  String get email => 'البريد الإلكتروني';
+
+  @override
+  String get sendScheduleToInstructor => 'إرسال الجدول إلى المدرب';
 }

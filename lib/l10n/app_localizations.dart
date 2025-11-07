@@ -1420,13 +1420,13 @@ abstract class AppLocalizations {
   /// No description provided for @developedForDrivingSchoolManagement.
   ///
   /// In en, this message translates to:
-  /// **'Developed for driving school management'**
+  /// **'Developed by Chater Marzougui'**
   String get developedForDrivingSchoolManagement;
 
   /// No description provided for @copyrightAllRightsReserved.
   ///
   /// In en, this message translates to:
-  /// **'© 2024 All rights reserved'**
+  /// **'© 2025 All rights reserved'**
   String get copyrightAllRightsReserved;
 
   /// No description provided for @minute.
@@ -1872,6 +1872,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This screen is only accessible to users with developer role.'**
   String get developerAccessOnly;
+
+  /// No description provided for @planningSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Planning sessions...'**
+  String get planningSessions;
+
+  /// No description provided for @creatingSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Creating sessions...'**
+  String get creatingSessions;
+
+  /// No description provided for @success.
+  ///
+  /// In en, this message translates to:
+  /// **'Success!'**
+  String get success;
+
+  /// No description provided for @planningFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Planning Failed'**
+  String get planningFailed;
+
+  /// No description provided for @successfullyCreatedSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Successfully created {count} sessions'**
+  String successfullyCreatedSessions(Object count);
+
+  /// No description provided for @totalHoursScheduled.
+  ///
+  /// In en, this message translates to:
+  /// **'Total hours scheduled: {hours} hours'**
+  String totalHoursScheduled(Object hours);
+
+  /// No description provided for @confirmAndCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm & Create'**
+  String get confirmAndCreate;
+
+  /// No description provided for @autoSessionPlanning.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto Session Planning'**
+  String get autoSessionPlanning;
+
+  /// No description provided for @howManyHoursToSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'How many hours would you like to schedule for {name}?'**
+  String howManyHoursToSchedule(Object name);
+
+  /// No description provided for @hoursToSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Hours to Schedule'**
+  String get hoursToSchedule;
+
+  /// No description provided for @exampleHours.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., 10'**
+  String get exampleHours;
+
+  /// No description provided for @systemWillFitSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'The system will try to fit sessions into the instructor\'s schedule based on the candidate\'s availability.'**
+  String get systemWillFitSessions;
+
+  /// No description provided for @planSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan Sessions'**
+  String get planSessions;
+
+  /// No description provided for @pleaseEnterValidHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid number of hours'**
+  String get pleaseEnterValidHours;
+
+  /// No description provided for @paymentAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Amount'**
+  String get paymentAmount;
+
+  /// No description provided for @paymentDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Date'**
+  String get paymentDate;
+
+  /// No description provided for @noteOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Note (optional)'**
+  String get noteOptional;
+
+  /// No description provided for @examplePaymentNote.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Acompte, Full payment, etc.'**
+  String get examplePaymentNote;
+
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// No description provided for @sendScheduleToInstructor.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Schedule to Instructor'**
+  String get sendScheduleToInstructor;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
