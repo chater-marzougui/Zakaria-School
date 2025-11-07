@@ -1044,7 +1044,7 @@ class _UserDialogState extends State<_UserDialog> {
               TextFormField(
                 controller: _emailController,
                 decoration: InputDecoration(
-                  labelText: "Email",
+                  labelText: t.email,
                   border: const OutlineInputBorder(),
                 ),
                 keyboardType: TextInputType.emailAddress,
