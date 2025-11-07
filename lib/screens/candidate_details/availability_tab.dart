@@ -178,7 +178,7 @@ class _AvailabilityCalendarTabState extends State<AvailabilityCalendarTab> {
         });
       }
     } catch (e) {
-      // Silently fail on initial load to avoid disrupting user experience
+      // Log error but don't show UI message to avoid disrupting user experience
       // User will see the data passed from the previous screen
       debugPrint('Failed to reload candidate data: $e');
     }
@@ -564,8 +564,9 @@ class _AvailabilityCalendarTabState extends State<AvailabilityCalendarTab> {
               if (_movingSlot != null) return; // Don't create if moving
 
               // Get this day column's grid position
-              final RenderBox? gridBox = _dayGridKeys[dayKey]?.currentContext?.findRenderObject() as RenderBox?;
-              if (gridBox == null) return;
+              final renderObject = _dayGridKeys[dayKey]?.currentContext?.findRenderObject();
+              if (renderObject is! RenderBox) return;
+              final gridBox = renderObject;
               
               // Convert global position to local position within the grid
               final localPosition = gridBox.globalToLocal(details.globalPosition);
@@ -578,8 +579,9 @@ class _AvailabilityCalendarTabState extends State<AvailabilityCalendarTab> {
             },
             onLongPressMoveUpdate: (details) {
               if (_dragDayKey == dayKey && _dragStartY != null && _movingSlot == null) {
-                final RenderBox? gridBox = _dayGridKeys[dayKey]?.currentContext?.findRenderObject() as RenderBox?;
-                if (gridBox == null) return;
+                final renderObject = _dayGridKeys[dayKey]?.currentContext?.findRenderObject();
+                if (renderObject is! RenderBox) return;
+                final gridBox = renderObject;
                 
                 final localPosition = gridBox.globalToLocal(details.globalPosition);
 
@@ -743,8 +745,9 @@ class _AvailabilityCalendarTabState extends State<AvailabilityCalendarTab> {
       },
       onLongPressMoveUpdate: (details) {
         if (_movingSlot != null && _movingSlotDayKey == dayKey) {
-          final RenderBox? gridBox = _dayGridKeys[dayKey]?.currentContext?.findRenderObject() as RenderBox?;
-          if (gridBox == null) return;
+          final renderObject = _dayGridKeys[dayKey]?.currentContext?.findRenderObject();
+          if (renderObject is! RenderBox) return;
+          final gridBox = renderObject;
           
           final localPosition = gridBox.globalToLocal(details.globalPosition);
 
