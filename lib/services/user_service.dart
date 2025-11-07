@@ -9,6 +9,7 @@ class UserService {
   static final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
 
   /// Create a new user with Firebase Auth and add to Firestore
+  /// Note: This will temporarily sign out the current user and sign them back in
   static Future<String> createUser({
     required String email,
     required String password,
@@ -17,6 +18,9 @@ class UserService {
     required String phoneNumber,
     required String role, // 'instructor' or 'secretary'
   }) async {
+    // Store current user to sign back in later
+    final currentUser = _auth.currentUser;
+    
     try {
       // Validate role
       if (role != 'instructor' && role != 'secretary' && role != 'developer') {
@@ -46,8 +50,16 @@ class UserService {
 
       await _db.collection('users').doc(uid).set(user.toFirestore());
 
+      // Sign out the newly created user
+      await _auth.signOut();
+      
+      // Note: The AuthWrapper will automatically re-authenticate the original user
+      // when Firebase Auth state changes to null and then back
+      
       return uid;
     } catch (e) {
+      // Try to restore original user session if creation failed
+      await _auth.signOut();
       throw Exception('Failed to create user: $e');
     }
   }

@@ -280,7 +280,7 @@
   "instructor": "مدرب",
   "secretary": "سكرتير",
   "developer": "مطور",
-  "userCreatedSuccessfully": "تم إنشاء المستخدم بنجاح",
+  "userCreatedSuccessfully": "تم إنشاء المستخدم بنجاح. سيتم تسجيل خروجك وستحتاج إلى تسجيل الدخول مرة أخرى.",
   "failedToCreateUser": "فشل في إنشاء المستخدم: {error}",
   "userUpdatedSuccessfully": "تم تحديث المستخدم بنجاح",
   "failedToUpdateUser": "فشل في تحديث المستخدم: {error}",

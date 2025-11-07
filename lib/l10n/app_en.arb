@@ -280,7 +280,7 @@
   "instructor": "Instructor",
   "secretary": "Secretary",
   "developer": "Developer",
-  "userCreatedSuccessfully": "User created successfully",
+  "userCreatedSuccessfully": "User created successfully. You will be signed out and need to sign in again.",
   "failedToCreateUser": "Failed to create user: {error}",
   "userUpdatedSuccessfully": "User updated successfully",
   "failedToUpdateUser": "Failed to update user: {error}",

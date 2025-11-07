@@ -280,7 +280,7 @@
   "instructor": "Instructeur",
   "secretary": "Secrétaire",
   "developer": "Développeur",
-  "userCreatedSuccessfully": "Utilisateur créé avec succès",
+  "userCreatedSuccessfully": "Utilisateur créé avec succès. Vous serez déconnecté et devrez vous reconnecter.",
   "failedToCreateUser": "Échec de la création de l'utilisateur: {error}",
   "userUpdatedSuccessfully": "Utilisateur mis à jour avec succès",
   "failedToUpdateUser": "Échec de la mise à jour de l'utilisateur: {error}",
