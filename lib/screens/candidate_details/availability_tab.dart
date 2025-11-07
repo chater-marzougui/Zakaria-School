@@ -343,8 +343,8 @@ class _AvailabilityCalendarTabState extends State<AvailabilityCalendarTab> {
 
   String _minutesToTimeString(int minutes) {
     final hours = (minutes ~/ 60).clamp(0, 23);
-    final mins = minutes % 60;
-    return '${hours.toString().padLeft(2, '0')}:${mins.toString().padLeft(2, '0')}';
+    final minus = minutes % 60;
+    return '${hours.toString().padLeft(2, '0')}:${minus.toString().padLeft(2, '0')}';
   }
 
   /// Helper to get RenderBox for a day column safely

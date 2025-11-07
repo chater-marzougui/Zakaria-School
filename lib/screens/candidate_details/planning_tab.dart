@@ -286,110 +286,214 @@ class _PaymentItem extends StatelessWidget {
     final theme = Theme.of(context);
     final t = AppLocalizations.of(context)!;
 
+    // Controllers for the form fields
+    final amountController = TextEditingController(
+      text: session.paymentAmount > 0 ? session.paymentAmount.toString() : '',
+    );
+    final noteController = TextEditingController(text: session.paymentNote);
+    DateTime selectedDate = session.paymentDate ?? DateTime.now();
+
+    void disposeControllers() {
+      if (amountController.hasListeners || noteController.hasListeners) {
+        return; // Already disposed
+      }
+      amountController.dispose();
+      noteController.dispose();
+    }
+
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Row(
-          children: [
-            Icon(
-              markAsPaid ? Icons.check_circle : Icons.cancel,
-              color: markAsPaid ? Colors.green : theme.colorScheme.error,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                markAsPaid ? t.markAsPaid : t.markAsUnpaid,
-                style: theme.textTheme.titleLarge,
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: Row(
+            children: [
+              Icon(
+                markAsPaid ? Icons.check_circle : Icons.cancel,
+                color: markAsPaid ? Colors.green : theme.colorScheme.error,
               ),
-            ),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(t.confirmPaymentStatusChange),
-            const SizedBox(height: 16),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(8),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  markAsPaid ? t.markAsPaid : t.markAsUnpaid,
+                  style: theme.textTheme.titleLarge,
+                ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(t.confirmPaymentStatusChange),
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(Icons.calendar_today, size: 16),
-                      const SizedBox(width: 8),
-                      Text(
-                        DateFormat('dd/MM/yyyy').format(session.date),
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
+                      Row(
+                        children: [
+                          Icon(Icons.calendar_today, size: 16),
+                          const SizedBox(width: 8),
+                          Text(
+                            DateFormat('dd/MM/yyyy').format(session.date),
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Icon(Icons.access_time, size: 16),
+                          const SizedBox(width: 8),
+                          Text(
+                            '${session.durationInHours.toStringAsFixed(1)} ${t.hours}',
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                if (markAsPaid) ...[
+                  const SizedBox(height: 16),
+                  const Divider(),
+                  const SizedBox(height: 16),
+                  // Payment Amount
+                  TextField(
+                    controller: amountController,
+                    keyboardType: TextInputType.numberWithOptions(decimal: true),
+                    decoration: InputDecoration(
+                      labelText: 'Payment Amount',
+                      prefixIcon: Icon(Icons.attach_money),
+                      suffixText: 'TND',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  // Payment Date
+                  InkWell(
+                    onTap: () async {
+                      final pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: selectedDate,
+                        firstDate: DateTime(2020),
+                        lastDate: DateTime.now().add(Duration(days: 365)),
+                      );
+                      if (pickedDate != null) {
+                        setState(() {
+                          selectedDate = pickedDate;
+                        });
+                      }
+                    },
+                    child: InputDecorator(
+                      decoration: InputDecoration(
+                        labelText: 'Payment Date',
+                        prefixIcon: Icon(Icons.calendar_today),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Icon(Icons.access_time, size: 16),
-                      const SizedBox(width: 8),
-                      Text(
-                        '${session.durationInHours.toStringAsFixed(1)} ${t.hours}',
+                      child: Text(
+                        DateFormat('dd/MM/yyyy').format(selectedDate),
                       ),
-                    ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  // Payment Note
+                  TextField(
+                    controller: noteController,
+                    maxLines: 2,
+                    decoration: InputDecoration(
+                      labelText: 'Note (optional)',
+                      prefixIcon: Icon(Icons.note),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      hintText: 'e.g., Acompte, Full payment, etc.',
+                    ),
                   ),
                 ],
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text(t.cancel),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                try {
+                  final updateData = <String, dynamic>{
+                    'payment_status': markAsPaid ? 'paid' : 'unpaid',
+                  };
+
+                  if (markAsPaid) {
+                    // Parse amount
+                    final amount = double.tryParse(amountController.text.trim()) ?? 0.0;
+                    updateData['payment_amount'] = amount;
+                    updateData['payment_date'] = Timestamp.fromDate(selectedDate);
+                    updateData['payment_note'] = noteController.text.trim();
+                  } else {
+                    // Clear payment data when marking as unpaid
+                    updateData['payment_amount'] = 0.0;
+                    updateData['payment_date'] = null;
+                    updateData['payment_note'] = '';
+                  }
+
+                  await FirebaseFirestore.instance
+                      .collection('sessions')
+                      .doc(session.id)
+                      .update(updateData);
+
+                  if (!context.mounted) return;
+                  
+                  Navigator.pop(context);
+
+                  showCustomSnackBar(
+                    context,
+                    markAsPaid
+                        ? t.paymentMarkedAsPaid
+                        : t.paymentMarkedAsUnpaid,
+                    type: SnackBarType.success,
+                  );
+                } catch (e) {
+                  if (!context.mounted) return;
+                  
+                  Navigator.pop(context);
+                  
+                  showCustomSnackBar(
+                    context,
+                    '${t.error}: $e',
+                    type: SnackBarType.error,
+                  );
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor:
+                markAsPaid ? Colors.green : theme.colorScheme.error,
+                foregroundColor: Colors.white,
               ),
+              child: Text(t.confirm),
             ),
           ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(t.cancel),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              try {
-                await FirebaseFirestore.instance
-                    .collection('sessions')
-                    .doc(session.id)
-                    .update({
-                  'payment_status': markAsPaid ? 'paid' : 'unpaid'
-                });
-
-                if (!context.mounted) return;
-                Navigator.pop(context);
-
-                showCustomSnackBar(
-                  context,
-                  markAsPaid
-                      ? t.paymentMarkedAsPaid
-                      : t.paymentMarkedAsUnpaid,
-                  type: SnackBarType.success,
-                );
-              } catch (e) {
-                if (!context.mounted) return;
-                showCustomSnackBar(
-                  context,
-                  '${t.error}: $e',
-                  type: SnackBarType.error,
-                );
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor:
-              markAsPaid ? Colors.green : theme.colorScheme.error,
-              foregroundColor: Colors.white,
-            ),
-            child: Text(t.confirm),
-          ),
-        ],
       ),
-    );
+    ).then((_) {
+      // Dispose controllers when dialog is dismissed
+      disposeControllers();
+    });
   }
 
   void _showDeleteConfirmationDialog(BuildContext context) {

@@ -213,32 +213,57 @@ class PlanningImageGenerator {
     _drawCenteredText(canvas, timeStr, startX + col1Width, y, col2Width, rowHeight, Colors.black, 20);
 
     // Payment status with check/uncheck or amount
-    if (session.paymentAmount > 0) {
-      // Draw amount
+    if (session.paymentNote.isNotEmpty) {
+      // Divide the column: 80px for check/amount, 220px for note
+      const double checkWidth = 80.0;
+      const double noteWidth = 220.0;
+      final checkX = startX + col1Width + col2Width;
+      final noteX = checkX + checkWidth;
+
+      if (session.paymentAmount > 0) {
+        // Draw amount in the left part
+        final amountStr = '${session.paymentAmount.toStringAsFixed(0)} TND';
+        _drawCenteredText(canvas, amountStr, checkX, y, checkWidth, rowHeight,
+            const Color(0xFF1B5E20), 22, bold: true);
+      } else {
+        // Draw check/uncheck mark in the left part
+        final isPaid = session.paymentStatus == 'paid';
+        final centerX = checkX + checkWidth / 2;
+        final centerY = y + rowHeight / 2;
+
+        if (isPaid) {
+          _drawCheckMark(canvas, centerX, centerY);
+        } else {
+          _drawCrossMark(canvas, centerX, centerY);
+        }
+      }
+
+      // Draw note in the right part (can span 2 lines)
+      final notePainter = TextPainter(
+        text: TextSpan(
+          text: session.paymentNote,
+          style: const TextStyle(
+            color: Color(0xFF666666),
+            fontSize: 16,
+            fontStyle: FontStyle.italic,
+          ),
+        ),
+        textDirection: ui.TextDirection.ltr,
+        maxLines: 2,
+        ellipsis: '...',
+      );
+      notePainter.layout(maxWidth: noteWidth - 10);
+      
+      // Center vertically
+      final noteY = y + (rowHeight - notePainter.height) / 2;
+      notePainter.paint(canvas, Offset(noteX + 5, noteY));
+    } else if (session.paymentAmount > 0) {
+      // No note: draw amount centered in full column
       final amountStr = '${session.paymentAmount.toStringAsFixed(0)} TND';
       _drawCenteredText(canvas, amountStr, startX + col1Width + col2Width, y, col3Width, rowHeight,
           const Color(0xFF1B5E20), 20, bold: true);
-
-      // Draw note if available
-      if (session.paymentNote.isNotEmpty) {
-        final notePainter = TextPainter(
-          text: TextSpan(
-            text: session.paymentNote,
-            style: const TextStyle(
-              color: Color(0xFF666666),
-              fontSize: 14,
-              fontStyle: FontStyle.italic,
-            ),
-          ),
-          textDirection: ui.TextDirection.ltr,
-          maxLines: 1,
-          ellipsis: '...',
-        );
-        notePainter.layout(maxWidth: col3Width - 20);
-        notePainter.paint(canvas, Offset(startX + col1Width + col2Width + 10, y + rowHeight - 20));
-      }
     } else {
-      // Draw check/uncheck mark
+      // No note and no amount: draw check/uncheck mark centered
       final isPaid = session.paymentStatus == 'paid';
       final centerX = startX + col1Width + col2Width + col3Width / 2;
       final centerY = y + rowHeight / 2;
