@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import '../models/structs.dart' as structs;
+import '../helpers/download_manager.dart';
 
 class PlanningImageGenerator {
   static Future<void> generateAndShare({
@@ -21,15 +22,14 @@ class PlanningImageGenerator {
         sessions: sessions,
       );
 
-      // Save to temporary file
-      final tempDir = await getTemporaryDirectory();
-      final file = File('${tempDir.path}/planning_${candidate.id}.png');
-      await file.writeAsBytes(imageBytes);
+      // Save to download directory using DownloadManager
+      final fileName = 'planning_${candidate.id}_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}.png';
+      final filePath = await DownloadManager.saveFile(fileName, imageBytes);
 
       // Share via WhatsApp
       await _shareViaWhatsApp(
         context: context,
-        filePath: file.path,
+        filePath: filePath,
         phoneNumber: candidate.phone,
       );
     } catch (e) {
@@ -390,15 +390,14 @@ class InstructorScheduleImageGenerator {
         sessions: sessions,
       );
 
-      // Save to temporary file
-      final tempDir = await getTemporaryDirectory();
-      final file = File('${tempDir.path}/instructor_schedule_${instructor.uid}.png');
-      await file.writeAsBytes(imageBytes);
+      // Save to download directory using DownloadManager
+      final fileName = 'instructor_schedule_${instructor.uid}_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}.png';
+      final filePath = await DownloadManager.saveFile(fileName, imageBytes);
 
       // Share via WhatsApp
       await _shareViaWhatsApp(
         context: context,
-        filePath: file.path,
+        filePath: filePath,
         phoneNumber: instructor.phoneNumber,
       );
     } catch (e) {
