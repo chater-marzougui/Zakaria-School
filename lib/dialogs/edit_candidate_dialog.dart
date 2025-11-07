@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../helpers/validators.dart';
 import '../l10n/app_localizations.dart';
 import '../models/structs.dart' as structs;
+import '../services/instructor_service.dart';
 
 class EditCandidateDialog extends StatefulWidget {
   final structs.Candidate candidate;
@@ -20,10 +21,10 @@ class _EditCandidateDialogState extends State<EditCandidateDialog> {
   late final TextEditingController nameController;
   late final TextEditingController phoneController;
   late final TextEditingController cinController;
-  late final TextEditingController instructorController;
 
   late bool theoryPassed;
   late String selectedStatus;
+  late String selectedInstructorId;
 
   final formKey = GlobalKey<FormState>();
   bool _isSaving = false;
@@ -35,10 +36,10 @@ class _EditCandidateDialogState extends State<EditCandidateDialog> {
     nameController = TextEditingController(text: widget.candidate.name);
     phoneController = TextEditingController(text: widget.candidate.phone);
     cinController = TextEditingController(text: widget.candidate.cin);
-    instructorController = TextEditingController(text: widget.candidate.assignedInstructorId);
 
     theoryPassed = widget.candidate.theoryPassed;
     selectedStatus = widget.candidate.status;
+    selectedInstructorId = widget.candidate.assignedInstructorId;
   }
 
   @override
@@ -47,7 +48,6 @@ class _EditCandidateDialogState extends State<EditCandidateDialog> {
     nameController.dispose();
     phoneController.dispose();
     cinController.dispose();
-    instructorController.dispose();
     super.dispose();
   }
 
@@ -116,8 +116,8 @@ class _EditCandidateDialogState extends State<EditCandidateDialog> {
                 ),
               ),
               const SizedBox(height: 16),
-              TextFormField(
-                controller: instructorController,
+              DropdownButtonFormField<String>(
+                value: selectedInstructorId.isEmpty ? null : selectedInstructorId,
                 decoration: InputDecoration(
                   labelText: t.assignedInstructor,
                   prefixIcon: const Icon(Icons.person_outline),
@@ -125,6 +125,27 @@ class _EditCandidateDialogState extends State<EditCandidateDialog> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
+                items: [
+                  DropdownMenuItem<String>(
+                    value: '',
+                    child: Text('- ${t.none} -'),
+                  ),
+                  ...InstructorService().getInstructorsList().map((instructor) {
+                    return DropdownMenuItem<String>(
+                      value: instructor.uid,
+                      child: Text(
+                        instructor.displayName.isNotEmpty
+                            ? instructor.displayName
+                            : '${instructor.firstName} ${instructor.lastName}',
+                      ),
+                    );
+                  }).toList(),
+                ],
+                onChanged: _isSaving ? null : (value) {
+                  setState(() {
+                    selectedInstructorId = value ?? '';
+                  });
+                },
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
@@ -200,7 +221,7 @@ class _EditCandidateDialogState extends State<EditCandidateDialog> {
         'name': nameController.text.trim(),
         'phone': phoneController.text.trim(),
         'cin': cinController.text.trim(),
-        'assigned_instructor_id': instructorController.text.trim(),
+        'assigned_instructor_id': selectedInstructorId,
         'status': selectedStatus,
         'theory_passed': theoryPassed,
       });

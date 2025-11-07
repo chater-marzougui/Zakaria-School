@@ -6,6 +6,7 @@ import '../firebase_options.dart';
 import '../helpers/seed_db.dart';
 import '../widgets/widgets.dart';
 import '../l10n/app_localizations.dart';
+import '../services/instructor_service.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -74,6 +75,12 @@ class _SplashScreenState extends State<SplashScreen> {
         });
         await TestDataGenerator.ensureTestData();
       }
+
+      // Step 5: Initialize instructor service
+      setState(() {
+        _loadingMessage = 'Loading instructors...';
+      });
+      await InstructorService().initialize();
 
       // Navigate to AuthWrapper which will load user data
       if (mounted) {

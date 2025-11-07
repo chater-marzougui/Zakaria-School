@@ -582,6 +582,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get optional => 'اختياري';
 
   @override
+  String get none => 'لا شيء';
+
+  @override
   String get cinExample => '12345678';
 
   @override

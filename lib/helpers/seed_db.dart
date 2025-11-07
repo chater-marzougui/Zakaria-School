@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math';
 import '../models/structs.dart';
+import '../services/instructor_service.dart';
 
 class TestDataGenerator {
   static final Random _random = Random();
@@ -16,10 +17,6 @@ class TestDataGenerator {
     'Ben Ali', 'Trabelsi', 'Jebali', 'Hmida', 'Bouazizi',
     'Khedher', 'Sassi', 'Gharbi', 'Mabrouk', 'Khaldi',
     'Mejri', 'Oueslati', 'Dridi', 'Chebbi', 'Mansour'
-  ];
-
-  static final List<String> _instructorIds = [
-    'instructor_001', 'instructor_002', 'instructor_003'
   ];
 
   static final List<String> _statuses = ['active', 'graduated', 'inactive'];
@@ -156,6 +153,12 @@ class TestDataGenerator {
     final totalPaidHours = (_random.nextInt(30) + 10).toDouble(); // 10-40 hours
     final totalTakenHours = (_random.nextDouble() * totalPaidHours).clamp(0, totalPaidHours);
 
+    // Get a random instructor ID from existing instructors
+    final instructorIds = InstructorService().getInstructorIds();
+    final assignedInstructorId = instructorIds.isNotEmpty 
+        ? instructorIds[_random.nextInt(instructorIds.length)]
+        : ''; // No instructor if none exist
+
     return Candidate(
       id: id,
       name: name,
@@ -166,7 +169,7 @@ class TestDataGenerator {
       totalPaidHours: totalPaidHours,
       totalTakenHours: double.parse(totalTakenHours.toStringAsFixed(1)),
       notes: _notes[_random.nextInt(_notes.length)],
-      assignedInstructorId: _instructorIds[_random.nextInt(_instructorIds.length)],
+      assignedInstructorId: assignedInstructorId,
       status: status,
     );
   }
@@ -203,10 +206,16 @@ class TestDataGenerator {
         ? (_random.nextDouble() < 0.7 ? 'paid' : 'unpaid')
         : 'unpaid';
 
+    // Get a random instructor ID from existing instructors
+    final instructorIds = InstructorService().getInstructorIds();
+    final instructorId = instructorIds.isNotEmpty 
+        ? instructorIds[_random.nextInt(instructorIds.length)]
+        : ''; // No instructor if none exist
+
     return Session(
       id: id,
       candidateId: candidateId,
-      instructorId: _instructorIds[_random.nextInt(_instructorIds.length)],
+      instructorId: instructorId,
       date: date,
       startTime: startTime,
       endTime: endTime,

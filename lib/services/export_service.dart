@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
 import '../models/structs.dart' as structs;
+import 'instructor_service.dart';
 
 class ExportService {
   static Future<String> exportCandidatesToCSV() async {
@@ -29,7 +30,7 @@ class ExportService {
         '${candidate.totalPaidHours},'
         '${candidate.totalTakenHours},'
         '${candidate.remainingHours},'
-        '"${candidate.assignedInstructorId}",'
+        '"${InstructorService().getInstructorName(candidate.assignedInstructorId)}",'
         '${candidate.status},'
         '"${candidate.notes.replaceAll('"', '""')}"'
       );

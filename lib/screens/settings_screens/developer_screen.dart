@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../services/db_service.dart';
 import '../../services/user_service.dart';
+import '../../services/instructor_service.dart';
 import '../../helpers/seed_db.dart';
 import '../../l10n/app_localizations.dart';
 import '../../widgets/widgets.dart';
@@ -543,6 +544,10 @@ class _DeveloperScreenState extends State<DeveloperScreen> with SingleTickerProv
       if (mounted) {
         final t = AppLocalizations.of(context)!;
         _showSuccess(t.userCreatedSuccessfully);
+        // Refresh instructor service if an instructor was created
+        if (result['role'] == 'instructor') {
+          await InstructorService().refresh();
+        }
         await _loadUsers();
       }
     } catch (e) {
@@ -575,6 +580,10 @@ class _DeveloperScreenState extends State<DeveloperScreen> with SingleTickerProv
       if (mounted) {
         final t = AppLocalizations.of(context)!;
         _showSuccess(t.userUpdatedSuccessfully);
+        // Refresh instructor service if an instructor was updated or role changed
+        if (user.role == 'instructor' || result['role'] == 'instructor') {
+          await InstructorService().refresh();
+        }
         await _loadUsers();
       }
     } catch (e) {
@@ -608,6 +617,10 @@ class _DeveloperScreenState extends State<DeveloperScreen> with SingleTickerProv
 
       if (mounted) {
         _showSuccess(t.userDeletedSuccessfully);
+        // Refresh instructor service if an instructor was deleted
+        if (user.role == 'instructor') {
+          await InstructorService().refresh();
+        }
         await _loadUsers();
       }
     } catch (e) {

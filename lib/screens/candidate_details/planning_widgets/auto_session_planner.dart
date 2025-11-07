@@ -111,6 +111,8 @@ class AutoSessionPlanner {
     final now = DateTime.now();
     final endDate = candidate.examDate ?? now.add(Duration(days: 60));
 
+    print("Now: $now, EndDate: $endDate");
+
     if (endDate.isBefore(now)) {
       return {
         'success': false,

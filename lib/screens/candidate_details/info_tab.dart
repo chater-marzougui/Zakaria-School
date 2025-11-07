@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/structs.dart' as structs;
+import '../../services/instructor_service.dart';
 
 
 class CandidateInfoTab extends StatefulWidget {
@@ -84,9 +85,7 @@ class _CandidateInfoTabState extends State<CandidateInfoTab> {
           _InfoCard(
             icon: Icons.person_outline,
             title: t.assignedInstructor,
-            value: widget.candidate.assignedInstructorId.isEmpty
-                ? '-'
-                : widget.candidate.assignedInstructorId,
+            value: InstructorService().getInstructorName(widget.candidate.assignedInstructorId),
           ),
           _InfoCard(
             icon: Icons.info_outline,

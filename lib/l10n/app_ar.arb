@@ -185,6 +185,7 @@
   "showingResults": "عرض {count} من {total} المرشحين",
   "totalCandidates": "إجمالي المرشحين",
   "optional": "اختياري",
+  "none": "لا شيء",
   "cinExample": "12345678",
   "confirm": "تأكيد",
   "delete": "حذف",

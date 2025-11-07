@@ -185,6 +185,7 @@
   "showingResults": "Showing {count} of {total} candidates",
   "totalCandidates": "Total Candidates",
   "optional": "optional",
+  "none": "None",
   "cinExample": "12345678",
   "confirm": "Confirm",
   "delete": "Delete",

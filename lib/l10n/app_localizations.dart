@@ -1207,6 +1207,12 @@ abstract class AppLocalizations {
   /// **'optional'**
   String get optional;
 
+  /// No description provided for @none.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get none;
+
   /// No description provided for @cinExample.
   ///
   /// In en, this message translates to:

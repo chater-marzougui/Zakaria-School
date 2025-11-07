@@ -582,6 +582,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get optional => 'optional';
 
   @override
+  String get none => 'None';
+
+  @override
   String get cinExample => '12345678';
 
   @override
