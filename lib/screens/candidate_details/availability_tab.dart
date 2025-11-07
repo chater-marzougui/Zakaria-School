@@ -34,8 +34,8 @@ class _AvailabilityCalendarTabState extends State<AvailabilityCalendarTab> {
   structs.TimeSlot? _movingSlot;
   Offset? _movingSlotOffset;
   
-  // Key for the day grid to calculate positions
-  final GlobalKey _gridKey = GlobalKey();
+  // Keys for each day grid to calculate positions accurately
+  final Map<String, GlobalKey> _dayGridKeys = {};
 
   final List<String> _dayKeys = [
     'monday',
@@ -51,6 +51,10 @@ class _AvailabilityCalendarTabState extends State<AvailabilityCalendarTab> {
   void initState() {
     super.initState();
     _workingAvailability = _deepCopyAvailability(widget.candidate.availability);
+    // Initialize keys for each day column
+    for (var dayKey in _dayKeys) {
+      _dayGridKeys[dayKey] = GlobalKey();
+    }
     // Reload data from Firestore when first opening the tab
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _reloadCandidateData();
@@ -129,8 +133,6 @@ class _AvailabilityCalendarTabState extends State<AvailabilityCalendarTab> {
 
       setState(() {
         _hasChanges = false;
-        // Update local state to match what was saved to Firebase
-        // This ensures the UI reflects the saved state when returning to this page
       });
 
       if (mounted) {
@@ -176,7 +178,8 @@ class _AvailabilityCalendarTabState extends State<AvailabilityCalendarTab> {
         });
       }
     } catch (e) {
-      // Silently fail - user will see old state
+      // Silently fail on initial load to avoid disrupting user experience
+      // User will see the data passed from the previous screen
       debugPrint('Failed to reload candidate data: $e');
     }
   }
@@ -556,12 +559,12 @@ class _AvailabilityCalendarTabState extends State<AvailabilityCalendarTab> {
 
           // Day grid with slots
           GestureDetector(
-            key: dayKey == _dayKeys[0] ? _gridKey : null, // Use key only for first column
+            key: _dayGridKeys[dayKey], // Individual key for each day column
             onLongPressStart: (details) {
               if (_movingSlot != null) return; // Don't create if moving
 
-              // Get the grid's position relative to the screen
-              final RenderBox? gridBox = _gridKey.currentContext?.findRenderObject() as RenderBox?;
+              // Get this day column's grid position
+              final RenderBox? gridBox = _dayGridKeys[dayKey]?.currentContext?.findRenderObject() as RenderBox?;
               if (gridBox == null) return;
               
               // Convert global position to local position within the grid
@@ -575,7 +578,7 @@ class _AvailabilityCalendarTabState extends State<AvailabilityCalendarTab> {
             },
             onLongPressMoveUpdate: (details) {
               if (_dragDayKey == dayKey && _dragStartY != null && _movingSlot == null) {
-                final RenderBox? gridBox = _gridKey.currentContext?.findRenderObject() as RenderBox?;
+                final RenderBox? gridBox = _dayGridKeys[dayKey]?.currentContext?.findRenderObject() as RenderBox?;
                 if (gridBox == null) return;
                 
                 final localPosition = gridBox.globalToLocal(details.globalPosition);
@@ -740,7 +743,7 @@ class _AvailabilityCalendarTabState extends State<AvailabilityCalendarTab> {
       },
       onLongPressMoveUpdate: (details) {
         if (_movingSlot != null && _movingSlotDayKey == dayKey) {
-          final RenderBox? gridBox = _gridKey.currentContext?.findRenderObject() as RenderBox?;
+          final RenderBox? gridBox = _dayGridKeys[dayKey]?.currentContext?.findRenderObject() as RenderBox?;
           if (gridBox == null) return;
           
           final localPosition = gridBox.globalToLocal(details.globalPosition);
