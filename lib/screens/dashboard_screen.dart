@@ -38,7 +38,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Select Instructor'),
+        title: Text(AppLocalizations.of(context)!.selectInstructor),
         content: SizedBox(
           width: double.maxFinite,
           child: ListView.builder(
@@ -220,8 +220,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                     )
                         : const Icon(Icons.send),
-                    label: const Text(
-                      'Send Schedule to Instructor',
+                    label: Text(
+                      AppLocalizations.of(context)!.sendScheduleToInstructor,
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     style: ElevatedButton.styleFrom(

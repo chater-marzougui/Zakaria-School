@@ -46,7 +46,7 @@ class _RecoverPasswordDialogState extends State<RecoverPasswordDialog> {
             TextField(
               controller: emailController,
               decoration: InputDecoration(
-                labelText: "Email",
+                labelText: t.email,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),

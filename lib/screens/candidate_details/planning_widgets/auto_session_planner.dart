@@ -65,7 +65,7 @@ class AutoSessionPlanner {
                 children: [
                   CircularProgressIndicator(),
                   SizedBox(height: 16),
-                  Text('Planning sessions...'),
+                  Text(AppLocalizations.of(context)!.planningSessions),
                 ],
               ),
             ),
@@ -470,7 +470,7 @@ class AutoSessionPlanner {
                 children: [
                   CircularProgressIndicator(),
                   SizedBox(height: 16),
-                  Text('Creating sessions...'),
+                  Text(AppLocalizations.of(context)!.creatingSessions),
                 ],
               ),
             ),
@@ -522,7 +522,7 @@ class AutoSessionPlanner {
           children: [
             Icon(Icons.check_circle, color: Colors.green),
             SizedBox(width: 12),
-            Text('Success!'),
+            Text(AppLocalizations.of(context)!.success),
           ],
         ),
         content: Column(
@@ -530,21 +530,23 @@ class AutoSessionPlanner {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Successfully created ${result['sessions_created']} sessions',
+              AppLocalizations.of(context)!.successfullyCreatedSessions
+                  .replaceAll('{count}', '${result['sessions_created']}'),
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
             SizedBox(height: 8),
             Text(
-              'Total hours scheduled: ${result['hours_scheduled'].toStringAsFixed(1)} hours',
+              AppLocalizations.of(context)!.totalHoursScheduled
+                  .replaceAll('{hours}', result['hours_scheduled'].toStringAsFixed(1)),
             ),
           ],
         ),
         actions: [
           ElevatedButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text('OK'),
+            child: Text(AppLocalizations.of(context)!.ok),
           ),
         ],
       ),
@@ -568,14 +570,14 @@ class AutoSessionPlanner {
           children: [
             Icon(Icons.error, color: Theme.of(context).colorScheme.error),
             SizedBox(width: 12),
-            Text('Planning Failed'),
+            Text(AppLocalizations.of(context)!.planningFailed),
           ],
         ),
         content: Text(message),
         actions: [
           ElevatedButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text('OK'),
+            child: Text(AppLocalizations.of(context)!.ok),
           ),
         ],
       ),
@@ -716,7 +718,7 @@ class _ScheduleConfirmationDialogState extends State<ScheduleConfirmationDialog>
               children: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: Text('Cancel'),
+                  child: Text(AppLocalizations.of(context)!.cancel),
                 ),
                 SizedBox(width: 12),
                 ElevatedButton.icon(
@@ -727,7 +729,7 @@ class _ScheduleConfirmationDialogState extends State<ScheduleConfirmationDialog>
                     widget.onConfirm(editableSessions);
                   },
                   icon: Icon(Icons.check),
-                  label: Text('Confirm & Create'),
+                  label: Text(AppLocalizations.of(context)!.confirmAndCreate),
                 ),
               ],
             ),

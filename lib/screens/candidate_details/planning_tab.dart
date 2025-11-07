@@ -149,8 +149,8 @@ class _PlanningTabState extends State<PlanningTab> {
                     }
                   },
                   icon: const Icon(Icons.auto_awesome),
-                  label: const Text(
-                    'Auto Session Planning',
+                  label: Text(
+                    t.autoSessionPlanning,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   style: ElevatedButton.styleFrom(
