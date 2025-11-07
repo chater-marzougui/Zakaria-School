@@ -255,7 +255,7 @@ class _DeveloperScreenState extends State<DeveloperScreen> with SingleTickerProv
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Access Denied',
+                  t.accessDenied,
                   style: theme.textTheme.headlineMedium?.copyWith(
                     color: theme.colorScheme.error,
                     fontWeight: FontWeight.bold,
@@ -263,7 +263,7 @@ class _DeveloperScreenState extends State<DeveloperScreen> with SingleTickerProv
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'This screen is only accessible to users with developer role.',
+                  t.developerAccessOnly,
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyLarge,
                 ),

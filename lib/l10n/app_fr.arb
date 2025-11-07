@@ -294,5 +294,7 @@
   "secretaries": "Secrétaires",
   "allUsers": "Tous les utilisateurs",
   "passwordMinLength": "Le mot de passe doit contenir au moins 6 caractères",
-  "invalidEmail": "Adresse email invalide"
+  "invalidEmail": "Adresse email invalide",
+  "accessDenied": "Accès refusé",
+  "developerAccessOnly": "Cet écran n'est accessible qu'aux utilisateurs ayant le rôle de développeur."
 }
