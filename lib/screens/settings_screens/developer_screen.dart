@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import '../../services/db_service.dart';
+import '../../services/user_service.dart';
 import '../../helpers/seed_db.dart';
 import '../../l10n/app_localizations.dart';
 import '../../widgets/widgets.dart';
+import '../../models/structs.dart' as structs;
 
-/// Developer Screen for testing database operations
+/// Developer Screen for testing database operations and user management
 /// Allows developers to:
 /// - View database statistics
 /// - Delete all candidates and sessions
 /// - Generate fake test data
+/// - Manage users (instructors, secretaries)
 class DeveloperScreen extends StatefulWidget {
   const DeveloperScreen({super.key});
 
@@ -16,15 +19,47 @@ class DeveloperScreen extends StatefulWidget {
   State<DeveloperScreen> createState() => _DeveloperScreenState();
 }
 
-class _DeveloperScreenState extends State<DeveloperScreen> {
+class _DeveloperScreenState extends State<DeveloperScreen> with SingleTickerProviderStateMixin {
   
   Map<String, dynamic>? _stats;
   bool _isLoading = false;
+  late TabController _tabController;
+  List<structs.User> _users = [];
 
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 2, vsync: this);
     _loadStats();
+    _loadUsers();
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadUsers() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final users = await UserService.getAllUsers();
+      setState(() {
+        _users = users;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      if (mounted) {
+        final t = AppLocalizations.of(context)!;
+        _showError(t.failedToLoadUsers(e.toString()));
+      }
+    }
   }
 
   Future<void> _loadStats() async {
@@ -203,18 +238,42 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
-            onPressed: _isLoading ? null : _loadStats,
+            onPressed: _isLoading ? null : () {
+              _loadStats();
+              _loadUsers();
+            },
             tooltip: t.refreshStatistics,
           ),
         ],
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: [
+            Tab(text: t.databaseStatistics),
+            Tab(text: t.userManagement),
+          ],
+        ),
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          _buildDatabaseTab(),
+          _buildUserManagementTab(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDatabaseTab() {
+    final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
+
+    return _isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
                   // Warning Banner
                   Card(
                     color: Colors.orange.withAlpha(50),
@@ -366,7 +425,159 @@ class _DeveloperScreenState extends State<DeveloperScreen> {
                 ],
               ),
             ),
+          );
+  }
+
+  Widget _buildUserManagementTab() {
+    final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
+
+    return _isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Add User Button
+                ElevatedButton.icon(
+                  icon: const Icon(Icons.person_add),
+                  label: Text(t.addUser),
+                  onPressed: () => _showAddUserDialog(),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.all(16),
+                    backgroundColor: theme.colorScheme.primary,
+                    foregroundColor: Colors.white,
+                  ),
+                ),
+
+                const SizedBox(height: 24),
+
+                // Users List
+                if (_users.isEmpty)
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(32),
+                      child: Text(
+                        t.noUsers,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          color: theme.textTheme.bodyMedium?.color?.withAlpha(128),
+                        ),
+                      ),
+                    ),
+                  )
+                else
+                  ..._users.map((user) => _UserCard(
+                        user: user,
+                        onEdit: () => _showEditUserDialog(user),
+                        onDelete: () => _deleteUser(user),
+                      )),
+              ],
+            ),
+          );
+  }
+
+  Future<void> _showAddUserDialog() async {
+    final result = await showDialog<Map<String, dynamic>>(
+      context: context,
+      builder: (context) => _UserDialog(),
     );
+
+    if (result == null) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      await UserService.createUser(
+        email: result['email'],
+        password: result['password'],
+        firstName: result['firstName'],
+        lastName: result['lastName'],
+        phoneNumber: result['phoneNumber'],
+        role: result['role'],
+      );
+
+      if (mounted) {
+        final t = AppLocalizations.of(context)!;
+        _showSuccess(t.userCreatedSuccessfully);
+        await _loadUsers();
+      }
+    } catch (e) {
+      if (mounted) {
+        final t = AppLocalizations.of(context)!;
+        _showError(t.failedToCreateUser(e.toString()));
+      }
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _showEditUserDialog(structs.User user) async {
+    final result = await showDialog<Map<String, dynamic>>(
+      context: context,
+      builder: (context) => _UserDialog(user: user),
+    );
+
+    if (result == null) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      await UserService.updateUser(user.uid, result);
+
+      if (mounted) {
+        final t = AppLocalizations.of(context)!;
+        _showSuccess(t.userUpdatedSuccessfully);
+        await _loadUsers();
+      }
+    } catch (e) {
+      if (mounted) {
+        final t = AppLocalizations.of(context)!;
+        _showError(t.failedToUpdateUser(e.toString()));
+      }
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _deleteUser(structs.User user) async {
+    final t = AppLocalizations.of(context)!;
+    final confirmed = await _showConfirmDialog(
+      t.deleteUser,
+      t.deleteUserConfirmation,
+      isDangerous: true,
+    );
+
+    if (!confirmed) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      await UserService.deleteUser(user.uid);
+
+      if (mounted) {
+        _showSuccess(t.userDeletedSuccessfully);
+        await _loadUsers();
+      }
+    } catch (e) {
+      if (mounted) {
+        _showError(t.failedToDeleteUser(e.toString()));
+      }
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 }
 
@@ -590,6 +801,282 @@ class _CustomDataDialogState extends State<_CustomDataDialog> {
             }
           },
           child: Text(t.generate),
+        ),
+      ],
+    );
+  }
+}
+
+class _UserCard extends StatelessWidget {
+  final structs.User user;
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
+
+  const _UserCard({
+    required this.user,
+    required this.onEdit,
+    required this.onDelete,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
+
+    Color roleColor;
+    IconData roleIcon;
+
+    switch (user.role) {
+      case 'developer':
+        roleColor = Colors.purple;
+        roleIcon = Icons.code;
+        break;
+      case 'secretary':
+        roleColor = Colors.orange;
+        roleIcon = Icons.admin_panel_settings;
+        break;
+      default: // instructor
+        roleColor = Colors.blue;
+        roleIcon = Icons.school;
+    }
+
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundColor: roleColor.withAlpha(50),
+          child: Icon(roleIcon, color: roleColor),
+        ),
+        title: Text(user.displayName),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(user.email),
+            Text(user.phoneNumber),
+            const SizedBox(height: 4),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              decoration: BoxDecoration(
+                color: roleColor.withAlpha(50),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                user.role == 'instructor' ? t.instructor :
+                user.role == 'secretary' ? t.secretary : t.developer,
+                style: TextStyle(
+                  color: roleColor,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.edit),
+              onPressed: onEdit,
+              tooltip: t.editUser,
+            ),
+            IconButton(
+              icon: const Icon(Icons.delete, color: Colors.red),
+              onPressed: onDelete,
+              tooltip: t.deleteUser,
+            ),
+          ],
+        ),
+        isThreeLine: true,
+      ),
+    );
+  }
+}
+
+class _UserDialog extends StatefulWidget {
+  final structs.User? user;
+
+  const _UserDialog({this.user});
+
+  @override
+  State<_UserDialog> createState() => _UserDialogState();
+}
+
+class _UserDialogState extends State<_UserDialog> {
+  final _formKey = GlobalKey<FormState>();
+  late TextEditingController _emailController;
+  late TextEditingController _passwordController;
+  late TextEditingController _firstNameController;
+  late TextEditingController _lastNameController;
+  late TextEditingController _phoneController;
+  String _selectedRole = 'instructor';
+
+  @override
+  void initState() {
+    super.initState();
+    _emailController = TextEditingController(text: widget.user?.email ?? '');
+    _passwordController = TextEditingController();
+    _firstNameController = TextEditingController(text: widget.user?.firstName ?? '');
+    _lastNameController = TextEditingController(text: widget.user?.lastName ?? '');
+    _phoneController = TextEditingController(text: widget.user?.phoneNumber ?? '');
+    _selectedRole = widget.user?.role ?? 'instructor';
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _phoneController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+    final isEditMode = widget.user != null;
+
+    return AlertDialog(
+      title: Text(isEditMode ? t.editUser : t.addUser),
+      content: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: _firstNameController,
+                decoration: InputDecoration(
+                  labelText: t.firstName,
+                  border: const OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return t.firstNameRequired;
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _lastNameController,
+                decoration: InputDecoration(
+                  labelText: t.lastName,
+                  border: const OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return t.lastNameRequired;
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _phoneController,
+                decoration: InputDecoration(
+                  labelText: t.phoneNumber,
+                  border: const OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.phone,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return t.phoneNumberRequired;
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _emailController,
+                decoration: InputDecoration(
+                  labelText: t.email,
+                  border: const OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.emailAddress,
+                enabled: !isEditMode, // Can't change email in edit mode
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return t.emailRequired;
+                  }
+                  if (!value.contains('@')) {
+                    return t.invalidEmail;
+                  }
+                  return null;
+                },
+              ),
+              if (!isEditMode) ...[
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _passwordController,
+                  decoration: InputDecoration(
+                    labelText: t.password,
+                    border: const OutlineInputBorder(),
+                  ),
+                  obscureText: true,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return t.passwordRequired;
+                    }
+                    if (value.length < 6) {
+                      return t.passwordMinLength;
+                    }
+                    return null;
+                  },
+                ),
+              ],
+              const SizedBox(height: 16),
+              DropdownButtonFormField<String>(
+                value: _selectedRole,
+                decoration: InputDecoration(
+                  labelText: t.selectRole,
+                  border: const OutlineInputBorder(),
+                ),
+                items: [
+                  DropdownMenuItem(value: 'instructor', child: Text(t.instructor)),
+                  DropdownMenuItem(value: 'secretary', child: Text(t.secretary)),
+                  DropdownMenuItem(value: 'developer', child: Text(t.developer)),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    _selectedRole = value!;
+                  });
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(t.cancel),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            if (_formKey.currentState!.validate()) {
+              final result = <String, dynamic>{
+                'firstName': _firstNameController.text,
+                'lastName': _lastNameController.text,
+                'phoneNumber': _phoneController.text,
+                'role': _selectedRole,
+              };
+
+              if (!isEditMode) {
+                result['email'] = _emailController.text;
+                result['password'] = _passwordController.text;
+              }
+
+              // Update displayName when editing
+              if (isEditMode) {
+                result['displayName'] = '${_firstNameController.text} ${_lastNameController.text}';
+              }
+
+              Navigator.pop(context, result);
+            }
+          },
+          child: Text(isEditMode ? t.save : t.addUser),
         ),
       ],
     );
