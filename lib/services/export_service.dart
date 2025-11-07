@@ -4,6 +4,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
 import '../models/structs.dart' as structs;
 import 'instructor_service.dart';
+import '../helpers/download_manager.dart';
 
 class ExportService {
   static Future<String> exportCandidatesToCSV() async {
@@ -83,11 +84,12 @@ class ExportService {
 
   static Future<String> _saveToFile(String name, String content) async {
     try {
-      final directory = await getApplicationDocumentsDirectory();
       final timestamp = DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
-      final file = File('${directory.path}/${name}_$timestamp.csv');
-      await file.writeAsString(content);
-      return file.path;
+      final fileName = '${name}_$timestamp.csv';
+      
+      // Use DownloadManager to save to platform-specific download directory
+      final filePath = await DownloadManager.saveTextFile(fileName, content);
+      return filePath;
     } catch (e) {
       throw Exception('Failed to save file: $e');
     }
