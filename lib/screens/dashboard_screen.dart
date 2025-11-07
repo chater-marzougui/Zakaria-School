@@ -143,6 +143,7 @@ class DashboardScreen extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'add-session-dashboard',
         onPressed: () {
           // Navigate to add session screen
           Navigator.pushNamed(context, '/add-session');

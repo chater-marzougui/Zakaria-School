@@ -8,20 +8,20 @@ import 'availability_widgets/time_column.dart';
 import 'availability_widgets/day_column.dart';
 
 /// Main availability calendar tab widget
-  class AvailabilityCalendarTab extends StatefulWidget {
+class AvailabilityCalendarTab extends StatefulWidget {
   final structs.Candidate candidate;
 
   const AvailabilityCalendarTab({
-  super.key,
-  required this.candidate,
+    super.key,
+    required this.candidate,
   });
 
   @override
   State<AvailabilityCalendarTab> createState() =>
-  _AvailabilityCalendarTabState();
-  }
+      _AvailabilityCalendarTabState();
+}
 
-  class _AvailabilityCalendarTabState extends State<AvailabilityCalendarTab> {
+class _AvailabilityCalendarTabState extends State<AvailabilityCalendarTab> {
   late AvailabilityState _availabilityState;
   double _zoomLevel = 1.2;
   final ScrollController _horizontalController = ScrollController();
@@ -321,9 +321,9 @@ import 'availability_widgets/day_column.dart';
       final endMinutes = _availabilityState
           .snapToQuarterHour(baseMinutes + ((endY / hourHeight) * 60).round());
 
-      if ((endMinutes - startMinutes).abs() >= 15) {
+      if ((endMinutes - startMinutes).abs() >= 30) {
         final actualStart =
-            startMinutes < endMinutes ? startMinutes : endMinutes;
+        startMinutes < endMinutes ? startMinutes : endMinutes;
         final actualEnd = startMinutes < endMinutes ? endMinutes : startMinutes;
 
         _availabilityState.addTimeSlot(
@@ -350,7 +350,7 @@ import 'availability_widgets/day_column.dart';
   /// Helper to get RenderBox for a day column safely
   RenderBox? _getRenderBoxForDay(String dayKey) {
     final renderObject =
-        _dayGridKeys[dayKey]?.currentContext?.findRenderObject();
+    _dayGridKeys[dayKey]?.currentContext?.findRenderObject();
     if (renderObject is! RenderBox) return null;
     return renderObject;
   }

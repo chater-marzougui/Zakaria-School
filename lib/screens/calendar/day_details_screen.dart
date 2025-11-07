@@ -111,6 +111,7 @@ class DayDetailsScreen extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'add-session-day-details',
         onPressed: () {
           Navigator.pushNamed(context, '/add-session');
         },

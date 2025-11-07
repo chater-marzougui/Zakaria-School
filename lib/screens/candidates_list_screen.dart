@@ -268,6 +268,7 @@ class _CandidatesListScreenState extends State<CandidatesListScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'add-candidate',
         onPressed: () {
           _showAddCandidateDialog(context);
         },

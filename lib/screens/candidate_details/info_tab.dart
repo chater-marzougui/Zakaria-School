@@ -4,6 +4,122 @@ import 'package:intl/intl.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/structs.dart' as structs;
 
+
+class CandidateInfoTab extends StatefulWidget {
+  final structs.Candidate candidate;
+
+  const CandidateInfoTab({
+    super.key,
+    required this.candidate,
+  });
+
+  @override
+  State<CandidateInfoTab> createState() => _CandidateInfoTabState();
+}
+
+class _CandidateInfoTabState extends State<CandidateInfoTab> {
+
+  void updateNotes(String notes) {
+    FirebaseFirestore.instance
+        .collection('candidates')
+        .doc(widget.candidate.id)
+        .update({'notes': notes});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
+    final notesController = TextEditingController(text: widget.candidate.notes);
+
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _InfoCard(
+            icon: Icons.person,
+            title: t.candidateName,
+            value: widget.candidate.name,
+          ),
+          _InfoCard(
+            icon: Icons.phone,
+            title: t.candidatePhone,
+            value: widget.candidate.phone,
+          ),
+          _InfoCard(
+            icon: Icons.credit_card,
+            title: t.cin,
+            value: widget.candidate.cin.isEmpty ? '-' : widget.candidate.cin,
+          ),
+          _InfoCard(
+            icon: Icons.calendar_today,
+            title: t.startDate,
+            value: DateFormat('dd/MM/yyyy').format(widget.candidate.startDate),
+          ),
+          _InfoCard(
+            icon: Icons.school,
+            title: t.theoryPassed,
+            value: widget.candidate.theoryPassed ? t.yes : t.no,
+          ),
+          _InfoCard(
+            icon: Icons.access_time,
+            title: t.totalPaidHours,
+            value: '${widget.candidate.totalPaidHours.toStringAsFixed(1)} ${t
+                .hours}',
+          ),
+          _InfoCard(
+            icon: Icons.done,
+            title: t.totalTakenHours,
+            value: '${widget.candidate.totalTakenHours.toStringAsFixed(1)} ${t
+                .hours}',
+          ),
+          _InfoCard(
+            icon: Icons.hourglass_empty,
+            title: t.remainingHours,
+            value: '${widget.candidate.remainingHours.toStringAsFixed(1)} ${t
+                .hours}',
+          ),
+          _InfoCard(
+            icon: Icons.person_outline,
+            title: t.assignedInstructor,
+            value: widget.candidate.assignedInstructor.isEmpty
+                ? '-'
+                : widget.candidate.assignedInstructor,
+          ),
+          _InfoCard(
+            icon: Icons.info_outline,
+            title: t.status,
+            value: widget.candidate.status,
+          ),
+          const SizedBox(height: 24),
+          Text(
+            t.notes,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 12),
+          TextField(
+            controller: notesController,
+            maxLines: 5,
+            decoration: InputDecoration(
+              hintText: t.notes,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            onChanged: (value) {
+              updateNotes(value);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _InfoCard extends StatelessWidget {
   final IconData icon;
   final String title;
@@ -40,99 +156,3 @@ class _InfoCard extends StatelessWidget {
   }
 }
 
-
-Widget buildInfoTab(BuildContext context, structs.Candidate candidate) {
-  final theme = Theme.of(context);
-  final t = AppLocalizations.of(context)!;
-  final notesController = TextEditingController(text: candidate.notes);
-
-
-  void updateNotes(String notes) {
-    FirebaseFirestore.instance
-        .collection('candidates')
-        .doc(candidate.id)
-        .update({'notes': notes});
-  }
-
-  return SingleChildScrollView(
-    padding: const EdgeInsets.all(16),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _InfoCard(
-          icon: Icons.person,
-          title: t.candidateName,
-          value: candidate.name,
-        ),
-        _InfoCard(
-          icon: Icons.phone,
-          title: t.candidatePhone,
-          value: candidate.phone,
-        ),
-        _InfoCard(
-          icon: Icons.credit_card,
-          title: t.cin,
-          value: candidate.cin.isEmpty ? '-' : candidate.cin,
-        ),
-        _InfoCard(
-          icon: Icons.calendar_today,
-          title: t.startDate,
-          value: DateFormat('dd/MM/yyyy').format(candidate.startDate),
-        ),
-        _InfoCard(
-          icon: Icons.school,
-          title: t.theoryPassed,
-          value: candidate.theoryPassed ? t.yes : t.no,
-        ),
-        _InfoCard(
-          icon: Icons.access_time,
-          title: t.totalPaidHours,
-          value: '${candidate.totalPaidHours.toStringAsFixed(1)} ${t.hours}',
-        ),
-        _InfoCard(
-          icon: Icons.done,
-          title: t.totalTakenHours,
-          value: '${candidate.totalTakenHours.toStringAsFixed(1)} ${t.hours}',
-        ),
-        _InfoCard(
-          icon: Icons.hourglass_empty,
-          title: t.remainingHours,
-          value: '${candidate.remainingHours.toStringAsFixed(1)} ${t.hours}',
-        ),
-        _InfoCard(
-          icon: Icons.person_outline,
-          title: t.assignedInstructor,
-          value: candidate.assignedInstructor.isEmpty
-              ? '-'
-              : candidate.assignedInstructor,
-        ),
-        _InfoCard(
-          icon: Icons.info_outline,
-          title: t.status,
-          value: candidate.status,
-        ),
-        const SizedBox(height: 24),
-        Text(
-          t.notes,
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 12),
-        TextField(
-          controller: notesController,
-          maxLines: 5,
-          decoration: InputDecoration(
-            hintText: t.notes,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-          onChanged: (value) {
-            updateNotes(value);
-          },
-        ),
-      ],
-    ),
-  );
-}

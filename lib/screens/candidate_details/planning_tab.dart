@@ -142,18 +142,18 @@ class _PlanningTabState extends State<PlanningTab> {
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
-                  onPressed: _isGenerating 
-                      ? null 
+                  onPressed: _isGenerating
+                      ? null
                       : () => _handleSharePlanning(allSessions),
                   icon: _isGenerating
                       ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                          ),
-                        )
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  )
                       : const Icon(Icons.share),
                   label: Text(
                     _isGenerating ? 'Generating...' : 'Share Planning',
@@ -189,7 +189,7 @@ class _PlanningTabState extends State<PlanningTab> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                       t.noSessionsYet,
+                      t.noSessionsYet,
                       style: theme.textTheme.titleMedium?.copyWith(
                         color: theme.textTheme.bodyMedium?.color
                             ?.withAlpha(150),

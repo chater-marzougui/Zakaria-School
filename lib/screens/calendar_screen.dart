@@ -141,6 +141,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'add-session-calendar',
         onPressed: () {
           Navigator.pushNamed(context, '/add-session');
         },

@@ -43,14 +43,17 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> with Sing
         title: Text(widget.candidate.name),
         actions: [
           IconButton(
+            key: const Key('callCandidateButton'),
             icon: const Icon(Icons.phone),
             onPressed: () => _makeCall(widget.candidate.phone),
           ),
           IconButton(
+            key: const Key('smsCandidateButton'),
             icon: const Icon(Icons.message),
             onPressed: () => _sendSMS(widget.candidate.phone),
           ),
           PopupMenuButton<String>(
+            key: const Key('candidateOptionsMenuButton'),
             onSelected: (value) {
               if (value == 'whatsapp') {
                 _sendWhatsApp(widget.candidate.phone);
@@ -109,7 +112,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> with Sing
       body: TabBarView(
         controller: _tabController,
         children: [
-          buildInfoTab(context, widget.candidate),
+          CandidateInfoTab(candidate: widget.candidate),
           AvailabilityCalendarTab(candidate: widget.candidate),
           PlanningTab(candidate: widget.candidate,),
         ],
@@ -132,6 +135,14 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> with Sing
   }
 
   void _sendWhatsApp(String phone) async {
+    final phoneClean = phone.trim().split(' ').join('');
+    if (phoneClean.isEmpty) return;
+    if (!phoneClean.startsWith('+')) {
+      // Assuming default country code +1 if not provided
+      phone = '+216$phoneClean';
+    } else {
+      phone = phoneClean;
+    }
     final uri = Uri.parse('https://wa.me/$phone');
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
@@ -228,6 +239,7 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> with Sing
                   ),
                   const SizedBox(height: 16),
                   DropdownButtonFormField<String>(
+                    key: const Key('statusDropdown'),
                     initialValue: selectedStatus,
                     decoration: InputDecoration(
                       labelText: t.status,
@@ -266,10 +278,12 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> with Sing
           ),
           actions: [
             TextButton(
+              key: const Key('cancelEditCandidateButton'),
               onPressed: () => Navigator.of(context).pop(),
               child: Text(t.cancel),
             ),
             ElevatedButton(
+              key: const Key('saveCandidateButton'),
               onPressed: () async {
                 if (formKey.currentState!.validate()) {
                   try {
@@ -329,10 +343,12 @@ class _CandidateDetailScreenState extends State<CandidateDetailScreen> with Sing
         content: Text(t.deleteCandidateMessage),
         actions: [
           TextButton(
+            key: const Key('cancelDeleteCandidateButton'),
             onPressed: () => Navigator.of(context).pop(false),
             child: Text(t.cancel),
           ),
           ElevatedButton(
+            key: const Key('confirmDeleteCandidateButton'),
             onPressed: () => Navigator.of(context).pop(true),
             style: ElevatedButton.styleFrom(
               backgroundColor: theme.colorScheme.error,
