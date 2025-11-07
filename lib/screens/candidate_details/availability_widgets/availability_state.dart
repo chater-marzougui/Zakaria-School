@@ -50,8 +50,12 @@ class AvailabilityState extends ChangeNotifier {
             if (slots is List) {
               availability[day] = slots
                   .map((slot) {
-                    if (slot is Map<String, dynamic>) {
-                      return structs.TimeSlot.fromMap(slot);
+                    try {
+                      if (slot is Map<String, dynamic>) {
+                        return structs.TimeSlot.fromMap(slot);
+                      }
+                    } catch (e) {
+                      debugPrint('Failed to parse time slot: $e');
                     }
                     return null;
                   })
@@ -72,18 +76,23 @@ class AvailabilityState extends ChangeNotifier {
 
   /// Save changes to Firestore
   Future<void> saveChanges() async {
-    Map<String, dynamic> availabilityMap = {};
-    _workingAvailability.forEach((day, slots) {
-      availabilityMap[day] = slots.map((slot) => slot.toMap()).toList();
-    });
+    try {
+      Map<String, dynamic> availabilityMap = {};
+      _workingAvailability.forEach((day, slots) {
+        availabilityMap[day] = slots.map((slot) => slot.toMap()).toList();
+      });
 
-    await FirebaseFirestore.instance
-        .collection('candidates')
-        .doc(candidateId)
-        .update({'availability': availabilityMap});
+      await FirebaseFirestore.instance
+          .collection('candidates')
+          .doc(candidateId)
+          .update({'availability': availabilityMap});
 
-    _hasChanges = false;
-    notifyListeners();
+      _hasChanges = false;
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Failed to save availability: $e');
+      rethrow; // Let caller handle the error
+    }
   }
 
   /// Add or merge a time slot

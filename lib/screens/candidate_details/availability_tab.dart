@@ -286,10 +286,8 @@ class _AvailabilityCalendarTabState extends State<AvailabilityCalendarTab> {
       String dayKey, LongPressStartDetails details, double totalHeight) {
     if (_movingSlot != null) return;
 
-    final renderObject =
-        _dayGridKeys[dayKey]?.currentContext?.findRenderObject();
-    if (renderObject is! RenderBox) return;
-    final gridBox = renderObject;
+    final gridBox = _getRenderBoxForDay(dayKey);
+    if (gridBox == null) return;
 
     final localPosition = gridBox.globalToLocal(details.globalPosition);
 
@@ -303,10 +301,8 @@ class _AvailabilityCalendarTabState extends State<AvailabilityCalendarTab> {
   void _handleDayLongPressMoveUpdate(
       String dayKey, LongPressMoveUpdateDetails details, double totalHeight) {
     if (_dragDayKey == dayKey && _dragStartY != null && _movingSlot == null) {
-      final renderObject =
-          _dayGridKeys[dayKey]?.currentContext?.findRenderObject();
-      if (renderObject is! RenderBox) return;
-      final gridBox = renderObject;
+      final gridBox = _getRenderBoxForDay(dayKey);
+      if (gridBox == null) return;
 
       final localPosition = gridBox.globalToLocal(details.globalPosition);
 
@@ -365,10 +361,8 @@ class _AvailabilityCalendarTabState extends State<AvailabilityCalendarTab> {
   void _handleSlotLongPressMoveUpdate(
       String dayKey, LongPressMoveUpdateDetails details, double totalHeight) {
     if (_movingSlot != null && _movingSlotDayKey == dayKey) {
-      final renderObject =
-          _dayGridKeys[dayKey]?.currentContext?.findRenderObject();
-      if (renderObject is! RenderBox) return;
-      final gridBox = renderObject;
+      final gridBox = _getRenderBoxForDay(dayKey);
+      if (gridBox == null) return;
 
       final localPosition = gridBox.globalToLocal(details.globalPosition);
 
@@ -406,5 +400,13 @@ class _AvailabilityCalendarTabState extends State<AvailabilityCalendarTab> {
   int _timeStringToMinutes(String time) {
     final parts = time.split(':');
     return int.parse(parts[0]) * 60 + int.parse(parts[1]);
+  }
+
+  /// Helper to get RenderBox for a day column safely
+  RenderBox? _getRenderBoxForDay(String dayKey) {
+    final renderObject =
+        _dayGridKeys[dayKey]?.currentContext?.findRenderObject();
+    if (renderObject is! RenderBox) return null;
+    return renderObject;
   }
 }
